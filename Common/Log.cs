@@ -102,17 +102,6 @@ namespace HHL.Common
             }
 
             RetrunSb(sb);
-        }
-        
-        public void PrintUnity(StringBuilder preSb,object message)
-        {
-            var sb = GetSb();
-            sb.Append("<color=#").Append(UnityEngine.ColorUtility.ToHtmlStringRGB(UnityEngine.Color.blue)).Append(">");
-            sb.Append(preSb.ToString()).Append(message);
-            sb.Append("</color>");
-            UnityEngine.Debug.Log(sb.ToString());
-            RetrunSb(sb);
-        }
-
+        } 
     }
 }
