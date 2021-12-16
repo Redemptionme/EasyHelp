@@ -37,13 +37,18 @@ namespace HHL.Common
              _outType |= (uint) eLogOut.eFile ;
              //_outType |= (uint) eLogOut.eUnity ;
 
-             //InitMsgListen();
+             InitMsgListen();
              
              var strFu = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
              Print("", eLogType.eLog, false);
              Print("-----HHL Log----------" + strFu + "--------------");
          }
-         
+
+         private void InitMsgListen()
+         {
+             
+         }
+
          public void PrintUnity(StringBuilder preSb,object message)
          {
              // var sb = GetSb();
