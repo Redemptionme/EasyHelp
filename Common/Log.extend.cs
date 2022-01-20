@@ -102,7 +102,19 @@ namespace HHL.Common
              //InitHXFDerbyMsg();
              //InitGuildResourceMsg();
              //InitIncidentMsg();
-             InitRuneMsg();
+             //InitRuneMsg();
+             InitCharter();
+         }
+
+         private void InitCharter()
+         {
+             AddListenMsgType(MsgType.KMsgCl2GstaskInfoRequest);
+             AddListenMsgType(MsgType.KMsgGs2CltaskInfoReply);
+             AddListenMsgType(MsgType.KMsgGs2CltaskMainTaskUpdateNotice);
+             AddListenMsgType(MsgType.KMsgCl2GstaskMainTaskAwardRequest);
+             AddListenMsgType(MsgType.KMsgGs2CltaskMainTaskAwardReply);
+             AddListenMsgType(MsgType.KMsgGs2CltaskOpenChapterNotice);
+             AddListenMsgType(MsgType.KMsgCl2GstaskChapterAwardRequest);
          }
 
          private void InitRuneMsg()

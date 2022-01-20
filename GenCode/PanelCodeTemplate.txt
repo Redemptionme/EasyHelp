@@ -1,0 +1,61 @@
+﻿using IGG.Framework.Utils;
+
+namespace IGG.Game.Module.__MODULE_NAME__.View
+{
+    // <summary>
+    // Author  __PERSON_NAME__
+    // Date    __DATA_TABLE_CREATE_TIME__
+    // Desc
+    // </summary>
+    public class __PANEL_NAME__ : Base__PANEL_NAME__
+    {
+        protected override void OnInit()
+        {
+            
+        }
+        
+        private bool CheckOpen()
+        { 
+            return true;
+        }
+        
+        private void RigCfg(ParamVo param)
+        {
+            // xxx = param.Get<uint>();
+        }
+          
+        private void RigEvent()
+        {
+            // m_owner.AddEventListener(__MODULE_NAME__Notify.xxx, xxx);
+        }
+
+        private void UnRigEvent()
+        {
+            
+        }
+        
+        protected override bool OnOpen(ParamVo param)
+        {
+            //这里可以处理参数及注册各种事件
+            RigCfg();
+            if (!CheckOpen())
+            {
+                return false;
+            }
+            RigEvent();
+            RefreshUI();
+            return true;
+        }
+        
+        protected override void OnClose()
+        {
+            //这里可以移除各种事件
+            UnRigEvent();
+        }
+        
+        private void RefreshUI()
+        {
+            
+        }
+    }
+}
