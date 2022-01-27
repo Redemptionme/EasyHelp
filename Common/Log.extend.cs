@@ -115,6 +115,7 @@ namespace HHL.Common
              AddListenMsgType(MsgType.KMsgGs2CltaskMainTaskAwardReply);
              AddListenMsgType(MsgType.KMsgGs2CltaskOpenChapterNotice);
              AddListenMsgType(MsgType.KMsgCl2GstaskChapterAwardRequest);
+             AddListenMsgType(MsgType.KMsgGs2CltaskChapterAwardReply);
          }
 
          private void InitRuneMsg()
