@@ -103,7 +103,7 @@ namespace HHL.Common
              //InitGuildResourceMsg();
              //InitIncidentMsg();
              //InitRuneMsg();
-             InitCharter();
+             //InitCharter();
          }
 
          private void InitCharter()
