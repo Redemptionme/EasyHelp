@@ -9,7 +9,9 @@
 using System;
 using System.IO;
 using System.Text;
+using IGG.EditorTools;
 using IGG.Framework.EditorTools.Module;
+using IGG.Game.Managers.Network;
 using UnityEditor;
 using UnityEngine;
 
@@ -35,7 +37,18 @@ namespace Game.HHL.Editor
             ModuleEditorWindow wnd = EditorWindow.GetWindow<ModuleEditorWindow>("模块代码生成工具");
             wnd.minSize = new Vector2(300, 200);
         }
-        
+
+        [MenuItem("HHL/Proto更新并生成")]
+        public static void GenProto()
+        {
+            ProtoTool.GenProto();
+        }
+
+        [MenuItem("HHL/网络测试")]
+        public static void NetworkDebugPanelShow()
+        {
+            NetworkDebugPanel.Show();
+        }
 
         private void OnGUI()
         {
