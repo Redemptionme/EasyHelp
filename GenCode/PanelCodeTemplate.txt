@@ -37,7 +37,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         protected override bool OnOpen(ParamVo param)
         {
             //这里可以处理参数及注册各种事件
-            RigCfg();
+            RigCfg(param);
             if (!CheckOpen())
             {
                 return false;
