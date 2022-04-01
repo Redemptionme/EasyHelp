@@ -103,7 +103,8 @@ namespace HHL.Common
              //InitGuildResourceMsg();
              //InitIncidentMsg();
              //InitRuneMsg();
-             //InitCharter();
+             //InitCityPerson();
+             InitCharter();
              InitArenaShop();
          }
 
@@ -115,6 +116,16 @@ namespace HHL.Common
              AddListenMsgType(MsgType.KMsgCl2GsshopRefreshRequest);
              AddListenMsgType(MsgType.KMsgGs2ClshopRefreshReply);
              AddListenMsgType(MsgType.KMsgGs2ClshopNotice);
+         }
+
+         private void InitCityPerson()
+         {
+             AddListenMsgType(MsgType.KMsgGs2CltaskInfoReply);
+             AddListenMsgType(MsgType.KMsgGs2CltaskCityTaskUpdateNotice);
+             AddListenMsgType(MsgType.KMsgCl2GstaskCityTaskAwardRequest);
+             AddListenMsgType(MsgType.KMsgGs2CltaskCityTaskAwardReply);
+             AddListenMsgType(MsgType.KMsgCl2GstaskClientActionCompleteRequest);
+             AddListenMsgType(MsgType.KMsgGs2CltaskCleintActionCompleteReply);
          }
 
          private void InitCharter()
@@ -251,15 +262,27 @@ namespace HHL.Common
 
          public void AddSpecialMsgType(MsgType eType)
          {
+             if (m_speicalList.Contains(eType))
+             {
+                 return;
+             }
              m_speicalList.Add(eType);
          }
          public void AddIgnoreMsgType(MsgType eType)
          {
+             if (m_ignoreMsgList.Contains(eType))
+             {
+                 return;
+             }
              m_ignoreMsgList.Add(eType);
          }
 
          public void AddListenMsgType(MsgType eType)
          {
+             if (m_MsgList.Contains(eType))
+             {
+                 return;
+             }
              m_MsgList.Add(eType);
          }
          
