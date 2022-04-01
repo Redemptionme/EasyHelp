@@ -104,6 +104,17 @@ namespace HHL.Common
              //InitIncidentMsg();
              //InitRuneMsg();
              //InitCharter();
+             InitArenaShop();
+         }
+
+         private void InitArenaShop()
+         {
+             AddListenMsgType(MsgType.KMsgGs2ClplayerAttribute);
+             AddListenMsgType(MsgType.KMsgCl2GsshopBuyItemRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClshopBuyItemReply);
+             AddListenMsgType(MsgType.KMsgCl2GsshopRefreshRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClshopRefreshReply);
+             AddListenMsgType(MsgType.KMsgGs2ClshopNotice);
          }
 
          private void InitCharter()
