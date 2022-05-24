@@ -104,8 +104,28 @@ namespace HHL.Common
              //InitIncidentMsg();
              //InitRuneMsg();
              //InitCityPerson();
-             InitCharter();
-             InitArenaShop();
+             //InitCharter();
+             //InitArenaShop();
+             //InitTurnTable();
+             InitWaterStatus();
+         }
+
+         private void InitWaterStatus()
+         {
+             AddListenMsgType(MsgType.KMsgGs2ClmapPlayerStatusInfoNotice);
+             AddListenMsgType(MsgType.KMsgGs2ClmapPlayerUpdateStatusNotice);
+             AddListenMsgType(MsgType.KMsgGs2ClmapPlayerRemoveStatusNotice);
+         }
+
+         private void InitTurnTable()
+         {
+             // 轮盘抽奖 非验证，自己猜测
+             AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityTurntableNotice);
+             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableRequest);
+             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableReply);
+             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableStageRewardRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClactivityTurntableStageRewardReply);
          }
 
          private void InitArenaShop()
