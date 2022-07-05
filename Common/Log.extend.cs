@@ -107,7 +107,7 @@ namespace HHL.Common
              //InitCharter();
              //InitArenaShop();
              //InitTurnTable();
-             InitWaterStatus();
+             //InitWaterStatus();
          }
 
          private void InitWaterStatus()
