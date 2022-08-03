@@ -108,6 +108,46 @@ namespace HHL.Common
              //InitArenaShop();
              //InitTurnTable();
              //InitWaterStatus();
+             InitPompeii();
+         }
+
+         private void InitPompeii()
+         {
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiStatusNotice);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetMainUiRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetMainUiReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetPreGuildResultRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetPreGuildResultReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiSubmitRegistRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiSubmitRegistReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetRegistDetailRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetRegistDetailReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiSetupRegistDetailRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiSetupRegistDetailReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetPairingInfoRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetPairingInfoReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiSetupChatGroupRequest);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetCandidateListRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetCandidateListReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiEventQueryRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiEventQueryReply);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiDataNotice);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBuildBattleDataNotice);
+             
+             // 以下可能与流程无关
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBossNotice);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGameDataRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGameDataReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiIntoRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiIntoReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiLeaveRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiLeaveReply);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiGameBaseDataRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGameBaseDataReply);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGuildBaseDataNotice);
+             AddListenMsgType(MsgType.KMsgCl2GspompeiiTempLeaveRequest);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiTempLeaveReply);
+             AddListenMsgType(MsgType.KMsgGs2ClpompeiiEndNotice);
          }
 
          private void InitWaterStatus()
