@@ -32,7 +32,8 @@ namespace HHL.Common
             eLog = 0,
             eWarning,
             eErro,
-            eRootNetwork
+            eRootNetwork,
+            ewise
         }
 
         public enum eLogOut
@@ -56,6 +57,7 @@ namespace HHL.Common
             //_outType |= (uint) eLogOut.eUnity ;
 
             InitMsgListen();
+            //InitWise();
 
             var strFu = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             Print("", eLogType.eLog, false);
@@ -80,6 +82,11 @@ namespace HHL.Common
             InitSpeicalMsg();
         }
 
+        private void InitWise()
+        {
+            _typeList.Add(eLogType.ewise);
+        }
+
         private void InitSpeicalMsg()
         {
             AddSpecialMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
@@ -99,7 +106,7 @@ namespace HHL.Common
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
-            //InitGrowthFund();
+            InitGrowthFund();
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
@@ -110,8 +117,15 @@ namespace HHL.Common
             //InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
-            InitPompeii();
-            InitMail();
+            //InitPompeii();
+            //InitMail();
+            //InitMagicLampNotice();
+        }
+
+        private void InitMagicLampNotice()
+        {
+            // 跑马灯
+            AddListenMsgType(MsgType.KMsgGs2ClmagicLampNotice);
         }
 
         private void InitScout()
@@ -148,13 +162,14 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiSetupRegistDetailReply);
             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetPairingInfoRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetPairingInfoReply);
-            AddListenMsgType(MsgType.KMsgCl2GspompeiiSetupChatGroupRequest);
             AddListenMsgType(MsgType.KMsgCl2GspompeiiGetCandidateListRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGetCandidateListReply);
             AddListenMsgType(MsgType.KMsgCl2GspompeiiEventQueryRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiEventQueryReply);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiDataNotice);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBuildBattleDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpompeiiBattleEndNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpompeiiGuildInfoNotice);
 
             // 以下可能与流程无关
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBossNotice);
@@ -292,6 +307,13 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsgrowthFundRewardReply);
             AddListenMsgType(MsgType.KMsgGs2ClbuyGrowthFundNotice);
             AddListenMsgType(MsgType.KMsgGs2ClmallAllDataNotice);
+            
+            
+            // 城建 不完整，很多都直接走taskMoudle内部那套了
+            AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
+            AddListenMsgType(MsgType.KMsgCl2GstaskBranchTaskAwardRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltaskBranchTaskAwardReply);
+            AddListenMsgType(MsgType.KMsgGs2CltaskInfoReply);
         }
 
         private void InitExploreMsg()
