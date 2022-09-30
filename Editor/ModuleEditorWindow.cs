@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using IGG.EditorTools;
@@ -49,6 +50,21 @@ namespace Game.HHL.Editor
         {
             NetworkDebugPanel.Show();
         }
+        [MenuItem("HHL/打开LOG")]
+        public static void OpenLog()
+        {
+            var winToolsPath = "C:/Program Files/Microsoft VS Code/Code.exe";
+            var uiProjectPath = Application.dataPath.Replace("Assets","output//HHL.log");
+            Process.Start(winToolsPath, uiProjectPath);
+        }
+        [MenuItem("HHL/打开string_cn表")]
+        public static void OpenStringCN()
+        {
+            var winToolsPath = "C:/Program Files/Microsoft VS Code/Code.exe";
+            var uiProjectPath = Application.dataPath.Replace("Assets","Assets/Config/string_cn.csv");
+            Process.Start(winToolsPath, uiProjectPath);
+        }
+        
 
         private void OnGUI()
         {
