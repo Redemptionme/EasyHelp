@@ -117,7 +117,7 @@ namespace HHL.Common
             //InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
-            //InitPompeii();
+            InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
         }
@@ -185,6 +185,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GspompeiiTempLeaveRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiTempLeaveReply);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiEndNotice);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsguildBuildingListRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildBuildingListReply);
         }
 
         private void InitWaterStatus()
