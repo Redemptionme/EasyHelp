@@ -170,6 +170,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBuildBattleDataNotice);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBattleEndNotice);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGuildInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspompeiiGameBaseDataRequest); // 分数靠这个取
+            AddListenMsgType(MsgType.KMsgGs2ClpompeiiGameBaseDataReply);
 
             // 以下可能与流程无关
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBossNotice);
