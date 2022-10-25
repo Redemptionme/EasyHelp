@@ -106,7 +106,7 @@ namespace HHL.Common
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
-            InitGrowthFund();
+            //InitGrowthFund();
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
@@ -114,10 +114,10 @@ namespace HHL.Common
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
-            //InitArenaShop();
+            InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
-            InitPompeii();
+            //InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
         }
@@ -218,6 +218,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsshopRefreshRequest);
             AddListenMsgType(MsgType.KMsgGs2ClshopRefreshReply);
             AddListenMsgType(MsgType.KMsgGs2ClshopNotice);
+            
+            AddListenMsgType(MsgType.KMsgCl2GslocalArenaRankListRequest);
+            AddListenMsgType(MsgType.KMsgGs2CllocalArenaRankListReply);
         }
 
         private void InitCityPerson()
