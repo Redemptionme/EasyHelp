@@ -114,12 +114,32 @@ namespace HHL.Common
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
-            InitArenaShop();
+            //InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
             //InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
+            InitGatlin();
+        }
+
+        private void InitGatlin()
+        {
+            // 新乌托邦
+            
+            //AddListenMsgType(MsgType.KMsgGs2ClplayerAllPersonalActivityNotice);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalGatlinKillRewardNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalGatlinInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinShotRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinShotReply);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinStageAwardRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinStageAwardReply);
+             
+            
+            AddListenMsgType(MsgType.KMsgGs2ClplayerPersonalActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerPersonalRemoveNotice);
+            //InitMail();
         }
 
         private void InitMagicLampNotice()
