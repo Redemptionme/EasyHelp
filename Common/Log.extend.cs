@@ -120,7 +120,21 @@ namespace HHL.Common
             //InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
-            InitGatlin();
+            //InitGatlin();
+            InitChristmasGame();
+        }
+
+        private void InitChristmasGame()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBattlePassNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBattlePassBaseInfoNotice);  
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassLevelRewardRequest); 
+            AddListenMsgType(MsgType.KMsgGs2ClactivityBattlePassLevelRewardReply); 
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassUpgradeRequest); 
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassUpgradeReply); 
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassEmoneyAdvanceRequest); 
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassEmoneyAdvanceReply);
         }
 
         private void InitGatlin()
