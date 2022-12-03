@@ -57,7 +57,6 @@ namespace HHL.Common
             //_outType |= (uint) eLogOut.eUnity ;
 
             InitMsgListen();
-            //InitWise();
 
             var strFu = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             Print("", eLogType.eLog, false);
@@ -103,6 +102,7 @@ namespace HHL.Common
 
         private void InitMsgFunction()
         {
+            //InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
@@ -121,7 +121,7 @@ namespace HHL.Common
             //InitMail();
             //InitMagicLampNotice();
             //InitGatlin();
-            InitChristmasGame();
+            //InitChristmasGame();
         }
 
         private void InitChristmasGame()
