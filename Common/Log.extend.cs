@@ -120,7 +120,7 @@ namespace HHL.Common
             //InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
-            //InitGatlin();
+            InitGatlin();
             //InitChristmasGame();
         }
 
