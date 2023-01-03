@@ -120,8 +120,28 @@ namespace HHL.Common
             //InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
-            InitGatlin();
+            //InitGatlin();
             //InitChristmasGame();
+            //InitExSave();
+            InitNewPegie();
+        }
+
+        private void InitNewPegie()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClallHeroNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClupdateHeroNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClheroAttrNotice);
+            
+            //AddListenMsgType(MsgType.MsgGS2CLPersonalExchangeSpecialHeroNotice);
+        }
+
+        // 客户端独立存储这块，大小不超过8字节都支持
+        private void InitExSave()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClplayerBaseNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsupdateShortClientDataRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClupdateShortClientDataReply);
+            
         }
 
         private void InitChristmasGame()
@@ -224,6 +244,12 @@ namespace HHL.Common
             
             AddListenMsgType(MsgType.KMsgCl2GsguildBuildingListRequest);
             AddListenMsgType(MsgType.KMsgGs2ClguildBuildingListReply);
+            
+            
+            // 战报
+            AddListenMsgType(MsgType.KMsgCl2GspompeiiBattleReportRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpompeiiBattleReportReply);
+            
         }
 
         private void InitWaterStatus()
