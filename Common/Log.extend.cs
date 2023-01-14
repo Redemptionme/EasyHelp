@@ -9,6 +9,7 @@ using IGG.Framework.IO;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Mail.Type;
 using IGG.Game.Data.Cache.WorldMap.Entity.Comp;
+using IGG.Game.Module.Reward;
 using IGG.Game.Module.Rune.Comp;
 using Protomsg;
 
@@ -124,6 +125,58 @@ namespace HHL.Common
             //InitChristmasGame();
             //InitExSave();
             InitNewPegie();
+        }
+
+        public void TestShowSeniorRewardPanel()
+        {
+            // todo hhl test
+            var reward = new List<Resource>();
+            //for(int i = 0; i < 10; i++)
+            {
+                // 英雄
+                reward.Add(new Resource(){ ResType = 11,SubType = 1063,Value = 2,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 14000,Value = 28,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 23010,Value = 21,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 21000,Value = 84,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 14010,Value = 14,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 141,Value = 1370,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 109,Value = 1270,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 143,Value = 1020,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 113,Value = 1400,});
+                reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
+                reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
+            }
+            
+            // 科技
+            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 3,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 2,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            
+            
+            // reward.Add(new Resource()
+            // {
+            //     ResType = (uint)PlayerAttributeType.KPlayerAttrTechnology,
+            //     SubType = 10001,
+            //     Value = 1,
+            // });
+            // reward.Add(new Resource()
+            // {
+            //     ResType = (uint)PlayerAttributeType.KPlayerAttrHero,
+            //     SubType = 1063,
+            //     Value = 1,
+            // });
+
+            RewardModule.Inst.ShowSeniorRewardPanel(reward);
         }
 
         private void InitNewPegie()
