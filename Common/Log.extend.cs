@@ -118,13 +118,13 @@ namespace HHL.Common
             //InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
-            //InitPompeii();
+            InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
             //InitGatlin();
             //InitChristmasGame();
             //InitExSave();
-            InitNewPegie();
+            //InitNewPegie();
         }
 
         public void TestShowSeniorRewardPanel()
@@ -303,6 +303,11 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GspompeiiBattleReportRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBattleReportReply);
             
+            // 庞贝展示期
+            AddListenMsgType(MsgType.KMsgGs2ClpompeiiGuildRewardInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspompeiiGuildRewardGetRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspompeiiGuildRewardGetReply);
+            AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
         }
 
         private void InitWaterStatus()

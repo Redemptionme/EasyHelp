@@ -1,0 +1,104 @@
+﻿using IGG.Framework.Utils;
+using IGG.Framework.Logging;
+
+namespace IGG.Game.Module.__MODULE_NAME__.View
+{
+    // <summary>
+    // Author  __PERSON_NAME__
+    // Date    __DATA_TABLE_CREATE_TIME__
+    // Desc
+    // </summary>
+    public class __PANEL_NAME__ : Base__PANEL_NAME__
+    {
+        private ActivityPanel m_panel;
+        private ActivityConfig m_cfg;
+        private ActivityBaseInfo m_activityInfo;
+        
+        // todo hhl 没写完遇到再做吧 参考ActivityDoomsdayUtopiaView
+        public void Init(ActivityPanel panel, uint masterId)
+        {
+            m_panel = panel;
+            m_cfg = StageDao.;
+            RigCfg();
+            RigEvent();
+            RefreshTitle();    
+            RefreshUI();
+        }
+        
+        public void Close()
+        {
+            OnClose();
+        }
+        
+        protected override void OnOpen()
+        {
+            // 这种活动那view别在这里写了，坑多,Init 和 Onopen 外部tip调用和活动列表调用顺序不一致
+        }
+        
+        protected override void OnClose()
+        {
+            UnRigEvent();
+        }
+        
+        private void RigCfg()
+        {
+            var activity = AppCache.Activity.GetActivity(m_cfg.Id, 0);
+            if (activity == null)
+            {
+                Logger.Log("activity cache null,id:{0}", m_cfg.Id);
+                return;
+            }
+            // xxx = param.Get<uint>();
+        }
+          
+        private void RigEvent()
+        {
+            // m_owner.AddEventListener(__MODULE_NAME__Notify.xxx, xxx);
+            m_btnInfo.onClick.Add(OnClickInfo);
+            Timers.inst.Add(1, -1, OnTimeRefreshTime);
+        }
+
+        private void UnRigEvent()
+        {
+            m_btnInfo.onClick.Remove(OnClickInfo);
+            Timers.inst.Remove(OnTimeRefreshTime);
+        }
+        
+        private void RefreshTitle()
+        {
+            m_txtTitle.text = m_cfg.GetTitle();           
+            m_txtUtc.text = TimeFormatHelper.DayAToDayB(m_activityInfo.TimeBegin, m_activityInfo.TimeEnd);
+            OnTimeRefreshTime(null);
+        }        
+        
+        private void RefreshUI()
+        {
+            
+        }
+        private void OnTimeRefreshTime(object param)
+        {
+             if(m_activityInfo == null) return;
+             
+             var endTime = m_activityInfo.TimeEnd;
+             uint second = 0;
+             if (endTime < TimeHelper.ServerTime)
+             {
+                 Timers.inst.Remove(OnTimeRefreshTime);
+                 m_owner.DispatchEvent(ActivityEvent.PersonalActTimeEndEvent, (uint)PersonActType.UtopiaTask, 0);
+                 m_panelMgr.ClosePanel("ActivityPanel");
+             }
+             else
+             {
+                 second = (uint)(endTime - TimeHelper.ServerTime);
+             }
+ 
+             m_txtTimeVal.text = TimeHelper.GetTimeStrBySec(second);
+        }
+        
+        private void OnClickInfo(EventContext context)
+        {
+            m_panel.GotoRule(m_cfg.Id);
+        }
+        
+    }
+}
