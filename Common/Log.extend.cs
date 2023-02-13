@@ -118,18 +118,30 @@ namespace HHL.Common
             //InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
-            InitPompeii();
+            //InitPompeii();
             //InitMail();
             //InitMagicLampNotice();
             //InitGatlin();
             //InitChristmasGame();
             //InitExSave();
             //InitNewPegie();
+            //InitClean();
+        }
+
+        private void InitClean()
+        {
+            // 只做表现，并非完整消息
+            AddListenMsgType(MsgType.KMsgGs2ClcityInfoReply);
+            AddListenMsgType(MsgType.KMsgGs2ClcityBuildingUpdateNotice);
+            
+            AddListenMsgType(MsgType.KMsgCl2GscityRemoveBuildingRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcityRemoveBuildingReply);
+            
+            
         }
 
         public void TestShowSeniorRewardPanel()
         {
-            // todo hhl test
             var reward = new List<Resource>();
             //for(int i = 0; i < 10; i++)
             {
