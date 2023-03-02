@@ -40,6 +40,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
             RigCfg(param);
             if (!CheckOpen())
             {
+                IGG.Framework.Logging.Logger.LogError($"{ResName} CheckOpen fail");
                 return false;
             }
             RigEvent();
