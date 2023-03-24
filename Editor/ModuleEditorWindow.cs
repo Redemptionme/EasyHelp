@@ -25,6 +25,15 @@ namespace Game.HHL.Editor
         private int m_curPanelIndex = 0;
         private string m_panelName = "TestPanel";
         private string m_authorName = "hanlinhe";
+        private static bool m_bMute;
+        
+        [MenuItem("HHL/音量开关")]
+        public static void WwiseMute()
+        {
+            var audioListener = FindObjectOfType<AkAudioListener>();
+            audioListener.enabled = m_bMute;
+            m_bMute = !m_bMute;
+        }
         
         [MenuItem("HHL/BC模块")]
         public static void OpenBC()
@@ -63,6 +72,13 @@ namespace Game.HHL.Editor
         {
             var winToolsPath = "C:/Program Files/Microsoft VS Code/Code.exe";
             var uiProjectPath = Application.dataPath.Replace("Assets","Assets/Config/string_cn.csv");
+            Process.Start(winToolsPath, uiProjectPath);
+        }
+        [MenuItem("HHL/打开message表")]
+        public static void OpenMessage()
+        {
+            var winToolsPath = "C:/Program Files/Microsoft VS Code/Code.exe";
+            var uiProjectPath = Application.dataPath.Replace("Assets","Assets/Config/message.csv");
             Process.Start(winToolsPath, uiProjectPath);
         }
 
