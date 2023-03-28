@@ -19,7 +19,7 @@ namespace HHL.Common
     {
         // 写文件单行字符长度,stringbuilder长度现在默认是200,所以别超过200
         private int _fileTxtLen = 120;
-        private bool _allMsg = false;
+        private bool _allMsg = true;
         private bool m_bAllEntityComp = false;
         private readonly List<MsgType> m_MsgList = new List<MsgType>();
         private readonly List<MsgType> m_ignoreMsgList = new List<MsgType>();
@@ -103,7 +103,7 @@ namespace HHL.Common
 
         private void InitMsgFunction()
         {
-            //InitWise();
+            InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
@@ -125,7 +125,7 @@ namespace HHL.Common
             //InitChristmasGame();
             //InitExSave();
             //InitNewPegie();
-            //InitClean();
+            InitClean();
         }
 
         private void InitClean()
@@ -150,29 +150,29 @@ namespace HHL.Common
                 reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
                 reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
                 reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 14000,Value = 28,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 23010,Value = 21,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 21000,Value = 84,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 14010,Value = 14,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 141,Value = 1370,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 109,Value = 1270,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 143,Value = 1020,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 113,Value = 1400,});
-                reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
-                reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 14000,Value = 28,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 23010,Value = 21,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 21000,Value = 84,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 14010,Value = 14,});
+                // reward.Add(new Resource(){ ResType = 14,SubType = 141,Value = 1370,});
+                // reward.Add(new Resource(){ ResType = 14,SubType = 109,Value = 1270,});
+                // reward.Add(new Resource(){ ResType = 14,SubType = 143,Value = 1020,});
+                // reward.Add(new Resource(){ ResType = 14,SubType = 113,Value = 1400,});
+                // reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
+                // reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
             }
             
             // 科技
-            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 3,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 2,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 3,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 2,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            // reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
             
             
             // reward.Add(new Resource()
