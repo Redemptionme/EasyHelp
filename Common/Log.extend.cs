@@ -7,8 +7,10 @@ using Google.Protobuf;
 using IGG.Framework.Cache;
 using IGG.Framework.IO;
 using IGG.Game.Data.Cache;
+using IGG.Game.Data.Cache.Common;
 using IGG.Game.Data.Cache.Mail.Type;
 using IGG.Game.Data.Cache.WorldMap.Entity.Comp;
+using IGG.Game.Data.Config;
 using IGG.Game.Module.Reward;
 using IGG.Game.Module.Rune.Comp;
 using Protomsg;
@@ -19,7 +21,7 @@ namespace HHL.Common
     {
         // 写文件单行字符长度,stringbuilder长度现在默认是200,所以别超过200
         private int _fileTxtLen = 120;
-        private bool _allMsg = true;
+        private bool _allMsg = false;
         private bool m_bAllEntityComp = false;
         private readonly List<MsgType> m_MsgList = new List<MsgType>();
         private readonly List<MsgType> m_ignoreMsgList = new List<MsgType>();
@@ -103,7 +105,7 @@ namespace HHL.Common
 
         private void InitMsgFunction()
         {
-            InitWise();
+            //InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
@@ -125,7 +127,7 @@ namespace HHL.Common
             //InitChristmasGame();
             //InitExSave();
             //InitNewPegie();
-            InitClean();
+            //InitClean();
         }
 
         private void InitClean()
@@ -143,13 +145,28 @@ namespace HHL.Common
         public void TestShowSeniorRewardPanel()
         {
             var reward = new List<Resource>();
+            foreach (var cfg in RewardDao.Inst.Configs)
+            {
+                var rewardVos = RewardDao.Inst.GetContentById(cfg.Id);
+                foreach (var vo in rewardVos)
+                {
+                    reward.Add(new Resource(){ ResType = (uint)vo.Type,SubType = vo.Value,Value = vo.Count,});
+                }
+            }
+
+            foreach (var cfg in ItemDao.Inst.Configs)
+            {
+                reward.Add(new Resource(){ ResType = (uint)PlayerAttributeType.KPlayerAttrItem,SubType = cfg.ItemId,Value = 2,});
+            }
+            
+            
             //for(int i = 0; i < 10; i++)
             {
                 // 英雄
-                reward.Add(new Resource(){ ResType = 11,SubType = 1063,Value = 2,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
+                // reward.Add(new Resource(){ ResType = 11,SubType = 1063,Value = 2,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
+                // reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
                 // reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
                 // reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
                 // reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
