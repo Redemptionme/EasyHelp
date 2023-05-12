@@ -128,6 +128,13 @@ namespace HHL.Common
             //InitExSave();
             //InitNewPegie();
             //InitClean();
+            InitRank();
+        }
+
+        private void InitRank()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
         }
 
         private void InitClean()
