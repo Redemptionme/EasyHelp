@@ -128,7 +128,38 @@ namespace HHL.Common
             //InitExSave();
             //InitNewPegie();
             //InitClean();
-            InitRank();
+            //InitRank();
+            InitHeroEquip();
+        }
+
+        private void InitHeroEquip()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipAddNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipRemoveNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipWearRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipWearReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipStarUpRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipStarUpReply);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipSynthesisRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipSynthesisReply);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipDisassembleRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipDisassembleReply);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipFlushEntryRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipFlushEntryReply);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipFlushEntrySaveRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipFlushEntrySaveReply);
+            AddListenMsgType(MsgType.KMsgCl2GsmiscHeroEquipWearQueueDataRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClmiscHeroEquipWearQueueDataReply);
+            AddListenMsgType(MsgType.KMsgGs2ClmiscHeroEquipWearQueueVersionNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsmiscHeroEquipWearQueueSaveRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClmiscHeroEquipWearQueueSaveReply);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipLockRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipLockReply);
+            
+           
+            
         }
 
         private void InitRank()
