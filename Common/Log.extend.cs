@@ -129,7 +129,22 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            InitHeroEquip();
+            //InitHeroEquip();
+            InitBattleRoyale();
+        }
+
+        private void InitBattleRoyale()
+        {
+            // 轮盘
+            AddListenMsgType(MsgType.KMsgCl2GsactivityChickenTurntableRequest);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityChickenTurntableReply);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityChickenTurntableNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
+            
+            
+            
         }
 
         private void InitHeroEquip()
@@ -526,6 +541,10 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsexploreBatchAwardRequest);
             AddListenMsgType(MsgType.KMsgCl2GsexploreAwardRequest);
             AddListenMsgType(MsgType.KMsgCl2GsexploreVisitRequest);
+            // 移民新增
+            AddListenMsgType(MsgType.KMsgCl2GsmiscRewardRecordsRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClmiscRewardRecordsReply);
+            AddListenMsgType(MsgType.KMsgGs2ClmiscRewardAddRecordsNotice);
         }
 
         private void InitHonorMsg()

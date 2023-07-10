@@ -20,7 +20,7 @@ namespace Game.HHL.Editor
     public class ModuleEditorWindow:EditorWindow
     {
         private string m_moduleName = "Test";
-        public string[] panelOptions = new string[]{"Normal","ActivityView","PersonalActivityView"};
+        public string[] panelOptions = new string[]{"Normal","ActivityView","PersonalActivityView","CompView"};
         private int m_curPanelIndex = 0;
         private string m_panelName = "TestPanel";
         private string m_authorName = "hanlinhe";
@@ -120,6 +120,9 @@ namespace Game.HHL.Editor
                         break;
                     case 2:
                         break;
+                    case 3:
+                        CreateCompView(panelDir,m_panelName,m_moduleName);
+                        break;
                 }
             };
             GUIUtility.ExitGUI();
@@ -151,6 +154,24 @@ namespace Game.HHL.Editor
             }
             var outputFileName = panelDir + "//" + panelName + ".cs";
             var codeTemplateFileName = Application.dataPath.Replace("Assets","Assets//Scripts/Game//HHL//GenCode/ActivityViewTemplate.txt");
+            var contentTxt= File.ReadAllText(codeTemplateFileName, Encoding.UTF8);
+            var sb = new StringBuilder(contentTxt);
+            sb.Replace("__PERSON_NAME__", m_authorName);
+            sb.Replace("__DATA_TABLE_CREATE_TIME__", DateTime.UtcNow.ToLocalTime().ToString("yyyy.MM.dd"));
+            sb.Replace("__MODULE_NAME__", m_moduleName);
+            sb.Replace("__PANEL_NAME__", panelName);
+       
+            EditorHelper.WriteFile(outputFileName,sb.ToString());
+        }
+        
+        private void CreateCompView(string panelDir,string panelName,string moduleName)
+        {
+            if (!Directory.Exists(panelDir))
+            {
+                Directory.CreateDirectory(panelDir);
+            }
+            var outputFileName = panelDir + "//" + panelName + ".cs";
+            var codeTemplateFileName = Application.dataPath.Replace("Assets","Assets//Scripts/Game//HHL//GenCode/CompView.txt");
             var contentTxt= File.ReadAllText(codeTemplateFileName, Encoding.UTF8);
             var sb = new StringBuilder(contentTxt);
             sb.Replace("__PERSON_NAME__", m_authorName);
