@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace HHL.Common
 {
@@ -11,9 +12,13 @@ namespace HHL.Common
         private string _filePath = "";
         private uint _outType = 0;
         private Queue<StringBuilder> m_sbPools = new Queue<StringBuilder>();
+        private GameObject m_goTools;
         
         public override void Init()
         {
+            m_goTools = new GameObject();
+            m_goTools.name = "HHLGOTools";
+            m_goTools.AddComponent<HHLGOTools>();
             InitExtend();
         }
 

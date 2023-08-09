@@ -143,8 +143,45 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityChickenTurntableNotice);
             AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
             
+            // 轮盘礼包
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallPlayerHandleAllDataNotify);//·新商城活动的玩家相关的所有处理逻辑信息通知
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallPlayerHandleGoodsDataNotify);// 新商城活动的玩家相关的处理逻辑信息通知(个人礼包开放购买数据)
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallAllActivityDataNotify); //·所有新商城活动信息通知
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallActivityDataNotify);//·新商城活动信息通知
+            AddListenMsgType(MsgType.KMsgCl2GsnewMallFetchFreeGiftRewardRequest);//领取免费礼包请求
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallFetchFreeGiftRewardReply); //领取免费礼包回复
             
             
+            // 任务
+            // /*AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);*/
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardRequest);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardReply);
+            
+            // 主活动
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingSucceedNotice); // 匹配成功通知 (匹配成功, 登录)
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingInfoRequest);// 请求匹配信息
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingInfoReply);// 响应匹配信息
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingRegisterRequest);// 请求报名匹配
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingRegisterReply);// 响应报名匹配
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingCancelRequest);// 请求取消匹配
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingCancelReply);// 响应取消匹配
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingMaintenanceNotice);// 维护开始
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingFailedNotice);// 维护开始
+            
+            // 观战
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpectateStatusRequest);// 请求获取观战状态
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpectateStatusReply);// 请求获取观战状态
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpotZoneInfoRequest);// 请求获取热点地区信息
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpotZoneInfoReply);// 响应获取热点地区信息
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpotZoneUpdateRequest);// 请求更新热点地区信息
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpotZoneUpdateReply);// 响应更新热点地区信息
+            
+            
+            // 观战 
+            // 排行版
+            AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
         }
 
         private void InitHeroEquip()

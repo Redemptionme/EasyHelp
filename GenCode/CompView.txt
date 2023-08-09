@@ -12,8 +12,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private bool m_bInit = false;
 
         public void Init()
-        {
-            UnInit();
+        {            
             InitBase();
             RefreshUI();
         }

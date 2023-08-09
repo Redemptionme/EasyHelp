@@ -56,7 +56,8 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         
         private void RefreshUI()
         {
-            
+            // copy to module
+            BindPanel<__PANEL_NAME__>();
         }
     }
 }
