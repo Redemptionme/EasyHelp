@@ -72,7 +72,8 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         
         private void RefreshUI()
         {
-            
+            // copy to module
+            RegisterView<__PANEL_NAME__>(Base__PANEL_NAME__.URL);
         }
         private void OnTimeRefreshTime(object param)
         {

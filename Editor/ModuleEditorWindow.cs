@@ -10,7 +10,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using IGG.Framework.EditorTools.Module;
+//using IGG.Framework.EditorTools.Module;
 using IGG.Game.Managers.Network;
 using UnityEditor;
 using UnityEngine;
@@ -37,8 +37,8 @@ namespace Game.HHL.Editor
         [MenuItem("HHL/BC模块")]
         public static void OpenBC()
         {
-            ModuleCodeBuildWnd wnd = EditorWindow.GetWindow<ModuleCodeBuildWnd>("模块代码生成工具");
-            wnd.minSize = new Vector2(200, 250);
+            //ModuleCodeBuildWnd wnd = EditorWindow.GetWindow<ModuleCodeBuildWnd>("模块代码生成工具");
+            //wnd.minSize = new Vector2(200, 250);
         }
         
         [MenuItem("HHL/生成代码")]

@@ -20,7 +20,7 @@ namespace HHL.Common
     public partial class Log
     {
         // 写文件单行字符长度,stringbuilder长度现在默认是200,所以别超过200
-        private int _fileTxtLen = 120;
+        private int _fileTxtLen = int.MaxValue;
         private bool _allMsg = false;
         private bool m_bAllEntityComp = false;
         private readonly List<MsgType> m_MsgList = new List<MsgType>();
@@ -129,8 +129,18 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            //InitHeroEquip();
-            InitBattleRoyale();
+            InitHeroEquip();
+            //InitBattleRoyale();
+            //InitActivityLimitTIme();
+        }
+
+        private void InitActivityLimitTIme()
+        {
+            // 任务
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardRequest);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardReply);
         }
 
         private void InitBattleRoyale()
@@ -209,9 +219,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClmiscHeroEquipWearQueueSaveReply);
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipLockRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipLockReply);
-            
-           
-            
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipStarRevertRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipStarRevertReply);
         }
 
         private void InitRank()
