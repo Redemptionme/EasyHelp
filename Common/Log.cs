@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace HHL.Common
 {
@@ -13,13 +14,26 @@ namespace HHL.Common
         private uint _outType = 0;
         private Queue<StringBuilder> m_sbPools = new Queue<StringBuilder>();
         private GameObject m_goTools;
+        public bool ToolsInit = false;
+        private string m_firstLogTime;
         
         public override void Init()
         {
+            InitGoTools();
+            InitExtend();
+        }
+
+        private void InitGoTools()
+        {
+            if (ToolsInit)
+            {
+                return;
+            }
             m_goTools = new GameObject();
             m_goTools.name = "HHLGOTools";
             m_goTools.AddComponent<HHLGOTools>();
-            InitExtend();
+            Object.DontDestroyOnLoad(m_goTools);
+            ToolsInit = true;
         }
 
         public override void Dispose()
@@ -46,6 +60,7 @@ namespace HHL.Common
         
         public void Print(object message, eLogType eType = eLogType.eLog, bool bAppend = true)
         {
+            InitGoTools();
             if (!_typeList.Contains(eType))
                 return;
 
@@ -72,7 +87,9 @@ namespace HHL.Common
 
             if (sb.Length <= _fileTxtLen)
             {
-                using (var sw = new StreamWriter(_filePath, bAppend)) { sw.WriteLine(sb.ToString()); }                    
+                using (var sw = new StreamWriter(_filePath, bAppend)) { sw.WriteLine(sb.ToString()); }      
+                var saveOldPath = Environment.CurrentDirectory + $"\\output\\old" + $"\\HHL_{m_firstLogTime}.log";
+                using (var sw = new StreamWriter(saveOldPath, bAppend)) { sw.WriteLine(sb.ToString()); }
             }
             else
             {

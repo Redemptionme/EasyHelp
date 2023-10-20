@@ -48,6 +48,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
                 return;
             }
             // xxx = param.Get<uint>();
+            m_activityInfo = AppCache.Activity.GetActivity(m_cfg.Id, 0);
         }
           
         private void RigEvent()

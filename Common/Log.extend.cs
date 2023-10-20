@@ -17,11 +17,21 @@ using Protomsg;
 
 namespace HHL.Common
 {
+    // 优先级从下往上
+    [Flags]
+    public enum LogFuncType
+    {
+        Normal = 1 << 0, // 业务向
+        Entity = 1 << 1,
+        Other = 1 << 2,
+        All = Normal | Entity | Other
+    }
+
     public partial class Log
     {
         // 写文件单行字符长度,stringbuilder长度现在默认是200,所以别超过200
         private int _fileTxtLen = int.MaxValue;
-        private bool _allMsg = false;
+        private LogFuncType m_logFuncType = LogFuncType.All;
         private bool m_bAllEntityComp = false;
         private readonly List<MsgType> m_MsgList = new List<MsgType>();
         private readonly List<MsgType> m_ignoreMsgList = new List<MsgType>();
@@ -60,10 +70,13 @@ namespace HHL.Common
             //_outType |= (uint) eLogOut.eUnity ;
 
             InitMsgListen();
+        }
 
-            var strFu = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        private void ClearLog()
+        {
+            m_firstLogTime = DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss");
             Print("", eLogType.eLog, false);
-            Print("-----HHL Log----------" + strFu + "--------------");
+            Print("-----HHL Log----------" + m_firstLogTime + "--------------");
         }
 
         public void PrintUnity(StringBuilder preSb, object message)
@@ -78,10 +91,17 @@ namespace HHL.Common
 
         private void InitMsgListen()
         {
-            InitMsgFunction();
-            InitEntityTrack();
             InitIgnoreMsg();
-            InitSpeicalMsg();
+            if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal)
+            {
+                InitMsgFunction();
+            }
+
+            if ((m_logFuncType & LogFuncType.Entity) == LogFuncType.Entity)
+            {
+                InitEntityTrack();
+                InitEntityMsg();
+            }
         }
 
         private void InitWise()
@@ -89,22 +109,24 @@ namespace HHL.Common
             _typeList.Add(eLogType.ewise);
         }
 
-        private void InitSpeicalMsg()
+        private void InitEntityMsg()
         {
             AddSpecialMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
         }
 
         private void InitIgnoreMsg()
         {
-            // AddIgnoreMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
-            // AddIgnoreMsgType(MsgType.KMsgGs2ClentityMovePathNotice);
-            // AddIgnoreMsgType(MsgType.KMsgGs2ClentityStopMoveNotice);
-            // AddIgnoreMsgType(MsgType.KMsgCl2GskeepLiveRequest);
-            // AddIgnoreMsgType(MsgType.KMsgGs2ClkeepLiveReply);
+            AddIgnoreMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
+            AddIgnoreMsgType(MsgType.KMsgGs2ClentityMovePathNotice);
+            AddIgnoreMsgType(MsgType.KMsgGs2ClentityStopMoveNotice);
+            AddIgnoreMsgType(MsgType.KMsgCl2GskeepLiveRequest);
+            AddIgnoreMsgType(MsgType.KMsgGs2ClkeepLiveReply);
+            
         }
 
         private void InitMsgFunction()
         {
+            InitLogin();
             //InitWise();
             //InitHonorMsg();
             //InitScout();
@@ -129,14 +151,75 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            InitHeroEquip();
+            //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
+            InitCampIsland();
+        }
+
+        private void InitCampIsland()
+        {
+            // 全新消息
+            // 战场主活动 查询任务列表、领取任务奖励。
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityCampislandStageTaskInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityCampislandStageTaskInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityCampislandStageTaskGetRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityCampislandStageTaskGetRewardReply);
+            
+            // 请求奇观和关卡信息。
+            AddListenMsgType(MsgType.KMsgCl2GstemplteAndPassInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltemplteAndPassInfoReply);
+            
+            
+            // 主活动
+            
+            AddListenMsgType(MsgType.KMsgCl2GsactivityRankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityRankQueryRankBoardReply);
+
+            // 募兵所
+            AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
+
+            // 建筑任务
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
+
+
+            // 军团悬赏
+            //MsgCL2GSActivityCampislandStageTaskInfoRequest
+
+            // 旧活动
+            // 以战养战 海岛奇兵 大海盗王
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
+
+
+            // 大海盗王
+            AddListenMsgType(MsgType.KMsgGs2ClguildActivityNotice);
+
+            // 以战养战 海岛奇兵
+            AddListenMsgType(MsgType.KMsgCl2GsactivityRankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityRankQueryRankBoardReply);
+
+            // 大海盗王
+            AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
+        }
+
+        private void InitLogin()
+        {
+            AddListenMsgType(MsgType.KMsgCl2LsloginRequest);
+            AddListenMsgType(MsgType.KMsgLs2ClloginReply);
+            AddListenMsgType(MsgType.KMsgCl2GsloginRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClloginReply);
         }
 
         private void InitActivityLimitTIme()
         {
-            // 任务
+            // 任务            
             AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardRequest);
@@ -148,46 +231,46 @@ namespace HHL.Common
             // 轮盘
             AddListenMsgType(MsgType.KMsgCl2GsactivityChickenTurntableRequest);
             AddListenMsgType(MsgType.KMsgCl2GsactivityChickenTurntableReply);
-            
+
             AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityChickenTurntableNotice);
             AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
-            
+
             // 轮盘礼包
-            AddListenMsgType(MsgType.KMsgGs2ClnewMallPlayerHandleAllDataNotify);//·新商城活动的玩家相关的所有处理逻辑信息通知
-            AddListenMsgType(MsgType.KMsgGs2ClnewMallPlayerHandleGoodsDataNotify);// 新商城活动的玩家相关的处理逻辑信息通知(个人礼包开放购买数据)
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallPlayerHandleAllDataNotify); //·新商城活动的玩家相关的所有处理逻辑信息通知
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallPlayerHandleGoodsDataNotify); // 新商城活动的玩家相关的处理逻辑信息通知(个人礼包开放购买数据)
             AddListenMsgType(MsgType.KMsgGs2ClnewMallAllActivityDataNotify); //·所有新商城活动信息通知
-            AddListenMsgType(MsgType.KMsgGs2ClnewMallActivityDataNotify);//·新商城活动信息通知
-            AddListenMsgType(MsgType.KMsgCl2GsnewMallFetchFreeGiftRewardRequest);//领取免费礼包请求
+            AddListenMsgType(MsgType.KMsgGs2ClnewMallActivityDataNotify); //·新商城活动信息通知
+            AddListenMsgType(MsgType.KMsgCl2GsnewMallFetchFreeGiftRewardRequest); //领取免费礼包请求
             AddListenMsgType(MsgType.KMsgGs2ClnewMallFetchFreeGiftRewardReply); //领取免费礼包回复
-            
-            
+
+
             // 任务
             // /*AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);*/
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardRequest);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardReply);
-            
+
             // 主活动
             AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingSucceedNotice); // 匹配成功通知 (匹配成功, 登录)
-            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingInfoRequest);// 请求匹配信息
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingInfoReply);// 响应匹配信息
-            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingRegisterRequest);// 请求报名匹配
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingRegisterReply);// 响应报名匹配
-            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingCancelRequest);// 请求取消匹配
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingCancelReply);// 响应取消匹配
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingMaintenanceNotice);// 维护开始
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingFailedNotice);// 维护开始
-            
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingInfoRequest); // 请求匹配信息
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingInfoReply); // 响应匹配信息
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingRegisterRequest); // 请求报名匹配
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingRegisterReply); // 响应报名匹配
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenPairingCancelRequest); // 请求取消匹配
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingCancelReply); // 响应取消匹配
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingMaintenanceNotice); // 维护开始
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingFailedNotice); // 维护开始
+
             // 观战
-            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpectateStatusRequest);// 请求获取观战状态
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpectateStatusReply);// 请求获取观战状态
-            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpotZoneInfoRequest);// 请求获取热点地区信息
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpotZoneInfoReply);// 响应获取热点地区信息
-            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpotZoneUpdateRequest);// 请求更新热点地区信息
-            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpotZoneUpdateReply);// 响应更新热点地区信息
-            
-            
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpectateStatusRequest); // 请求获取观战状态
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpectateStatusReply); // 请求获取观战状态
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpotZoneInfoRequest); // 请求获取热点地区信息
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpotZoneInfoReply); // 响应获取热点地区信息
+            AddListenMsgType(MsgType.KMsgCl2GseatChickenSpotZoneUpdateRequest); // 请求更新热点地区信息
+            AddListenMsgType(MsgType.KMsgGs2CleatChickenSpotZoneUpdateReply); // 响应更新热点地区信息
+
+
             // 观战 
             // 排行版
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
@@ -201,7 +284,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipUpdateNotice);
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipWearRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipWearReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipStarUpRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipStarUpReply);
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipSynthesisRequest);
@@ -234,11 +317,9 @@ namespace HHL.Common
             // 只做表现，并非完整消息
             AddListenMsgType(MsgType.KMsgGs2ClcityInfoReply);
             AddListenMsgType(MsgType.KMsgGs2ClcityBuildingUpdateNotice);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GscityRemoveBuildingRequest);
             AddListenMsgType(MsgType.KMsgGs2ClcityRemoveBuildingReply);
-            
-            
         }
 
         public void TestShowSeniorRewardPanel()
@@ -249,16 +330,17 @@ namespace HHL.Common
                 var rewardVos = RewardDao.Inst.GetContentById(cfg.Id);
                 foreach (var vo in rewardVos)
                 {
-                    reward.Add(new Resource(){ ResType = (uint)vo.Type,SubType = vo.Value,Value = vo.Count,});
+                    reward.Add(new Resource() { ResType = (uint)vo.Type, SubType = vo.Value, Value = vo.Count });
                 }
             }
 
             foreach (var cfg in ItemDao.Inst.Configs)
             {
-                reward.Add(new Resource(){ ResType = (uint)PlayerAttributeType.KPlayerAttrItem,SubType = cfg.ItemId,Value = 2,});
+                reward.Add(new Resource()
+                    { ResType = (uint)PlayerAttributeType.KPlayerAttrItem, SubType = cfg.ItemId, Value = 2 });
             }
-            
-            
+
+
             //for(int i = 0; i < 10; i++)
             {
                 // 英雄
@@ -280,7 +362,7 @@ namespace HHL.Common
                 // reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
                 // reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
             }
-            
+
             // 科技
             // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
             // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
@@ -289,8 +371,8 @@ namespace HHL.Common
             // reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
             // reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
             // reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
-            
-            
+
+
             // reward.Add(new Resource()
             // {
             //     ResType = (uint)PlayerAttributeType.KPlayerAttrTechnology,
@@ -312,7 +394,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClallHeroNotice);
             AddListenMsgType(MsgType.KMsgGs2ClupdateHeroNotice);
             AddListenMsgType(MsgType.KMsgGs2ClheroAttrNotice);
-            
+
             //AddListenMsgType(MsgType.MsgGS2CLPersonalExchangeSpecialHeroNotice);
         }
 
@@ -322,36 +404,35 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClplayerBaseNotice);
             AddListenMsgType(MsgType.KMsgCl2GsupdateShortClientDataRequest);
             AddListenMsgType(MsgType.KMsgGs2ClupdateShortClientDataReply);
-            
         }
 
         private void InitChristmasGame()
         {
             AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBattlePassNotice);
-            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBattlePassBaseInfoNotice);  
-            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassLevelRewardRequest); 
-            AddListenMsgType(MsgType.KMsgGs2ClactivityBattlePassLevelRewardReply); 
-            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassUpgradeRequest); 
-            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassUpgradeReply); 
-            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassEmoneyAdvanceRequest); 
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBattlePassBaseInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassLevelRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityBattlePassLevelRewardReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassUpgradeRequest);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassUpgradeReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassEmoneyAdvanceRequest);
             AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassEmoneyAdvanceReply);
         }
 
         private void InitGatlin()
         {
             // 新乌托邦
-            
+
             //AddListenMsgType(MsgType.KMsgGs2ClplayerAllPersonalActivityNotice);
-            
+
             AddListenMsgType(MsgType.KMsgGs2ClpersonalGatlinKillRewardNotice);
             AddListenMsgType(MsgType.KMsgGs2ClpersonalGatlinInfoNotice);
             AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinShotRequest);
             AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinShotReply);
             AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinStageAwardRequest);
             AddListenMsgType(MsgType.KMsgCl2GspersonalGatlinStageAwardReply);
-             
-            
+
+
             AddListenMsgType(MsgType.KMsgGs2ClplayerPersonalActivityNotice);
             AddListenMsgType(MsgType.KMsgGs2ClplayerPersonalRemoveNotice);
             //InitMail();
@@ -422,15 +503,15 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GspompeiiTempLeaveRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiTempLeaveReply);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiEndNotice);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsguildBuildingListRequest);
             AddListenMsgType(MsgType.KMsgGs2ClguildBuildingListReply);
-            
-            
+
+
             // 战报
             AddListenMsgType(MsgType.KMsgCl2GspompeiiBattleReportRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiBattleReportReply);
-            
+
             // 庞贝展示期
             AddListenMsgType(MsgType.KMsgGs2ClpompeiiGuildRewardInfoNotice);
             AddListenMsgType(MsgType.KMsgCl2GspompeiiGuildRewardGetRequest);
@@ -464,7 +545,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsshopRefreshRequest);
             AddListenMsgType(MsgType.KMsgGs2ClshopRefreshReply);
             AddListenMsgType(MsgType.KMsgGs2ClshopNotice);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GslocalArenaRankListRequest);
             AddListenMsgType(MsgType.KMsgGs2CllocalArenaRankListReply);
         }
@@ -505,6 +586,7 @@ namespace HHL.Common
 
         private void InitEntityTrack()
         {
+            InitEntityMsg();
             //m_checkEntitys.Add(123123);
         }
 
@@ -561,8 +643,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsgrowthFundRewardReply);
             AddListenMsgType(MsgType.KMsgGs2ClbuyGrowthFundNotice);
             AddListenMsgType(MsgType.KMsgGs2ClmallAllDataNotice);
-            
-            
+
+
             // 城建 不完整，很多都直接走taskMoudle内部那套了
             AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
             AddListenMsgType(MsgType.KMsgCl2GstaskBranchTaskAwardRequest);
@@ -624,68 +706,117 @@ namespace HHL.Common
 
         public void AddSpecialMsgType(MsgType eType)
         {
-            if (m_speicalList.Contains(eType)) return;
+            if (m_speicalList.Contains(eType))
+            {
+                return;
+            }
+
             m_speicalList.Add(eType);
         }
 
         public void AddIgnoreMsgType(MsgType eType)
         {
-            if (m_ignoreMsgList.Contains(eType)) return;
+            if (m_ignoreMsgList.Contains(eType))
+            {
+                return;
+            }
+
             m_ignoreMsgList.Add(eType);
         }
 
         public void AddListenMsgType(MsgType eType)
         {
-            if (m_MsgList.Contains(eType)) return;
+            if (m_MsgList.Contains(eType))
+            {
+                return;
+            }
+
             m_MsgList.Add(eType);
         }
 
         public void PrintMsg(IMessage msg, bool bSend = false)
         {
-            if (msg == null) return;
+            if (msg == null)
+            {
+                return;
+            }
+
             var msgType = (MsgType)MsgMap.GetIdByType(msg.GetType());
 
-            if (m_ignoreMsgList.Contains(msgType)) return;
-            if (!_allMsg && !m_MsgList.Contains(msgType)) return;
+            if (m_ignoreMsgList.Contains(msgType))
+            {
+                return;
+            }
 
-            if (m_speicalList.Contains(msgType))
+            if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal && !m_MsgList.Contains(msgType))
+            {
+                return;
+            }
+
+            if (msgType == MsgType.KMsgCl2LsloginRequest)
+            {
+                ClearLog();
+            }
+
+            if ((m_logFuncType & LogFuncType.Entity) == LogFuncType.Entity && m_speicalList.Contains(msgType))
             {
                 if (bSend)
+                {
                     PrintSpeical("Send " + (int)msgType + " ==>" + msgType + " ", msg, eLogType.eRootNetwork);
+                }
                 else
+                {
                     PrintSpeical("Recv " + (int)msgType + " ==>" + msgType + " ", msg, eLogType.eRootNetwork);
+                }
 
                 return;
             }
 
 
             if (bSend)
+            {
                 Print("Send " + (int)msgType + " ==>" + msgType + " " + msg, eLogType.eRootNetwork);
+            }
             else
+            {
                 Print("Recv " + (int)msgType + " ==>" + msgType + " " + msg, eLogType.eRootNetwork);
+            }
         }
 
 
         public void PrintSpeical(object message, IMessage msg, eLogType eType = eLogType.eLog, bool bAppend = true)
         {
             if (!_typeList.Contains(eType))
+            {
                 return;
+            }
 
             var preSb = GetSb();
             preSb.Append(DateTime.Now.ToString("HH:mm:ss:fff")).Append(" [").Append(eType.ToString()).Append("] ");
 
 
             message += getMsgGS2CLSyncEntitiesDataNotice(msg as MsgGS2CLSyncEntitiesDataNotice);
-            if ((eLogOut.eUnity & (eLogOut)_outType) == eLogOut.eUnity) PrintUnity(preSb, message);
+            if ((eLogOut.eUnity & (eLogOut)_outType) == eLogOut.eUnity)
+            {
+                PrintUnity(preSb, message);
+            }
 
-            if ((eLogOut.eFile & (eLogOut)_outType) == eLogOut.eFile) WriteFile(preSb, message, bAppend);
+            if ((eLogOut.eFile & (eLogOut)_outType) == eLogOut.eFile)
+            {
+                WriteFile(preSb, message, bAppend);
+            }
+
             RetrunSb(preSb);
         }
 
         private string getMsgGS2CLSyncEntitiesDataNotice(MsgGS2CLSyncEntitiesDataNotice msg)
         {
             var bInCheck = true;
-            if (msg == null) return "Msg is not MsgGS2CLSyncEntitiesDataNotice";
+            if (msg == null)
+            {
+                return "Msg is not MsgGS2CLSyncEntitiesDataNotice";
+            }
+
             var sb = SbPool.Get();
             var hasRegion = AppCache.WorldMap.TryUseWorldContext(msg.RegionId, out var context, false);
             sb.Append("{RegionId=").Append(msg.RegionId).Append(hasRegion ? "" : "(!exist)");
@@ -704,9 +835,15 @@ namespace HHL.Common
                 entityData.Read(input);
                 sb.Append("{ ---EntiyId = ").Append(entityData.Id).Append(",").Append(entityData.Type).Append(",");
 
-                if (m_checkEntitys.Count > 0 && !m_checkEntitys.Contains(entityData.Id)) continue;
+                if (m_checkEntitys.Count > 0 && !m_checkEntitys.Contains(entityData.Id))
+                {
+                    continue;
+                }
 
-                if (!m_entityTypes.Contains(entityData.Type) && !m_bAllEntityComp) continue;
+                if (!m_entityTypes.Contains(entityData.Type) && !m_bAllEntityComp)
+                {
+                    continue;
+                }
 
                 sb.Append(" Comp{ len=").Append(entityData.Components.Length).Append("}");
 
