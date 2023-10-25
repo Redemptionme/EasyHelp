@@ -29,8 +29,10 @@ namespace HHL.Common
             {
                 return;
             }
-            m_goTools = new GameObject();
-            m_goTools.name = "HHLGOTools";
+            m_goTools = new GameObject
+            {
+                name = "HHLGOTools"
+            };
             m_goTools.AddComponent<HHLGOTools>();
             Object.DontDestroyOnLoad(m_goTools);
             ToolsInit = true;
