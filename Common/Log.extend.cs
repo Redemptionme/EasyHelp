@@ -24,7 +24,8 @@ namespace HHL.Common
         Normal = 1 << 0, // 业务向
         Entity = 1 << 1,
         Other = 1 << 2,
-        All = Normal | Entity | Other
+        All = Normal | Entity | Other,
+        NoEntity = All & ~Entity,
     }
 
     public partial class Log
@@ -116,7 +117,7 @@ namespace HHL.Common
 
         private void InitIgnoreMsg()
         {
-            AddIgnoreMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
+            //AddIgnoreMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
             AddIgnoreMsgType(MsgType.KMsgGs2ClentityMovePathNotice);
             AddIgnoreMsgType(MsgType.KMsgGs2ClentityStopMoveNotice);
             AddIgnoreMsgType(MsgType.KMsgCl2GskeepLiveRequest);
@@ -154,7 +155,20 @@ namespace HHL.Common
             //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
-            InitCampIsland();
+            //InitCampIsland();
+            InitFestivalGetReward();
+        }
+
+        private void InitFestivalGetReward()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClactivityBeckonInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBeckonCallMonsterRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityBeckonCallMonsterReply);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityDropNotice);
         }
 
         private void InitCampIsland()
@@ -748,11 +762,6 @@ namespace HHL.Common
                 return;
             }
 
-            if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal && !m_MsgList.Contains(msgType))
-            {
-                return;
-            }
-
             if (msgType == MsgType.KMsgCl2LsloginRequest)
             {
                 ClearLog();
@@ -771,7 +780,15 @@ namespace HHL.Common
 
                 return;
             }
-
+            
+            if (m_MsgList.Count > 4)
+            {
+                // 什么都不填等于啥都要
+                if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal && !m_MsgList.Contains(msgType))
+                {
+                    return;
+                }
+            }
 
             if (bSend)
             {
@@ -865,8 +882,8 @@ namespace HHL.Common
                     }
 
                     bInCheck = true;
-                    var data = Activator.CreateInstance(dataType);
-                    if (data is IMessage iMsg)
+                    
+                    if (dataType != null && Activator.CreateInstance(dataType) is IMessage iMsg)
                     {
                         iMsg.MergeFrom(compData.Content);
                         sb.Append("{").Append(dataType).Append(":").Append(iMsg).Append("}");

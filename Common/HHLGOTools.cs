@@ -38,12 +38,12 @@ namespace HHL.Common
                 //gameObject.AddComponent<CityMapTool>();
                 //BattleRoyaleModule.Inst.OpenLoading();
                 //CampIslandModule.Inst.OpenActivityPanel();
-                CampIslandModule.Inst.OpenInnerActivityRank();
+                //CampIslandModule.Inst.OpenInnerActivityRank();
             }
             
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.ClosePanel<BattleRoyaleLoadingPanel>();
+                //PanelMgr.Inst.ClosePanel<BattleRoyaleLoadingPanel>();
             }
             
             
