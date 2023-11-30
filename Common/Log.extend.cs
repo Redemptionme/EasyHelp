@@ -117,7 +117,7 @@ namespace HHL.Common
 
         private void InitIgnoreMsg()
         {
-            //AddIgnoreMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
+            AddIgnoreMsgType(MsgType.KMsgGs2ClsyncEntitiesDataNotice);
             AddIgnoreMsgType(MsgType.KMsgGs2ClentityMovePathNotice);
             AddIgnoreMsgType(MsgType.KMsgGs2ClentityStopMoveNotice);
             AddIgnoreMsgType(MsgType.KMsgCl2GskeepLiveRequest);
