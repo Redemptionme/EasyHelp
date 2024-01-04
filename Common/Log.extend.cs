@@ -136,7 +136,7 @@ namespace HHL.Common
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
-            //InitIncidentMsg();
+            InitIncidentMsg();
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
@@ -156,7 +156,29 @@ namespace HHL.Common
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             //InitCampIsland();
-            InitFestivalGetReward();
+            //InitFestivalGetReward();
+            InitNewCity();
+        }
+
+        private void InitNewCity()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GspopulationDataRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationDataReply);   
+            AddListenMsgType(MsgType.KMsgCl2GspopulationRecruitRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationRecruitReply);   
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationBaseDataNotice);   
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationRiotNotice);   
+            AddListenMsgType(MsgType.KMsgCl2GspopulationAppointRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationAppointReply);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationCleanWorkUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspopulationAllCleanWorksRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationAllCleanWorksReply);
+            AddListenMsgType(MsgType.KMsgCl2GspopulationStartCleanWorkRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationStartCleanWorkReply);
+            
+            
+            
         }
 
         private void InitFestivalGetReward()
