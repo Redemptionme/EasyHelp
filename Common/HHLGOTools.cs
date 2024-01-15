@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Collections;
 using HHL.Game;
 using IGG.Framework.Panel;
@@ -54,12 +55,15 @@ namespace HHL.Common
                 //CampIslandModule.Inst.OpenInnerActivityRank();
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
+            if (Input.GetKeyDown(KeyCode.F12))
             {
                 HHL.Common.Log.Inst.Print($"------------------------------------------------------");
+                //CityBuildingModule.Inst.TriggerCityRoleHappy();
+                CityBuildingModule.Inst.FlyOutCityIcon();
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                CityBuildingModule.Inst.Debug = true;
                 var index = CityBuildingModule.Inst.CityStatus == CityStatus.PlayGame ? 1 : (uint)CityBuildingModule.Inst.CityStatus + 1;
                 var cfg = CityWorktimeDao.Inst.GetCfg(index);
                 CityBuildingModule.Inst.CurWorkTimeConfig = cfg;
@@ -99,43 +103,35 @@ namespace HHL.Common
                 DeadCity(-1);
             }
             
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                var wall = AppCache.CityBuilding.MyCompCity.GetBuilding(EBuildingType.CityWall);
-                if (wall == null || wall.Body == null)
-                {
-                    return;
-                }
-
-                
-                var pos1 = wall.Owner.LocalCenterOffset + wall.Owner.Trans.position;
-                AddCube(pos1, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.red, "pos1");
-                var pos2 = wall.Body.GetBoundingBox().center + pos1;
-                AddCube(pos2, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.yellow, "pos2");
-                var pos3 = wall.Body.GetBoundingBox().extents + pos1;
-                AddCube(pos3, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.magenta, "pos3");
-                var pos4 = pos2 + pos3 - pos1;
-                AddCube(pos4, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.green, "pos4");
-                
-                float fLen = pos2.x;
-                var dis = 4.3f;
-                var pos5 = new Vector3(fLen - dis, 0, 0) + pos1; 
-                AddCube(pos5, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos5");
-                var pos6 = new Vector3(0, 0, fLen - dis) + pos1;
-                AddCube(pos6, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos6");
-                var pos7 = new Vector3(0, 0, dis - fLen) + pos1;
-                AddCube(pos7, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos7");
-                var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
-                AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
-                
-                
-                
-                
-                
-                
-            }
-             
-            
+            // if (Input.GetKeyDown(KeyCode.I))
+            // {
+            //     var wall = AppCache.CityBuilding.MyCompCity.GetBuilding(EBuildingType.CityWall);
+            //     if (wall == null || wall.Body == null)
+            //     {
+            //         return;
+            //     }
+            //
+            //
+            //     var pos1 = wall.Owner.LocalCenterOffset + wall.Owner.Trans.position;
+            //     AddCube(pos1, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.red, "pos1");
+            //     var pos2 = wall.Body.GetBoundingBox().center + pos1;
+            //     AddCube(pos2, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.yellow, "pos2");
+            //     var pos3 = wall.Body.GetBoundingBox().extents + pos1;
+            //     AddCube(pos3, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.magenta, "pos3");
+            //     var pos4 = pos2 + pos3 - pos1;
+            //     AddCube(pos4, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.green, "pos4");
+            //
+            //     var fLen = pos2.x;
+            //     var dis = 4.3f;
+            //     var pos5 = new Vector3(fLen - dis, 0, 0) + pos1;
+            //     AddCube(pos5, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos5");
+            //     var pos6 = new Vector3(0, 0, fLen - dis) + pos1;
+            //     AddCube(pos6, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos6");
+            //     var pos7 = new Vector3(0, 0, dis - fLen) + pos1;
+            //     AddCube(pos7, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos7");
+            //     var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
+            //     AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
+            // }
         }
 
         public void AddCube(Vector3 pos,Vector3 scale,Vector3 rotate,Color color,string cubeName)
@@ -161,7 +157,32 @@ namespace HHL.Common
             }
 
             msg.BaseInfo = AppCache.CityBuilding.PopulationInfo.Clone();
-            msg.BaseInfo.NowInIdleNum = (uint)(msg.BaseInfo.NowInIdleNum + num);
+            
+            for (int i = 0; i < -num; i++)
+            {
+                if (msg.BaseInfo.NowInIdleNum > 0)
+                {
+                    msg.BaseInfo.NowInIdleNum--;    
+                }
+                else
+                {
+                    foreach (var info in msg.BuildAppoint)
+                    {
+                        if (info.AppointNum > 0)
+                        {
+                            info.AppointNum--;
+                        }
+                    }
+
+                    foreach (var info in msg.BuildAppoint.ToArray())
+                    {
+                        if (info.AppointNum == 0)
+                        {
+                            msg.BuildAppoint.Remove(info);
+                        }
+                    }
+                }  
+            }
 
             CityBuildingModule.Inst.OnMsgGS2CLPopulationBaseDataNotice(msg);
         }

@@ -136,7 +136,7 @@ namespace HHL.Common
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
-            InitIncidentMsg();
+            //InitIncidentMsg();
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
