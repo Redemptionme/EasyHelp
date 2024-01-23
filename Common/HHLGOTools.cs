@@ -17,6 +17,8 @@ using IGG.Game.Module.NewCity;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.WorldMap.Help;
 using Protomsg;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -224,6 +226,18 @@ namespace HHL.Common
             };
 
             CityBuildingModule.Inst.OnMsgGS2CLPopulationRecruitReply(msg);
+        }
+
+        [MenuItem("HHL/启动游戏")]
+        private static void OpenGame()
+        {
+            EditorSceneManager.OpenScene("Assets/Scenes/Launch.unity");
+        }
+
+        [MenuItem("HHL/启动小人编辑器")]
+        private static void OpenNewCityTools()
+        {
+            EditorSceneManager.OpenScene("Assets/GameTools/NewCity/NewCity.unity");
         }
     }
 }

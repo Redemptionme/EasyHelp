@@ -152,7 +152,7 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            //InitHeroEquip();
+            InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             //InitCampIsland();
@@ -340,6 +340,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipLockReply);
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipStarRevertRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipStarRevertReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipSpecialRevertSearchRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipSpecialRevertSearchReply);
         }
 
         private void InitRank()
