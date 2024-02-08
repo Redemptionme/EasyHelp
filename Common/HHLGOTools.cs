@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf.Collections;
 using HHL.Game;
+using IGG.Framework.Cache;
 using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Config;
 using IGG.Game.Helper;
+using IGG.Game.Module.Activity;
+using IGG.Game.Module.Activity.View;
 using IGG.Game.Module.BattleRoyale;
 using IGG.Game.Module.BattleRoyale.View;
 using IGG.Game.Module.CampIsland;
@@ -15,6 +18,7 @@ using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
 using IGG.Game.Module.PlayerOp.OpStates;
+using IGG.Game.Module.Reward;
 using IGG.Game.Module.WorldMap.Help;
 using Protomsg;
 using UnityEditor;
@@ -27,8 +31,10 @@ namespace HHL.Common
     public class HHLGOTools : MonoBehaviour
     {
         public static HHLGOTools Self;
-        public Vector3 TestPos1;
-        public Vector3 TestPos2;
+        public Vector3 Param1;
+
+        public Vector3 Param2;
+
         // Start is called before the first frame update
         private void Start()
         {
@@ -49,39 +55,44 @@ namespace HHL.Common
 
         private void CheckInput()
         {
-            if (Input.GetKeyDown(KeyCode.F4))
-            {
-                gameObject.AddComponent<CityMapTool>();
-                //BattleRoyaleModule.Inst.OpenLoading();
-                //CampIslandModule.Inst.OpenActivityPanel();
-                //CampIslandModule.Inst.OpenInnerActivityRank();
-            }
-
             if (Input.GetKeyDown(KeyCode.F12))
             {
-                HHL.Common.Log.Inst.Print($"------------------------------------------------------");
+                Log.Inst.Print($"------------------------------------------------------");
                 //CityBuildingModule.Inst.TriggerCityRoleHappy();
                 CityBuildingModule.Inst.FlyOutCityIcon();
             }
+
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                CityBuildingModule.Inst.Debug = true;
-                var index = CityBuildingModule.Inst.CityStatus == CityStatus.PlayGame ? 1 : (uint)CityBuildingModule.Inst.CityStatus + 1;
-                var cfg = CityWorktimeDao.Inst.GetCfg(index);
-                CityBuildingModule.Inst.CurWorkTimeConfig = cfg;
-                CityBuildingModule.Inst.CityStatus = (CityStatus)index;
+                //CityChange();
+                //FakeMove();
 
-                // var dic = AppCache.CityBuilding.MyCity.BuildingInfoes;
-                // var list = new List<BuildingInfo>();
-                // foreach (var item in dic)
-                // {
-                //     list.Add(item.Value);
-                // }
-                //
-                // var startId = list[Random.Range(0, list.Count)].Id;
-                // var endId = list[Random.Range(0, list.Count)].Id;
-                //
-                // CityBuildingModule.Inst.FakeRoleMove(startId,endId);
+                //PanelMgr.Inst.OpenPanel<KOFPuzzleDisplayDetailPanel>();
+
+                var list = new List<Resource>();
+                for (var i = 0; i < Param1.x; i++)
+                {
+                    list.Add(new Resource());
+                }
+
+                RewardModule.Inst.ShowSeniorRewardPanel(list.ToArray());
+            }
+
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                //gameObject.AddComponent<CityMapTool>();
+                //BattleRoyaleModule.Inst.OpenLoading();
+                //CampIslandModule.Inst.OpenActivityPanel();
+                //CampIslandModule.Inst.OpenInnerActivityRank();
+
+                // var panel = PanelMgr.Inst.GetPanel<KOFPuzzleDisplayDetailPanel>();
+                // panel.RefreshPos(Param1, Param2);
+
+                // ActivityModule.Inst.OpenKOFPuzzleDrawPanel();
+
+                //ShowRandomPiece();
+                //ShowRandomPiece2();
+                FlyKofReward();
             }
 
             if (Input.GetKeyDown(KeyCode.F8))
@@ -104,7 +115,7 @@ namespace HHL.Common
             {
                 DeadCity(-1);
             }
-            
+
             // if (Input.GetKeyDown(KeyCode.I))
             // {
             //     var wall = AppCache.CityBuilding.MyCompCity.GetBuilding(EBuildingType.CityWall);
@@ -136,13 +147,111 @@ namespace HHL.Common
             // }
         }
 
-        public void AddCube(Vector3 pos,Vector3 scale,Vector3 rotate,Color color,string cubeName)
+        private void FlyKofReward()
+        {
+            var panel = PanelMgr.Inst.GetPanel<KOFPuzzleDrawPanel>();
+            if (panel == null)
+            {
+                return;
+            }
+
+            var list = ListPool<RafflePuzzleRewardInfo>.Get();
+            for (var i = 0; i < Param1.y; i++)
+            {
+                var info = new RafflePuzzleRewardInfo();
+                var pieces = ActivityPuzzlePiecesDao.Inst.GetPieces((uint)i + 1);
+                info.Type = RafflePuzzleRewardType.Pieces;
+                info.IsRepeated = false;
+                info.Id = pieces[Random.Range(0, pieces.Count)];
+                info.Num = 1;
+
+                list.Add(info);
+            }
+
+
+            panel.FlyEffect(ListPool<RafflePuzzleRewardInfo>.PutAndToArray(list));
+        }
+
+        private void ShowRandomPiece2()
+        {
+            var list = new List<RafflePuzzleRewardInfo>();
+            for (var i = 0; i < Param1.y; i++)
+            {
+                var info = new RafflePuzzleRewardInfo();
+                var pieceList = ActivityPuzzlePiecesDao.Inst.GetPieces((uint)Param1.z);
+                info.Type = RafflePuzzleRewardType.Pieces;
+                info.IsRepeated = Random.Range(0, 2) == 1;
+                info.Id = pieceList[Random.Range(0, pieceList.Count)];
+                info.Num = 1;
+
+                list.Add(info);
+            }
+
+            PanelMgr.Inst.OpenPanel<KOFPuzzleRewardPanel>((uint)190161, list.ToArray());
+        }
+
+        private void ShowRandomPiece()
+        {
+            var list = new List<RafflePuzzleRewardInfo>();
+            for (var i = 0; i < Param1.y; i++)
+            {
+                var info = new RafflePuzzleRewardInfo();
+                info.Type = (RafflePuzzleRewardType)Random.Range(0, 2);
+                switch (info.Type)
+                {
+                    case RafflePuzzleRewardType.Item:
+                        info.Id = 45159;
+                        info.Num = (uint)Random.Range(0, 100);
+                        break;
+                    case RafflePuzzleRewardType.Pieces:
+                        info.IsRepeated = Random.Range(0, 2) == 1;
+                        info.Id = ActivityPuzzlePiecesDao.Inst
+                            .Configs[Random.Range(0, ActivityPuzzlePiecesDao.Inst.Configs.Length)].PiecesId;
+                        info.Num = 1;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                list.Add(info);
+            }
+
+            PanelMgr.Inst.OpenPanel<KOFPuzzleRewardPanel>((uint)190161, list.ToArray());
+        }
+
+        private void FakeMove()
+        {
+            var dic = AppCache.CityBuilding.MyCity.BuildingInfoes;
+            var list = new List<BuildingInfo>();
+            foreach (var item in dic)
+            {
+                list.Add(item.Value);
+            }
+
+            var startId = list[Random.Range(0, list.Count)].Id;
+            var endId = list[Random.Range(0, list.Count)].Id;
+
+            CityBuildingModule.Inst.FakeRoleMove(startId, endId);
+        }
+
+        public void CityChange()
+        {
+            CityBuildingModule.Inst.Debug = true;
+            var index = CityBuildingModule.Inst.CityStatus == CityStatus.PlayGame
+                ? 1
+                : (uint)CityBuildingModule.Inst.CityStatus + 1;
+            var cfg = CityWorktimeDao.Inst.GetCfg(index);
+            CityBuildingModule.Inst.CurWorkTimeConfig = cfg;
+            CityBuildingModule.Inst.CityStatus = (CityStatus)index;
+        }
+
+        public void AddCube(Vector3 pos, Vector3 scale, Vector3 rotate, Color color, string cubeName)
         {
             var cellObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cellObj.transform.position = pos;
             cellObj.transform.localScale = scale;
             cellObj.transform.localRotation = Quaternion.Euler(rotate);
-            
+
             var msRender = cellObj.GetComponent<MeshRenderer>();
             msRender.material.shader = Shader.Find("Transparent/Diffuse");
             color.a = 1f;
@@ -159,12 +268,12 @@ namespace HHL.Common
             }
 
             msg.BaseInfo = AppCache.CityBuilding.PopulationInfo.Clone();
-            
-            for (int i = 0; i < -num; i++)
+
+            for (var i = 0; i < -num; i++)
             {
                 if (msg.BaseInfo.NowInIdleNum > 0)
                 {
-                    msg.BaseInfo.NowInIdleNum--;    
+                    msg.BaseInfo.NowInIdleNum--;
                 }
                 else
                 {
@@ -183,7 +292,7 @@ namespace HHL.Common
                             msg.BuildAppoint.Remove(info);
                         }
                     }
-                }  
+                }
             }
 
             CityBuildingModule.Inst.OnMsgGS2CLPopulationBaseDataNotice(msg);

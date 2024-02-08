@@ -25,7 +25,7 @@ namespace HHL.Common
         Entity = 1 << 1,
         Other = 1 << 2,
         All = Normal | Entity | Other,
-        NoEntity = All & ~Entity,
+        NoEntity = All & ~Entity
     }
 
     public partial class Log
@@ -34,12 +34,12 @@ namespace HHL.Common
         private int _fileTxtLen = int.MaxValue;
         private LogFuncType m_logFuncType = LogFuncType.All;
         private bool m_bAllEntityComp = false;
-        private readonly List<MsgType> m_MsgList = new List<MsgType>();
-        private readonly List<MsgType> m_ignoreMsgList = new List<MsgType>();
-        private readonly List<MsgType> m_speicalList = new List<MsgType>();
-        private readonly List<ulong> m_checkEntitys = new List<ulong>();
-        private readonly List<EntityType> m_entityTypes = new List<EntityType>();
-        private readonly Dictionary<Type, Type> m_compsBindDic = new Dictionary<Type, Type>();
+        private readonly List<MsgType> m_MsgList = new();
+        private readonly List<MsgType> m_ignoreMsgList = new();
+        private readonly List<MsgType> m_speicalList = new();
+        private readonly List<ulong> m_checkEntitys = new();
+        private readonly List<EntityType> m_entityTypes = new();
+        private readonly Dictionary<Type, Type> m_compsBindDic = new();
 
         public enum eLogType
         {
@@ -122,7 +122,6 @@ namespace HHL.Common
             AddIgnoreMsgType(MsgType.KMsgGs2ClentityStopMoveNotice);
             AddIgnoreMsgType(MsgType.KMsgCl2GskeepLiveRequest);
             AddIgnoreMsgType(MsgType.KMsgGs2ClkeepLiveReply);
-            
         }
 
         private void InitMsgFunction()
@@ -157,39 +156,49 @@ namespace HHL.Common
             //InitActivityLimitTIme();
             //InitCampIsland();
             //InitFestivalGetReward();
-            InitNewCity();
+            //InitNewCity();
+            InitKof();
+        }
+
+        private void InitKof()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+
+            AddListenMsgType(MsgType.KMsgCl2GsactivityRafflePuzzleInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityRafflePuzzleInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityRafflePuzzleRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityRafflePuzzleReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityRafflePuzzleRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityRafflePuzzleRewardReply);
         }
 
         private void InitNewCity()
         {
-            AddListenMsgType(MsgType.KMsgCl2GspopulationDataRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClpopulationDataReply);   
-            AddListenMsgType(MsgType.KMsgCl2GspopulationRecruitRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClpopulationRecruitReply);   
-            AddListenMsgType(MsgType.KMsgGs2ClpopulationBaseDataNotice);   
-            AddListenMsgType(MsgType.KMsgGs2ClpopulationRiotNotice);   
-            AddListenMsgType(MsgType.KMsgCl2GspopulationAppointRequest);   
+            AddListenMsgType(MsgType.KMsgCl2GspopulationDataRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationDataReply);
+            AddListenMsgType(MsgType.KMsgCl2GspopulationRecruitRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationRecruitReply);
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationBaseDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpopulationRiotNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspopulationAppointRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpopulationAppointReply);
-            
+
             AddListenMsgType(MsgType.KMsgGs2ClpopulationCleanWorkUpdateNotice);
             AddListenMsgType(MsgType.KMsgCl2GspopulationAllCleanWorksRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpopulationAllCleanWorksReply);
             AddListenMsgType(MsgType.KMsgCl2GspopulationStartCleanWorkRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpopulationStartCleanWorkReply);
-            
-            
-            
         }
 
         private void InitFestivalGetReward()
         {
             AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
             AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
-            
+
             AddListenMsgType(MsgType.KMsgGs2ClactivityBeckonInfoNotice);
             AddListenMsgType(MsgType.KMsgCl2GsactivityBeckonCallMonsterRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityBeckonCallMonsterReply);
-            
+
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityDropNotice);
         }
 
@@ -202,14 +211,14 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClactivityCampislandStageTaskInfoReply);
             AddListenMsgType(MsgType.KMsgCl2GsactivityCampislandStageTaskGetRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityCampislandStageTaskGetRewardReply);
-            
+
             // 请求奇观和关卡信息。
             AddListenMsgType(MsgType.KMsgCl2GstemplteAndPassInfoRequest);
             AddListenMsgType(MsgType.KMsgGs2CltemplteAndPassInfoReply);
-            
-            
+
+
             // 主活动
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsactivityRankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityRankQueryRankBoardReply);
 
@@ -340,7 +349,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipLockReply);
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipStarRevertRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipStarRevertReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipSpecialRevertSearchRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipSpecialRevertSearchReply);
         }
@@ -805,7 +814,7 @@ namespace HHL.Common
 
                 return;
             }
-            
+
             if (m_MsgList.Count > 4)
             {
                 // 什么都不填等于啥都要
@@ -907,7 +916,7 @@ namespace HHL.Common
                     }
 
                     bInCheck = true;
-                    
+
                     if (dataType != null && Activator.CreateInstance(dataType) is IMessage iMsg)
                     {
                         iMsg.MergeFrom(compData.Content);

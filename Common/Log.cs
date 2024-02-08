@@ -34,7 +34,6 @@ namespace HHL.Common
                 name = "HHLGOTools"
             };
             m_goTools.AddComponent<HHLGOTools>();
-            Object.DontDestroyOnLoad(m_goTools);
             ToolsInit = true;
         }
 
