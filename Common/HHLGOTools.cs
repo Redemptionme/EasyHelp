@@ -9,17 +9,20 @@ using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Config;
 using IGG.Game.Helper;
+using IGG.Game.Managers;
 using IGG.Game.Module.Activity;
 using IGG.Game.Module.Activity.View;
 using IGG.Game.Module.BattleRoyale;
 using IGG.Game.Module.BattleRoyale.View;
 using IGG.Game.Module.CampIsland;
 using IGG.Game.Module.CityBuilding;
+using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
 using IGG.Game.Module.WorldMap.Help;
+using IGG.Game.UI.Hero;
 using Protomsg;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -69,13 +72,17 @@ namespace HHL.Common
 
                 //PanelMgr.Inst.OpenPanel<KOFPuzzleDisplayDetailPanel>();
 
-                var list = new List<Resource>();
-                for (var i = 0; i < Param1.x; i++)
-                {
-                    list.Add(new Resource());
-                }
+                // var list = new List<Resource>();
+                // for (var i = 0; i < Param1.x; i++)
+                // {
+                //     list.Add(new Resource());
+                // }
+                //
+                // RewardModule.Inst.ShowSeniorRewardPanel(list.ToArray());
+                
+                //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzle, Random.Range(1,3));
 
-                RewardModule.Inst.ShowSeniorRewardPanel(list.ToArray());
+                WatchInfo();
             }
 
             if (Input.GetKeyDown(KeyCode.F4))
@@ -92,7 +99,8 @@ namespace HHL.Common
 
                 //ShowRandomPiece();
                 //ShowRandomPiece2();
-                FlyKofReward();
+                //FlyKofReward();
+                //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzleTimes, Random.Range(1,3));
             }
 
             if (Input.GetKeyDown(KeyCode.F8))
@@ -145,6 +153,30 @@ namespace HHL.Common
             //     var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
             //     AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
             // }
+        }
+
+        private void WatchInfo()
+        {
+            int nCount = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzle);
+            int nCount1 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzlePuzzle);
+            int nCount2 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzlePuzzleTimes);
+            int nCount3 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzleGift);
+            
+            
+            var activityInfo = AppCache.Activity.GetActivity(ActivityModule.KofPuzzleActId);
+            if (activityInfo == null)
+            {
+                return ;
+            }
+            if (activityInfo.Status == ActivityStatus.KActivityStatuEnd)
+            {
+                return ;
+            }
+
+            if (TimeHelper.ServerTime > activityInfo.TimeEnd)
+            {
+                return ;
+            }
         }
 
         private void FlyKofReward()
