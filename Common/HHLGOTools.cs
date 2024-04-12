@@ -21,6 +21,7 @@ using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
+using IGG.Game.Module.Vehicle.View;
 using IGG.Game.Module.WorldMap.Help;
 using IGG.Game.UI.Hero;
 using Protomsg;
@@ -82,7 +83,8 @@ namespace HHL.Common
                 
                 //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzle, Random.Range(1,3));
 
-                WatchInfo();
+                //WatchInfo();
+                TestVehicleGetPanel();
             }
 
             if (Input.GetKeyDown(KeyCode.F4))
@@ -101,6 +103,7 @@ namespace HHL.Common
                 //ShowRandomPiece2();
                 //FlyKofReward();
                 //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzleTimes, Random.Range(1,3));
+                TestVehiclePanel();
             }
 
             if (Input.GetKeyDown(KeyCode.F8))
@@ -153,6 +156,16 @@ namespace HHL.Common
             //     var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
             //     AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
             // }
+        }
+
+        private void TestVehiclePanel()
+        {
+            PanelMgr.Inst.OpenPanel<VehiclePanel>(EVehiclePanelState.Accessories,"",AppCache.Vehicle.CarportVehicleId);
+        }
+
+        private void TestVehicleGetPanel()
+        {
+            PanelMgr.Inst.OpenPanel<VehicleGetPanel>(WorkshopVehicleDao.Inst.SortList[0].Id);
         }
 
         private void WatchInfo()

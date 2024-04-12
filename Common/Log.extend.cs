@@ -151,13 +151,30 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            InitHeroEquip();
+            //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             //InitCampIsland();
             //InitFestivalGetReward();
             //InitNewCity();
-            InitKof();
+            //InitKof();
+            InitVehicle();
+        }
+
+        private void InitVehicle()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleBaseNotice);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesNotice);   
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleUnlockRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleUnlockReply);   
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleAccessoriesUnlockRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesUnlockReply);   
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleAccessoriesReplaceRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesReplaceReply);   
+            AddListenMsgType(MsgType.KMsgCl2GscarportUpdateVehicleSkinRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportUpdateVehicleSkinReply);   
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleReadRequest);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleReadReply);   
         }
 
         private void InitKof()
