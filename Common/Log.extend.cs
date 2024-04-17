@@ -158,23 +158,35 @@ namespace HHL.Common
             //InitFestivalGetReward();
             //InitNewCity();
             //InitKof();
-            InitVehicle();
+            //InitVehicle();
+            InitPlaneWarScriptView();
+        }
+
+        private void InitPlaneWarScriptView()
+        {
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldBaseUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldGuildUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldRoundUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsdungeonsFieldScoreRequest);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldScoreReply);
         }
 
         private void InitVehicle()
         {
-            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleBaseNotice);   
-            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesNotice);   
-            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleUnlockRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleUnlockReply);   
-            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleAccessoriesUnlockRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesUnlockReply);   
-            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleAccessoriesReplaceRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesReplaceReply);   
-            AddListenMsgType(MsgType.KMsgCl2GscarportUpdateVehicleSkinRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClcarportUpdateVehicleSkinReply);   
-            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleReadRequest);   
-            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleReadReply);   
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleBaseNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesNotice);
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleUnlockRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleUnlockReply);
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleAccessoriesUnlockRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesUnlockReply);
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleAccessoriesReplaceRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleAccessoriesReplaceReply);
+            AddListenMsgType(MsgType.KMsgCl2GscarportUpdateVehicleSkinRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcarportUpdateVehicleSkinReply);
+            AddListenMsgType(MsgType.KMsgCl2GscarportVehicleReadRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleReadReply);
         }
 
         private void InitKof()
