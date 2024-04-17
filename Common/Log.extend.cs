@@ -151,7 +151,7 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            //InitHeroEquip();
+            InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             //InitCampIsland();
