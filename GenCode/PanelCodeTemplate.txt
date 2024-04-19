@@ -9,6 +9,8 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
     // </summary>
     public class __PANEL_NAME__ : Base__PANEL_NAME__
     {
+        private PanelRigHelper m_rigHelper;
+        
         protected override void OnInit()
         {
             
@@ -26,12 +28,13 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
           
         private void RigEvent()
         {
+            m_rigHelper = new PanelRigHelper();
             // m_owner.AddEventListener(__MODULE_NAME__Notify.xxx, xxx);
         }
 
         private void UnRigEvent()
         {
-            
+            m_rigHelper.Clear();
         }
         
         protected override bool OnOpen(ParamVo param)

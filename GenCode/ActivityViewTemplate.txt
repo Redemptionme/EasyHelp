@@ -13,6 +13,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private ActivityPanel m_panel;
         private ActivityConfig m_cfg;
         private ActivityBaseInfo m_activityInfo;
+        private PanelRigHelper m_rigHelper;
         
         public void Init(ActivityPanel panel, ActivityConfig cfg)
         {
@@ -53,6 +54,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
           
         private void RigEvent()
         {
+            m_rigHelper = new PanelRigHelper();
             // m_owner.AddEventListener(__MODULE_NAME__Notify.xxx, xxx);
             m_btnInfo.onClick.Add(OnClickInfo);
             Timers.inst.Add(1, -1, OnTimeRefreshTime);
@@ -60,6 +62,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
 
         private void UnRigEvent()
         {
+            m_rigHelper.Clear();
             m_btnInfo.onClick.Remove(OnClickInfo);
             Timers.inst.Remove(OnTimeRefreshTime);
         }
