@@ -7,6 +7,7 @@ using HHL.Game;
 using IGG.Framework.Cache;
 using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
+using IGG.Game.Data.Cache.Activity;
 using IGG.Game.Data.Config;
 using IGG.Game.Helper;
 using IGG.Game.Managers;
@@ -84,7 +85,8 @@ namespace HHL.Common
                 //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzle, Random.Range(1,3));
 
                 //WatchInfo();
-                TestVehicleGetPanel();
+                //TestVehicleGetPanel();
+                TestPlaneWarPanel();
             }
 
             if (Input.GetKeyDown(KeyCode.F4))
@@ -156,6 +158,11 @@ namespace HHL.Common
             //     var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
             //     AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
             // }
+        }
+
+        private void TestPlaneWarPanel()
+        {
+            PanelMgr.Inst.OpenPanel<ActivityPanel>((uint)160300,true,ActivityCache.EActivityState.PlaneWar);
         }
 
         private void TestVehiclePanel()

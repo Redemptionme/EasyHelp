@@ -151,7 +151,7 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            InitHeroEquip();
+            //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             //InitCampIsland();
@@ -164,6 +164,9 @@ namespace HHL.Common
 
         private void InitPlaneWarScriptView()
         {
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsActivityDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsActivityUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2CldungeonsActivityBaseUpdateNotice);
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldDataNotice);
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldUpdateNotice);
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldBaseUpdateNotice);
@@ -171,6 +174,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldRoundUpdateNotice);
             AddListenMsgType(MsgType.KMsgCl2GsdungeonsFieldScoreRequest);
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldScoreReply);
+            
+            
         }
 
         private void InitVehicle()
