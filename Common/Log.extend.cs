@@ -159,6 +159,7 @@ namespace HHL.Common
             //InitNewCity();
             //InitKof();
             //InitVehicle();
+            InitVehiclePipeline();
             //InitPlaneWarScriptView();
         }
 
@@ -174,8 +175,6 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldRoundUpdateNotice);
             AddListenMsgType(MsgType.KMsgCl2GsdungeonsFieldScoreRequest);
             AddListenMsgType(MsgType.KMsgGs2CldungeonsFieldScoreReply);
-            
-            
         }
 
         private void InitVehicle()
@@ -192,7 +191,10 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClcarportUpdateVehicleSkinReply);
             AddListenMsgType(MsgType.KMsgCl2GscarportVehicleReadRequest);
             AddListenMsgType(MsgType.KMsgGs2ClcarportVehicleReadReply);
-            
+        }
+
+        private void InitVehiclePipeline()
+        {
             AddListenMsgType(MsgType.KMsgCl2GscarportPipelineCreateRequest);
             AddListenMsgType(MsgType.KMsgGs2ClcarportPipelineCreateReply);
             AddListenMsgType(MsgType.KMsgCl2GscarportPipelineRewardRequest);
