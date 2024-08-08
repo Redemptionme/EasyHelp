@@ -150,7 +150,7 @@ namespace HHL.Common
             //InitExSave();
             //InitNewPegie();
             //InitClean();
-            //InitRank();
+            InitRank();
             //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
@@ -160,8 +160,26 @@ namespace HHL.Common
             //InitKof();
             //InitVehicle();
             //InitPlaneWarScriptView();
+            InitActivity2048Proto();
         }
 
+        public void InitActivity2048Proto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityMergeInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityMergeNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityMergeSwipeRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityMergeSwipeReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityMergeUseItemRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityMergeUseItemReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityMergeUsePowerItemRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityMergeUsePowerItemReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityMergeRestartRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityMergeRestartReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityMergeGetRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityMergeGetRewardReply);
+        } 
+         
         private void InitPlaneWarScriptView()
         {
             AddListenMsgType(MsgType.KMsgGs2CldungeonsActivityDataNotice);
@@ -399,6 +417,8 @@ namespace HHL.Common
         {
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClactivityCrossDataNotice);
         }
 
         private void InitClean()

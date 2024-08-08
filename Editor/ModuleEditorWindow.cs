@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace Game.HHL.Editor
 {
-    public class ModuleEditorWindow:EditorWindow
+    public class ModuleEditorWindow : EditorWindow
     {
         private string m_moduleName = "Test";
         public string[] panelOptions = new string[]{"Normal","ActivityView","PersonalActivityView","CompView"};
@@ -47,6 +47,8 @@ namespace Game.HHL.Editor
             ModuleEditorWindow wnd = EditorWindow.GetWindow<ModuleEditorWindow>("模块代码生成工具");
             wnd.minSize = new Vector2(300, 200);
         }
+        
+        
 
         // [MenuItem("HHL/Proto更新并生成")]
         // public static void GenProto()

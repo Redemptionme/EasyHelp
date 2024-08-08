@@ -69,6 +69,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>();
+                
                 //CityChange();
                 //FakeMove();
 
@@ -86,7 +88,8 @@ namespace HHL.Common
 
                 //WatchInfo();
                 //TestVehicleGetPanel();
-                TestPlaneWarPanel();
+                //TestPlaneWarPanel();
+                PanelMgr.Inst.OpenPanel<KOFPuzzleDrawPanel>((uint)ActivityModule.KofPuzzleActId);
             }
 
             if (Input.GetKeyDown(KeyCode.F4))
