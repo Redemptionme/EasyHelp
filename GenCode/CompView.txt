@@ -1,12 +1,17 @@
-﻿using IGG.Game.UI.__MODULE_NAME__;
+﻿#region FileInfo
+
+// <summary>
+// Author  __PERSON_NAME__
+// Date    __DATA_TABLE_CREATE_TIME__
+// Desc
+// </summary>
+
+#endregion
+
+using IGG.Game.UI.__MODULE_NAME__;
 
 namespace IGG.Game.Module.__MODULE_NAME__.View
 {
-    // <summary>
-    // Author  __PERSON_NAME__
-    // Date    __DATA_TABLE_CREATE_TIME__
-    // Desc
-    // </summary>
     public class __PANEL_NAME__ : Base__PANEL_NAME__
     {
         private bool m_bInit = false;
