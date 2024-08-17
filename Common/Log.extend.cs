@@ -150,7 +150,7 @@ namespace HHL.Common
             //InitExSave();
             //InitNewPegie();
             //InitClean();
-            InitRank();
+            //InitRank();
             //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
@@ -159,7 +159,7 @@ namespace HHL.Common
             //InitNewCity();
             //InitKof();
             //InitVehicle();
-            InitVehiclePipeline();
+            //InitVehiclePipeline();
             //InitPlaneWarScriptView();
             InitActivity2048Proto();
         }

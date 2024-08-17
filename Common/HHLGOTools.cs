@@ -89,7 +89,7 @@ namespace HHL.Common
                 //WatchInfo();
                 //TestVehicleGetPanel();
                 //TestPlaneWarPanel();
-                PanelMgr.Inst.OpenPanel<KOFPuzzleDrawPanel>((uint)ActivityModule.KofPuzzleActId);
+                //PanelMgr.Inst.OpenPanel<KOFPuzzleDrawPanel>((uint)ActivityModule.KofPuzzleActId);
             }
 
             if (Input.GetKeyDown(KeyCode.F4))
@@ -186,20 +186,20 @@ namespace HHL.Common
             int nCount3 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzleGift);
             
             
-            var activityInfo = AppCache.Activity.GetActivity(ActivityModule.KofPuzzleActId);
-            if (activityInfo == null)
-            {
-                return ;
-            }
-            if (activityInfo.Status == ActivityStatus.KActivityStatuEnd)
-            {
-                return ;
-            }
-
-            if (TimeHelper.ServerTime > activityInfo.TimeEnd)
-            {
-                return ;
-            }
+            // var activityInfo = AppCache.Activity.GetActivity(ActivityModule.KofPuzzleActId);
+            // if (activityInfo == null)
+            // {
+            //     return ;
+            // }
+            // if (activityInfo.Status == ActivityStatus.KActivityStatuEnd)
+            // {
+            //     return ;
+            // }
+            //
+            // if (TimeHelper.ServerTime > activityInfo.TimeEnd)
+            // {
+            //     return ;
+            // }
         }
 
         private void FlyKofReward()
