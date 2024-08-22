@@ -179,6 +179,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClactivityMergeRestartReply);
             AddListenMsgType(MsgType.KMsgCl2GsactivityMergeGetRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityMergeGetRewardReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
         } 
          
         private void InitPlaneWarScriptView()
