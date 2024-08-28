@@ -23,77 +23,19 @@ namespace HHL.Game
     public class CityMapTool : MonoBehaviour
     {
         public Map Map;
-        public Vector3 StartPos;
-        public List<List<GameObject>> CellList = new();
         private Building m_wall;
+        public Vector3 CubeSize = Vector3.one * 0.01f;
+        public Vector3 CubeOffSet = Vector3.zero;
 
         private void Start()
         {
             Map = AppCache.CityBuilding.MyCompCity.PathFindingMap;
             m_wall = AppCache.CityBuilding.MyCompCity.GetBuilding(EBuildingType.CityWall);
-            if (m_wall == null || m_wall.Body == null)
-            {
-                return;
-            }
-
-            for (var i = 0; i < Map.RowCount; i++)
-            {
-                var list = new List<GameObject>();
-                for (var j = 0; j < Map.ColumnCount; j++)
-                {
-                    var cellObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-                    var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
-                    pos += m_wall.Owner.LocalCenterOffset + m_wall.Owner.Trans.position;
-
-
-                    //cellObj.transform.parent = transform;
-                    //var v2Pos = Map.StartPos + CoordHelper.GridToCartesianCoord(new int2(i, j)).ToVector2();
-
-                    // var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
-                    // pos += wall.Owner.LocalCenterOffset + wall.Owner.Trans.position;
-                    pos.y = -0.02f;
-                    cellObj.transform.position = pos;
-                    cellObj.transform.localScale = new Vector3(0.05f, 0.05f, .05f);
-                    cellObj.transform.localRotation = Quaternion.Euler(new Vector3(0f, -45f, 0f));
-                    var msRender = cellObj.GetComponent<MeshRenderer>();
-                    msRender.material.shader = Shader.Find("Transparent/Diffuse");
-                    // 设置物体的初始颜色
-                    var color = Color.green;
-                    color.a = 0.3f;
-                    msRender.material.color = color;
-                    // y * ColumnCount + x
-                    cellObj.name = $"[{i},{j}] [{j * Map.ColumnCount + i}]";
-                    list.Add(cellObj);
-                }
-
-                CellList.Add(list);
-            }
         }
 
 
         public void Update()
         {
-            if (Time.frameCount % 15 == 0)
-            {
-                for (var i = 0; i < Map.RowCount; i++)
-                {
-                    for (var j = 0; j < Map.ColumnCount; j++)
-                    {
-                        var mapCell = Map.GetCell(j, i);
-                        var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
-                        pos += m_wall.Owner.LocalCenterOffset + m_wall.Owner.Trans.position;
-
-                        var cellObj = CellList[i][j];
-
-                        var color = mapCell.HasObstacle ? Color.red : Color.green;
-                        color.a = 0.1f;
-                        var msRender = cellObj.GetComponent<MeshRenderer>();
-                        // 设置物体的初始颜色
-                        msRender.material.color = color;
-                    }
-                }
-            }
         }
 
 #if UNITY_EDITOR
@@ -107,6 +49,7 @@ namespace HHL.Game
                     var mapCell = Map.GetCell(j, i);
                     var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
                     pos += m_wall.Owner.LocalCenterOffset + m_wall.Owner.Trans.position;
+                    //pos.y = -0.02f;
                     if (mapCell.HasObstacle)
                     {
                         Gizmos.color = Color.red;
@@ -115,7 +58,17 @@ namespace HHL.Game
                     {
                         Gizmos.color = Color.green;
                     }
-                    Gizmos.DrawCube(pos,Vector3.one * HHLGOTools.Self.Param1.x);
+
+                    pos += CubeOffSet;
+
+                    if (i == 0 && j == 0)
+                    {
+                        Gizmos.DrawSphere(pos, CubeSize.x);
+                    }
+                    else
+                    {
+                        Gizmos.DrawCube(pos, CubeSize);
+                    }
                 }
             }
         }
