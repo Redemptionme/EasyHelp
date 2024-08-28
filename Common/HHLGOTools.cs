@@ -94,7 +94,7 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                //gameObject.AddComponent<CityMapTool>();
+                gameObject.AddComponent<CityMapTool>();
                 //BattleRoyaleModule.Inst.OpenLoading();
                 //CampIslandModule.Inst.OpenActivityPanel();
                 //CampIslandModule.Inst.OpenInnerActivityRank();
@@ -108,7 +108,7 @@ namespace HHL.Common
                 //ShowRandomPiece2();
                 //FlyKofReward();
                 //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzleTimes, Random.Range(1,3));
-                TestVehiclePanel();
+                //TestVehiclePanel();
             }
 
             if (Input.GetKeyDown(KeyCode.F8))

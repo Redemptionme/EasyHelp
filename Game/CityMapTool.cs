@@ -9,7 +9,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using HHL.Common;
 using IGG.Game.Data.Cache;
 using IGG.Game.Module.CityBuilding;
 using IGG.Game.PathFinding;
@@ -22,31 +24,32 @@ namespace HHL.Game
     {
         public Map Map;
         public Vector3 StartPos;
-        public List<List<GameObject>> CellList = new List<List<GameObject>>();
+        public List<List<GameObject>> CellList = new();
+        private Building m_wall;
 
         private void Start()
         {
             Map = AppCache.CityBuilding.MyCompCity.PathFindingMap;
-            var wall = AppCache.CityBuilding.MyCompCity.GetBuilding(EBuildingType.CityWall);
-            if (wall == null || wall.Body == null)
+            m_wall = AppCache.CityBuilding.MyCompCity.GetBuilding(EBuildingType.CityWall);
+            if (m_wall == null || m_wall.Body == null)
             {
                 return;
             }
-            
+
             for (var i = 0; i < Map.RowCount; i++)
             {
                 var list = new List<GameObject>();
                 for (var j = 0; j < Map.ColumnCount; j++)
                 {
                     var cellObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    
+
                     var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
-                    pos += wall.Owner.LocalCenterOffset + wall.Owner.Trans.position;
-                    
-                    
+                    pos += m_wall.Owner.LocalCenterOffset + m_wall.Owner.Trans.position;
+
+
                     //cellObj.transform.parent = transform;
                     //var v2Pos = Map.StartPos + CoordHelper.GridToCartesianCoord(new int2(i, j)).ToVector2();
-                                      
+
                     // var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
                     // pos += wall.Owner.LocalCenterOffset + wall.Owner.Trans.position;
                     pos.y = -0.02f;
@@ -78,6 +81,9 @@ namespace HHL.Game
                     for (var j = 0; j < Map.ColumnCount; j++)
                     {
                         var mapCell = Map.GetCell(j, i);
+                        var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
+                        pos += m_wall.Owner.LocalCenterOffset + m_wall.Owner.Trans.position;
+
                         var cellObj = CellList[i][j];
 
                         var color = mapCell.HasObstacle ? Color.red : Color.green;
@@ -89,5 +95,30 @@ namespace HHL.Game
                 }
             }
         }
+
+#if UNITY_EDITOR
+
+        private void OnDrawGizmos()
+        {
+            for (var i = 0; i < Map.RowCount; i++)
+            {
+                for (var j = 0; j < Map.ColumnCount; j++)
+                {
+                    var mapCell = Map.GetCell(j, i);
+                    var pos = CoordHelper.GridToCartesianCoord(new int2(i, j));
+                    pos += m_wall.Owner.LocalCenterOffset + m_wall.Owner.Trans.position;
+                    if (mapCell.HasObstacle)
+                    {
+                        Gizmos.color = Color.red;
+                    }
+                    else
+                    {
+                        Gizmos.color = Color.green;
+                    }
+                    Gizmos.DrawCube(pos,Vector3.one * HHLGOTools.Self.Param1.x);
+                }
+            }
+        }
+#endif
     }
 }
