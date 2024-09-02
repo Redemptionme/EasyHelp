@@ -80,8 +80,11 @@ namespace Game.HHL.Editor
                         return;
                     }
 
-                    TotalFieldName = paramStr[0].Substring(0, 1).ToUpper() + paramStr[0].Substring(1) +
-                                     paramStr[1].Substring(0, 1).ToUpper() + paramStr[1].Substring(1);
+                    TotalFieldName = "";
+                    foreach (var str in paramStr)
+                    {
+                        TotalFieldName += str.Substring(0, 1).ToUpper() + str.Substring(1);
+                    }
                 }
                 else
                 {
@@ -105,9 +108,10 @@ namespace Game.HHL.Editor
         public const string Repeated = "repeated";
         public const string Msg = "Msg";
 
-        public static string GetClientName(string name)
+        public static string GetClientName(string name,bool isRepeated)
         {
-            return m_clientName.TryGetValue(name, out var type) ? type : name;
+            var typeName = m_clientName.TryGetValue(name, out var type) ? type : name;
+            return isRepeated ? $"List<{typeName}>" : typeName;
         }
 
         public static Dictionary<string, string> m_clientName = new()

@@ -46,14 +46,14 @@ namespace Game.HHL.Editor
         private string m_outputNotifyStr;
 
         private List<ProtoStruct> m_infos = new();
-   
+
         [MenuItem("HHL/生成Proto处理相关")]
         public static void OpenProtoEditor()
         {
             var wnd = GetWindow<ProtoEditorWindow>("Proto消息生成工具");
             wnd.minSize = new Vector2(800, 600);
         }
-     
+
         private void OnGUI()
         {
             GUILayout.BeginHorizontal();
@@ -79,8 +79,9 @@ namespace Game.HHL.Editor
                 using (var strReader = new StringReader(m_protoStr))
                 {
                     var Annotation = "";
+                    List<string> TempList = new();
                     ProtoStruct info = null;
-                    var bIn = false;
+                    var depth = 0;
 
                     while (true)
                     {
@@ -90,10 +91,18 @@ namespace Game.HHL.Editor
                             break;
                         }
 
+                        line = line.Replace("\t", " ");
+
                         if (line == "")
                         {
                             continue;
                         }
+
+                        if (line == " ")
+                        {
+                            continue;
+                        }
+
 
                         if (line.StartsWith("//"))
                         {
@@ -107,102 +116,56 @@ namespace Game.HHL.Editor
                             {
                                 Annotation = Annotation
                             };
-                            var sublines = line.Split(" ");
+                            var sublines = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                             if (sublines.Length > 1)
                             {
                                 info.ClassName = sublines[1];
-
                                 m_infos.Add(info);
+                                depth = 0;
                                 continue;
                             }
                         }
                         else if (line.Contains('{'))
                         {
+                            depth++;
                             continue;
                         }
                         else if (line.Contains('}'))
                         {
-                            bIn = false;
-
+                            depth--;
                             continue;
                         }
-                        else if (bIn)
+                        else if (depth > 1)
                         {
+                            // 嵌套后面再做
                             continue;
                         }
                         else
                         {
-                            if (info != null)
+                            var pos = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            var equalIndex = 0;
+                            var isRepeated = false;
+                            for (var i = 0; i < pos.Length; i++)
                             {
-                                var pos = line.Split('\t');
-                                foreach (var str in pos)
+                                if (i == 0 && pos[i] == "repeated")
                                 {
-                                    if (string.IsNullOrWhiteSpace(str))
-                                    {
-                                        continue;
-                                    }
+                                    isRepeated = true;
+                                }
 
-                                    if (str == "")
-                                    {
-                                        continue;
-                                    }
-                                    else if (str.StartsWith("="))
-                                    {
-                                        continue;
-                                    }
-                                    else if (str.Contains("//"))
-                                    {
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        var fieldStr = str.Split(' ');
-                                        var starIndex = -1;
-                                        var endTag = 0;
-
-                                        for (var i = 0; i < fieldStr.Length; i++)
-                                        {
-                                            var splitStr = fieldStr[i];
-                                            if (string.IsNullOrWhiteSpace(splitStr))
-                                            {
-                                                continue;
-                                            }
-
-                                            if (starIndex == -1)
-                                            {
-                                                starIndex = i;
-                                            }
-
-                                            if (splitStr == "=")
-                                            {
-                                                endTag = i;
-                                                break;
-                                            }
-                                        }
-
-                                        var st = new ProtoStruct();
-                                        if (fieldStr[starIndex] == TypeNameHelper.Message)
-                                        {
-                                            bIn = true;
-                                            continue;
-                                        }
-
-                                        if (fieldStr[starIndex] == TypeNameHelper.Repeated)
-                                        {
-                                            st.FieldName = fieldStr[starIndex + 2];
-                                            st.TypeName =
-                                                $"List<{TypeNameHelper.GetClientName(fieldStr[starIndex + 1])}>";
-                                        }
-                                        else
-                                        {
-                                            st.FieldName = fieldStr[starIndex + 1];
-                                            st.TypeName = TypeNameHelper.GetClientName(fieldStr[starIndex]);
-                                        }
-
-                                        info.Childs.Add(st);
-                                    }
+                                if (pos[i] == "=")
+                                {
+                                    equalIndex = i;
+                                    break;
                                 }
                             }
+
+                            var st = new ProtoStruct
+                            {
+                                FieldName = pos[equalIndex - 1],
+                                TypeName = TypeNameHelper.GetClientName(pos[equalIndex - 2], isRepeated)
+                            };
+
+                            info.Childs.Add(st);
                         }
                     }
                 }
@@ -251,12 +214,15 @@ namespace Game.HHL.Editor
                             break;
                         case EProtoType.Notice:
                             sb.Append("        ").Append(info.Annotation).AppendLine();
-                            sb.Append("        ").Append("public void On").Append(info.ClassName).Append("(").Append(info.ClassName)
+                            sb.Append("        ").Append("public void On").Append(info.ClassName).Append("(")
+                                .Append(info.ClassName)
                                 .Append(" obj)").AppendLine();
                             sb.Append("        ").Append("{").AppendLine();
-                            sb.Append("        ").Append("    //todo hhl").AppendLine();
-                            sb.Append("        ").Append("    ").Append("AppCache.").Append(m_moduleName).Append(";").AppendLine();
-                            sb.Append("        ").Append("    ").Append("SendNotify(").Append(m_moduleName).Append("Notify").Append(info.FuncName).AppendLine();
+                            //sb.Append("        ").Append("    //todo hhl").AppendLine();
+                            sb.Append("        ").Append("    ").Append("// AppCache.").Append(m_moduleName).Append(";")
+                                .AppendLine();
+                            sb.Append("        ").Append("    ").Append("SendNotify(").Append(m_moduleName)
+                                .Append("Notify.").Append(info.FuncName).Append(");").AppendLine();
                             sb.Append("        ").Append("}").AppendLine();
                             break;
                         case EProtoType.Request:
@@ -297,18 +263,22 @@ namespace Game.HHL.Editor
                             break;
                         case EProtoType.Reply:
                             sb.Append("        ").Append(info.Annotation).AppendLine();
-                            sb.Append("        ").Append("public void On").Append(info.ClassName).Append("(").Append(info.ClassName)
+                            sb.Append("        ").Append("public void On").Append(info.ClassName).Append("(")
+                                .Append(info.ClassName)
                                 .Append(" obj)").AppendLine();
                             sb.Append("        ").Append("{").AppendLine();
-                            sb.Append("        ").Append("    ").Append("if ((ErrorCode)obj.ErrorCode != ErrorCode.KEcsuccess)")
+                            sb.Append("        ").Append("    ")
+                                .Append("if ((ErrorCode)obj.ErrorCode != ErrorCode.KEcsuccess)")
                                 .AppendLine();
                             sb.Append("        ").Append("    {").AppendLine();
-                            sb.Append("        ").Append("        ").Append("ErrorHelper.ShowError((int)obj.ErrorCode);").AppendLine();
+                            sb.Append("        ").Append("        ")
+                                .Append("ErrorHelper.ShowError((int)obj.ErrorCode);").AppendLine();
                             sb.Append("        ").Append("        ").Append("return;").AppendLine();
                             sb.Append("        ").Append("    }").AppendLine();
-                            sb.Append("        ").Append("    // todo hhl;").AppendLine();
-                            sb.Append("        ").Append("    ").Append("AppCache.").Append(m_moduleName).Append(";").AppendLine();
-                            sb.Append("        ").Append("    ").Append("SendNotify(").Append(m_moduleName).Append("Notify.").Append(info.FuncName).Append(")").Append(";")
+                            //sb.Append("        ").Append("    // todo hhl;").AppendLine();
+                            //sb.Append("        ").Append("    ").Append("AppCache.").Append(m_moduleName).Append(";").AppendLine();
+                            sb.Append("        ").Append("    ").Append("SendNotify(").Append(m_moduleName)
+                                .Append("Notify.").Append(info.FuncName).Append(")").Append(";")
                                 .AppendLine();
                             sb.Append("        ").Append("}").AppendLine();
                             break;
@@ -328,7 +298,8 @@ namespace Game.HHL.Editor
                         continue;
                     }
 
-                    sb.Append("public static string ").Append(info.FuncName).Append(" = ").Append('\"').Append(m_moduleName)
+                    sb.Append("public static string ").Append(info.FuncName).Append(" = ").Append('\"')
+                        .Append(m_moduleName)
                         .Append("Notify_").Append(info.FuncName).Append("\"").Append(";").AppendLine();
                 }
 
@@ -377,9 +348,9 @@ namespace Game.HHL.Editor
             //GUILayout.BeginArea(rect);
             m_outPutBigScroll = EditorGUILayout.BeginScrollView(m_outPutBigScroll, GUILayout.Height(200));
             GUILayout.BeginVertical();
-            
+
             EditorGUILayout.Space();
-        
+
 
             GUILayout.Label("HHL调试代码", EditorStyles.boldLabel);
             m_outputDebugScroll = EditorGUILayout.BeginScrollView(m_outputDebugScroll, GUILayout.Height(200));

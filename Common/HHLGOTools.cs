@@ -16,6 +16,7 @@ using IGG.Game.Module.Activity.View;
 using IGG.Game.Module.BattleRoyale;
 using IGG.Game.Module.BattleRoyale.View;
 using IGG.Game.Module.CampIsland;
+using IGG.Game.Module.Cargo.View;
 using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
@@ -64,11 +65,12 @@ namespace HHL.Common
             {
                 Log.Inst.Print($"------------------------------------------------------");
                 //CityBuildingModule.Inst.TriggerCityRoleHappy();
-                CityBuildingModule.Inst.FlyOutCityIcon();
+                //CityBuildingModule.Inst.FlyOutCityIcon();
             }
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                PanelMgr.Inst.OpenPanel<CargoPanel>();
                 //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>();
                 
                 //CityChange();

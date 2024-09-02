@@ -161,7 +161,59 @@ namespace HHL.Common
             //InitVehicle();
             //InitVehiclePipeline();
             //InitPlaneWarScriptView();
-            InitActivity2048Proto();
+            //InitActivity2048Proto();
+            InitCargoProto();
+        }
+
+        public void InitCargoProto()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsfreightDataRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClfreightDataReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildFreightDataRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildFreightDataReply);
+            AddListenMsgType(MsgType.KMsgCl2GsaddPlayerFreightTruckRequest);
+            AddListenMsgType(MsgType.KMsgGs2CladdPlayerFreightTruckReply);
+            AddListenMsgType(MsgType.KMsgCl2GsrefreshPlayerFreightGoodsRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClrefreshPlayerFreightGoodsReply);
+            AddListenMsgType(MsgType.KMsgCl2GsstartPlayerFreightRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClstartPlayerFreightReply);
+            AddListenMsgType(MsgType.KMsgCl2GsattackPlayerFreightRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClattackPlayerFreightReply);
+            AddListenMsgType(MsgType.KMsgCl2GsplayerFreightGoodsCompleteNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsplayerFreightPlunderRecordNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsgetPlayerFreightTruckRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClgetPlayerFreightTruckRewardReply);
+            AddListenMsgType(MsgType.KMsgGs2ClupdatePlayerBaseFreightDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClremovePlayerFreightTruckNotice);
+            AddListenMsgType(MsgType.KMsgCl2GscreateGuildFreightRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClcreateGuildFreightReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildFreightNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsguildFreightStopNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsplayerJoinGuildFreightNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsjoinGuildFreightRequest);
+            AddListenMsgType(MsgType.KMsgGs2CljoinGuildFreightReply);
+            AddListenMsgType(MsgType.KMsgCl2GsrefreshGuildFreightGoodsRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClrefreshGuildFreightGoodsReply);
+            AddListenMsgType(MsgType.KMsgGs2ClupdateGuildFreightGoodsNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsguildFreightHostLeaderRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildFreightHostLeaderReply);
+            AddListenMsgType(MsgType.KMsgCl2GsaddGuildFreightHostLeaderNotice);
+            AddListenMsgType(MsgType.KMsgCl2GssetGuildFreightTruckLeaderRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClsetGuildFreightTruckLeaderReply);
+            AddListenMsgType(MsgType.KMsgCl2GssetGuildFreightTruckLeaderNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsattackGuildFreightRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClattackGuildFreightReply);
+            AddListenMsgType(MsgType.KMsgGs2ClattackGuildFreightArmyNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsjoinAttackGuildFreightRequest);
+            AddListenMsgType(MsgType.KMsgGs2CljoinAttackGuildFreightReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildFreightPlunderRecordNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClremoveAttackGuildFreightArmyNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsaddGuildFreightTruckRecordNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightHostLeaderNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsremoveAttackGuildFreightArmyMemberNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightNormalTruckNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightLeaderTruckNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightLeaderArmyNotice);
         }
 
         public void InitActivity2048Proto()
@@ -179,11 +231,11 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClactivityMergeRestartReply);
             AddListenMsgType(MsgType.KMsgCl2GsactivityMergeGetRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityMergeGetRewardReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
-        } 
-         
+        }
+
         private void InitPlaneWarScriptView()
         {
             AddListenMsgType(MsgType.KMsgGs2CldungeonsActivityDataNotice);
@@ -422,7 +474,7 @@ namespace HHL.Common
         {
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
-            
+
             AddListenMsgType(MsgType.KMsgGs2ClactivityCrossDataNotice);
         }
 
