@@ -121,6 +121,7 @@ namespace Game.HHL.Editor
                             {
                                 info.ClassName = sublines[1];
                                 m_infos.Add(info);
+                                Annotation = "";
                                 depth = 0;
                                 continue;
                             }
@@ -255,10 +256,10 @@ namespace Game.HHL.Editor
                                         .Append(childInfo.ParamName).Append(",").AppendLine();
                                 }
 
-                                sb.Append("        ").Append("    };").AppendLine();
-                                sb.Append("        ").Append("    SendMsg(msg);").AppendLine();
+                                sb.Append("        ").Append("    };");
                             }
-
+                            sb.AppendLine();
+                            sb.Append("        ").Append("    SendMsg(msg);").AppendLine();
                             sb.Append("        ").Append("}").AppendLine();
                             break;
                         case EProtoType.Reply:

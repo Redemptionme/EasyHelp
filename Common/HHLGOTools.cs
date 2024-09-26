@@ -8,6 +8,7 @@ using IGG.Framework.Cache;
 using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Activity;
+using IGG.Game.Data.Cache.Setting;
 using IGG.Game.Data.Config;
 using IGG.Game.Helper;
 using IGG.Game.Managers;
@@ -70,7 +71,9 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<CargoPanel>();
+                AppPrefs.CargoFirstAdd.Value = false;
+                AppPrefs.Save();
+                PanelMgr.Inst.OpenPanel<CargoPanel>(0);
                 //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>();
                 
                 //CityChange();
