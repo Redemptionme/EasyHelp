@@ -8,15 +8,18 @@ using IGG.Framework.Cache;
 using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Activity;
+using IGG.Game.Data.Cache.Bag;
 using IGG.Game.Data.Cache.Setting;
 using IGG.Game.Data.Config;
 using IGG.Game.Helper;
 using IGG.Game.Managers;
 using IGG.Game.Module.Activity;
 using IGG.Game.Module.Activity.View;
+using IGG.Game.Module.Bag.View;
 using IGG.Game.Module.BattleRoyale;
 using IGG.Game.Module.BattleRoyale.View;
 using IGG.Game.Module.CampIsland;
+using IGG.Game.Module.Cargo;
 using IGG.Game.Module.Cargo.View;
 using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
@@ -71,11 +74,12 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                AppPrefs.CargoFirstAdd.Value = false;
-                AppPrefs.Save();
+                // AppPrefs.CargoFirstAdd.Value = false;
+                // AppPrefs.Save();
+                CargoModule.Inst.Lock = Self.Param1.x > 0f;
                 PanelMgr.Inst.OpenPanel<CargoPanel>(0);
                 //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>();
-                
+
                 //CityChange();
                 //FakeMove();
 
@@ -88,7 +92,7 @@ namespace HHL.Common
                 // }
                 //
                 // RewardModule.Inst.ShowSeniorRewardPanel(list.ToArray());
-                
+
                 //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzle, Random.Range(1,3));
 
                 //WatchInfo();
@@ -115,6 +119,21 @@ namespace HHL.Common
                 //RedDotMgr.Inst.Set(RedDotPath.KofPuzzlePuzzleTimes, Random.Range(1,3));
                 //TestVehiclePanel();
             }
+
+            if (Input.GetKeyDown(KeyCode.F6))
+            {
+                //m_panelMgr.OpenPanel("CommonNeedResPanel", new object[] { list });
+                var vos = new List<UseItemVo>();
+                var itemVo = new UseItemVo()
+                {
+                    ResType = BaseResType.Item, // 坑爹
+                    NeedCount = 1,
+                    Id =  AppCache.Cargo.Vo.PlayerRefreshItemId,
+                };
+                vos.Add(itemVo);
+                PanelMgr.Inst.OpenPanel<BagResourcesPanel>(new object[] { vos });
+            }
+
 
             if (Input.GetKeyDown(KeyCode.F8))
             {
@@ -170,12 +189,13 @@ namespace HHL.Common
 
         private void TestPlaneWarPanel()
         {
-            PanelMgr.Inst.OpenPanel<ActivityPanel>((uint)160300,true,ActivityCache.EActivityState.PlaneWar);
+            PanelMgr.Inst.OpenPanel<ActivityPanel>((uint)160300, true, ActivityCache.EActivityState.PlaneWar);
         }
 
         private void TestVehiclePanel()
         {
-            PanelMgr.Inst.OpenPanel<VehiclePanel>(EVehiclePanelState.Accessories,"",AppCache.Vehicle.CarportVehicleId);
+            PanelMgr.Inst.OpenPanel<VehiclePanel>(EVehiclePanelState.Accessories, "",
+                AppCache.Vehicle.CarportVehicleId);
         }
 
         private void TestVehicleGetPanel()
@@ -185,12 +205,12 @@ namespace HHL.Common
 
         private void WatchInfo()
         {
-            int nCount = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzle);
-            int nCount1 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzlePuzzle);
-            int nCount2 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzlePuzzleTimes);
-            int nCount3 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzleGift);
-            
-            
+            var nCount = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzle);
+            var nCount1 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzlePuzzle);
+            var nCount2 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzlePuzzleTimes);
+            var nCount3 = RedDotMgr.Inst.GetCount(RedDotPath.KofPuzzleGift);
+
+
             // var activityInfo = AppCache.Activity.GetActivity(ActivityModule.KofPuzzleActId);
             // if (activityInfo == null)
             // {

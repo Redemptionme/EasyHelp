@@ -162,7 +162,7 @@ namespace HHL.Common
             //InitVehiclePipeline();
             //InitPlaneWarScriptView();
             //InitActivity2048Proto();
-            InitCargoProto();
+            //InitCargoProto();
         }
 
         public void InitCargoProto()
