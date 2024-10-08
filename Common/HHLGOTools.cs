@@ -126,8 +126,8 @@ namespace HHL.Common
                 var vos = new List<UseItemVo>();
                 var itemVo = new UseItemVo()
                 {
-                    ResType = BaseResType.Item, // 坑爹
-                    NeedCount = 1,
+                    ResType = BaseResType.Item, 
+                    NeedCount = 25,
                     Id =  AppCache.Cargo.Vo.PlayerRefreshItemId,
                 };
                 vos.Add(itemVo);
