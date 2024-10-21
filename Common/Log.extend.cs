@@ -162,7 +162,7 @@ namespace HHL.Common
             //InitVehiclePipeline();
             //InitPlaneWarScriptView();
             //InitActivity2048Proto();
-            //InitCargoProto();
+            InitCargoProto();
         }
 
         public void InitCargoProto()
@@ -214,17 +214,17 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightNormalTruckNotice);
             AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightLeaderTruckNotice);
             AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightLeaderArmyNotice);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsaddSearchTargetRequest);
             AddListenMsgType(MsgType.KMsgGs2CladdSearchTargetReply);
             AddListenMsgType(MsgType.KMsgCl2GsupdateSearchTargetNotice);
             AddListenMsgType(MsgType.KMsgCl2GssearchFreightRequest);
             AddListenMsgType(MsgType.KMsgGs2ClsearchFreightReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsinviteJoinAttackGuildFreightRequest);
             AddListenMsgType(MsgType.KMsgGs2ClinviteJoinAttackGuildFreightReply);
             AddListenMsgType(MsgType.KMsgGs2ClinviteJoinAttackGuildFreightNotice);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsremoveGuildFreightLeaderRequest);
             AddListenMsgType(MsgType.KMsgGs2ClremoveGuildFreightLeaderReply);
             AddListenMsgType(MsgType.KMsgGs2ClcancelAttackGuildFreightReply);
@@ -232,6 +232,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GschangeAttackGuildFreightArmyRequest);
             AddListenMsgType(MsgType.KMsgGs2ClchangeAttackGuildFreightArmyReply);
 
+            AddListenMsgType(MsgType.KMsgGs2ClguildFreightBaseDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClupdateGuildFreightBaseTruckDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClupdateAttackGuildFreightTruckDataNotice);
         }
 
         public void InitActivity2048Proto()
