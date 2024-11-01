@@ -139,7 +139,7 @@ namespace HHL.Common
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
-            //InitArenaShop();
+            InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
             //InitPompeii();
@@ -154,15 +154,29 @@ namespace HHL.Common
             //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
-            //InitCampIsland();
+            InitCampIsland();
             //InitFestivalGetReward();
             //InitNewCity();
             //InitKof();
             //InitVehicle();
             //InitVehiclePipeline();
             //InitPlaneWarScriptView();
-            //InitActivity2048Proto();
-            InitCargoProto();
+            InitActivity2048Proto();
+            //InitCargoProto();
+            InitIsland();
+        }
+
+        private void InitIsland()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClguildActivityTaskNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsguildActivityQueryAllTaskRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildActivityQueryAllTaskreply);
+
+            // bp
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBattlePassMallNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBattlePassMallLevelRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityBattlePassLevelMallRewardReply);
         }
 
         public void InitCargoProto()
@@ -255,6 +269,22 @@ namespace HHL.Common
 
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
+            
+            // 红包
+            AddListenMsgType(MsgType.KMsgGs2ClplayerHongbaoDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerHongbaoUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClcommonHongbaoDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClcommonHongbaoUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoDeleteNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoReceiverNotice);
+            AddListenMsgType(MsgType.KMsgCl2GshongbaoReceiveRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoReceiveReply);
+            AddListenMsgType(MsgType.KMsgCl2GshongbaoThankRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoThankReply);
+            AddListenMsgType(MsgType.KMsgCl2GshongbaoListRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClhongbaoListReply);
         }
 
         private void InitPlaneWarScriptView()

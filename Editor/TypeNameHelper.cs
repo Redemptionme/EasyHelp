@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HHL.Common;
 
 namespace Game.HHL.Editor
 {
@@ -45,15 +46,15 @@ namespace Game.HHL.Editor
 
         public void GenProtoType()
         {
-            if (ClassName.Contains(EProtoType.Notice.ToString()))
+            if (StringUtils.Contains(ClassName, EProtoType.Notice.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 ProtoType = EProtoType.Notice;
             }
-            else if (ClassName.Contains(EProtoType.Request.ToString()))
+            else if (StringUtils.Contains(ClassName, EProtoType.Request.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 ProtoType = EProtoType.Request;
             }
-            else if (ClassName.Contains(EProtoType.Reply.ToString()))
+            else if (StringUtils.Contains(ClassName, EProtoType.Reply.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 ProtoType = EProtoType.Reply;
             }
@@ -108,7 +109,7 @@ namespace Game.HHL.Editor
         public const string Repeated = "repeated";
         public const string Msg = "Msg";
 
-        public static string GetClientName(string name,bool isRepeated)
+        public static string GetClientName(string name, bool isRepeated)
         {
             var typeName = m_clientName.TryGetValue(name, out var type) ? type : name;
             return isRepeated ? $"List<{typeName}>" : typeName;

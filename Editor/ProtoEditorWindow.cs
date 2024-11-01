@@ -103,6 +103,10 @@ namespace Game.HHL.Editor
                             continue;
                         }
 
+                        if (line.Split(" ", StringSplitOptions.RemoveEmptyEntries).Length == 0)
+                        {
+                            continue;
+                        }
 
                         if (line.StartsWith("//"))
                         {
