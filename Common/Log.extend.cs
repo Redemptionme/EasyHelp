@@ -127,7 +127,7 @@ namespace HHL.Common
         private void InitMsgFunction()
         {
             InitLogin();
-            //InitWise();
+            InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
