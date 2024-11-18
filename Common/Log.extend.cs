@@ -11,8 +11,10 @@ using IGG.Game.Data.Cache.Common;
 using IGG.Game.Data.Cache.Mail.Type;
 using IGG.Game.Data.Cache.WorldMap.Entity.Comp;
 using IGG.Game.Data.Config;
+using IGG.Game.Module.MainScene.View;
 using IGG.Game.Module.Reward;
 using IGG.Game.Module.Rune.Comp;
+using IGG.Game.UI.Main;
 using Protomsg;
 
 namespace HHL.Common
@@ -139,7 +141,7 @@ namespace HHL.Common
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
-            InitArenaShop();
+            //InitArenaShop();
             //InitTurnTable();
             //InitWaterStatus();
             //InitPompeii();
@@ -154,16 +156,16 @@ namespace HHL.Common
             //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
-            InitCampIsland();
+            ///InitCampIsland();
             //InitFestivalGetReward();
             //InitNewCity();
             //InitKof();
             //InitVehicle();
             //InitVehiclePipeline();
             //InitPlaneWarScriptView();
-            InitActivity2048Proto();
-            //InitCargoProto();
-            InitIsland();
+            //InitActivity2048Proto();
+            InitCargoProto();
+            //InitIsland();
         }
 
         private void InitIsland()
@@ -542,70 +544,91 @@ namespace HHL.Common
         public void TestShowSeniorRewardPanel()
         {
             var reward = new List<Resource>();
-            foreach (var cfg in RewardDao.Inst.Configs)
-            {
-                var rewardVos = RewardDao.Inst.GetContentById(cfg.Id);
-                foreach (var vo in rewardVos)
-                {
-                    reward.Add(new Resource() { ResType = (uint)vo.Type, SubType = vo.Value, Value = vo.Count });
-                }
-            }
+            // foreach (var cfg in RewardDao.Inst.Configs)
+            // {
+            //     var rewardVos = RewardDao.Inst.GetContentById(cfg.Id);
+            //     foreach (var vo in rewardVos)
+            //     {
+            //         reward.Add(new Resource() { ResType = (uint)vo.Type, SubType = vo.Value, Value = vo.Count });
+            //     }
+            // }
+            //
+            // foreach (var cfg in ItemDao.Inst.Configs)
+            // {
+            //     reward.Add(new Resource()
+            //         { ResType = (uint)PlayerAttributeType.KPlayerAttrItem, SubType = cfg.ItemId, Value = 2 });
+            // }
 
-            foreach (var cfg in ItemDao.Inst.Configs)
-            {
-                reward.Add(new Resource()
-                    { ResType = (uint)PlayerAttributeType.KPlayerAttrItem, SubType = cfg.ItemId, Value = 2 });
-            }
-
-
+            //英雄
             //for(int i = 0; i < 10; i++)
             {
-                // 英雄
-                // reward.Add(new Resource(){ ResType = 11,SubType = 1063,Value = 2,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 14000,Value = 28,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 23010,Value = 21,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 21000,Value = 84,});
-                // reward.Add(new Resource(){ ResType = 2,SubType = 14010,Value = 14,});
-                // reward.Add(new Resource(){ ResType = 14,SubType = 141,Value = 1370,});
-                // reward.Add(new Resource(){ ResType = 14,SubType = 109,Value = 1270,});
-                // reward.Add(new Resource(){ ResType = 14,SubType = 143,Value = 1020,});
-                // reward.Add(new Resource(){ ResType = 14,SubType = 113,Value = 1400,});
-                // reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
-                // reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
+                reward.Add(new Resource(){ ResType = 11,SubType = 1063,Value = 2,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 14000,Value = 28,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 23010,Value = 21,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 21000,Value = 84,});
+                reward.Add(new Resource(){ ResType = 2,SubType = 14010,Value = 14,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 141,Value = 1370,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 109,Value = 1270,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 143,Value = 1020,});
+                reward.Add(new Resource(){ ResType = 14,SubType = 113,Value = 1400,});
+                reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
+                reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
             }
 
             // 科技
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 3,});
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 2,});
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
-            // reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 3,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 2,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
 
+            reward.Add(new Resource()
+            {
+                ResType = (uint)PlayerAttributeType.KPlayerAttrItem,
+                SubType = 46604,
+                Value = 19,
+            });
+            
+            reward.Add(new Resource()
+            {
+                ResType = (uint)PlayerAttributeType.KPlayerAttrTechnology,
+                SubType = 10001,
+                Value = 1,
+            });
+            reward.Add(new Resource()
+            {
+                ResType = (uint)PlayerAttributeType.KPlayerAttrHero,
+                SubType = 1063,
+                Value = 1,
+            });
+           
+            reward.Add(new Resource()
+            {
+                ResType = (uint)PlayerAttributeType.KPlayerAttrItem,
+                SubType = 46604,
+                Value = 15,
+            });
 
-            // reward.Add(new Resource()
-            // {
-            //     ResType = (uint)PlayerAttributeType.KPlayerAttrTechnology,
-            //     SubType = 10001,
-            //     Value = 1,
-            // });
-            // reward.Add(new Resource()
-            // {
-            //     ResType = (uint)PlayerAttributeType.KPlayerAttrHero,
-            //     SubType = 1063,
-            //     Value = 1,
-            // });
-
-            RewardModule.Inst.ShowSeniorRewardPanel(reward);
+            var specialRes = new SpecialRes();
+            specialRes.Type = PlayerAttributeType.KPlayerAttrItem;
+            specialRes.Id = 46604;
+            specialRes.UIRender = OnRenderTest;
+            RewardModule.Inst.ShowSeniorRewardPanel(reward,true,85037,0,80463,SRPCloseType.ClickEmptyClose,null,null,null,null,specialRes);
         }
 
+        private void OnRenderTest(Resource res, BaseItemReceive ui)
+        {
+            ui.m_ctrlIconItem.selectedIndex = 3;
+            Print($"Res {res}");
+        }
         private void InitNewPegie()
         {
             AddListenMsgType(MsgType.KMsgGs2ClallHeroNotice);
@@ -823,6 +846,10 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClradarCompleteReply);
             AddListenMsgType(MsgType.KMsgCl2GsradarRefreshRequest);
             AddListenMsgType(MsgType.KMsgGs2ClradarRefreshReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsradarCompleteAllRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClradarCompleteAllReply);
+
         }
 
         private void InitGuildResourceMsg()

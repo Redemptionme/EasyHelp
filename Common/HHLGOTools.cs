@@ -74,10 +74,11 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                HHL.Common.Log.Inst.TestShowSeniorRewardPanel();
                 // AppPrefs.CargoFirstAdd.Value = false;
                 // AppPrefs.Save();
-                CargoModule.Inst.Lock = Self.Param1.x > 0f;
-                PanelMgr.Inst.OpenPanel<CargoPanel>(0);
+                // CargoModule.Inst.Lock = Self.Param1.x > 0f;
+                // PanelMgr.Inst.OpenPanel<CargoPanel>(0);
                 //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>();
 
                 //CityChange();
