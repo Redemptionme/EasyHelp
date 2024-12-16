@@ -25,6 +25,7 @@ using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
+using IGG.Game.Module.Pet.View;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
 using IGG.Game.Module.Vehicle.View;
@@ -74,7 +75,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                HHL.Common.Log.Inst.TestShowSeniorRewardPanel();
+                PanelMgr.Inst.OpenPanel<PetFencePanel>();
+                //HHL.Common.Log.Inst.TestShowSeniorRewardPanel();
                 // AppPrefs.CargoFirstAdd.Value = false;
                 // AppPrefs.Save();
                 // CargoModule.Inst.Lock = Self.Param1.x > 0f;
@@ -104,7 +106,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                gameObject.AddComponent<CityMapTool>();
+                HHL.Common.Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
+                //gameObject.AddComponent<CityMapTool>();
                 //BattleRoyaleModule.Inst.OpenLoading();
                 //CampIslandModule.Inst.OpenActivityPanel();
                 //CampIslandModule.Inst.OpenInnerActivityRank();
@@ -136,26 +139,26 @@ namespace HHL.Common
             }
 
 
-            if (Input.GetKeyDown(KeyCode.F8))
-            {
-                //PanelMgr.Inst.ClosePanel<BattleRoyaleLoadingPanel>();
-                OutCityIntoCity(1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.F9))
-            {
-                AddOutCity(1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.F10))
-            {
-                AddOutCity(-1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.F7))
-            {
-                DeadCity(-1);
-            }
+            // if (Input.GetKeyDown(KeyCode.F8))
+            // {
+            //     //PanelMgr.Inst.ClosePanel<BattleRoyaleLoadingPanel>();
+            //     OutCityIntoCity(1);
+            // }
+            //
+            // if (Input.GetKeyDown(KeyCode.F9))
+            // {
+            //     AddOutCity(1);
+            // }
+            //
+            // if (Input.GetKeyDown(KeyCode.F10))
+            // {
+            //     AddOutCity(-1);
+            // }
+            //
+            // if (Input.GetKeyDown(KeyCode.F7))
+            // {
+            //     DeadCity(-1);
+            // }
 
             // if (Input.GetKeyDown(KeyCode.I))
             // {

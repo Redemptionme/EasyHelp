@@ -277,7 +277,7 @@ namespace Game.HHL.Editor
                                 .AppendLine();
                             sb.Append("        ").Append("    {").AppendLine();
                             sb.Append("        ").Append("        ")
-                                .Append("ErrorHelper.ShowError((int)obj.ErrorCode);").AppendLine();
+                                .Append("ErrorHelper.ShowError(obj,(int)obj.ErrorCode);").AppendLine();
                             sb.Append("        ").Append("        ").Append("return;").AppendLine();
                             sb.Append("        ").Append("    }").AppendLine();
                             //sb.Append("        ").Append("    // todo hhl;").AppendLine();

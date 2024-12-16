@@ -129,7 +129,7 @@ namespace HHL.Common
         private void InitMsgFunction()
         {
             InitLogin();
-            InitWise();
+            //InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
@@ -166,6 +166,31 @@ namespace HHL.Common
             //InitActivity2048Proto();
             InitCargoProto();
             //InitIsland();
+            InitPetProto();
+        }
+        
+        public void InitPetProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClpetHuntEventsNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspetHuntHuntInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetHuntHuntInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetHuntHuntDispatchRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetHuntHuntDispatchReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetHuntHuntCollectRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetHuntHuntCollectReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetHuntHuntInstantRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetHuntHuntInstantReply);
+            
+            
+            AddListenMsgType(MsgType.KMsgGs2ClpetTrainCellDataUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspetTrainInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetTrainInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetTrainAddRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetTrainAddReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetTrainUnloadRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetTrainUnloadReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetTrainRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetTrainRewardReply);
         }
 
         private void InitIsland()
@@ -624,7 +649,7 @@ namespace HHL.Common
             RewardModule.Inst.ShowSeniorRewardPanel(reward,true,85037,0,80463,SRPCloseType.ClickEmptyClose,null,null,null,null,specialRes);
         }
 
-        private void OnRenderTest(Resource res, BaseItemReceive ui)
+        private void OnRenderTest(Resource res, BaseItemReceive ui,int index)
         {
             ui.m_ctrlIconItem.selectedIndex = 3;
             Print($"Res {res}");
