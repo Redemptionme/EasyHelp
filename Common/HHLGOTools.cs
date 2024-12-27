@@ -28,6 +28,7 @@ using IGG.Game.Module.NewCity;
 using IGG.Game.Module.Pet.View;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
+using IGG.Game.Module.Skin.View;
 using IGG.Game.Module.Vehicle.View;
 using IGG.Game.Module.WorldMap.Help;
 using IGG.Game.UI.Hero;
@@ -75,6 +76,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                //AppPrefs.SeasonShopIslandNeedTip.Value = true;
+                //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
                 PanelMgr.Inst.OpenPanel<PetFencePanel>();
                 //HHL.Common.Log.Inst.TestShowSeniorRewardPanel();
                 // AppPrefs.CargoFirstAdd.Value = false;
@@ -107,6 +110,7 @@ namespace HHL.Common
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 HHL.Common.Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
+                PanelMgr.Inst.OpenPanel<SkinMarchVideoPanel>(null, (uint)HHLGOTools.Self.Param1.x);
                 //gameObject.AddComponent<CityMapTool>();
                 //BattleRoyaleModule.Inst.OpenLoading();
                 //CampIslandModule.Inst.OpenActivityPanel();
