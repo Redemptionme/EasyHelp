@@ -110,7 +110,9 @@ namespace HHL.Common
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 HHL.Common.Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
-                PanelMgr.Inst.OpenPanel<SkinMarchVideoPanel>(null, (uint)HHLGOTools.Self.Param1.x);
+                PanelMgr.Inst.OpenPanel<PacificRimTurntablePanel>();
+                //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>((uint)130402);
+                //PanelMgr.Inst.OpenPanel<SkinMarchVideoPanel>(null, (uint)HHLGOTools.Self.Param1.x);
                 //gameObject.AddComponent<CityMapTool>();
                 //BattleRoyaleModule.Inst.OpenLoading();
                 //CampIslandModule.Inst.OpenActivityPanel();

@@ -129,7 +129,7 @@ namespace HHL.Common
         private void InitMsgFunction()
         {
             InitLogin();
-            InitWise();
+            //InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
@@ -137,7 +137,7 @@ namespace HHL.Common
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
-            InitIncidentMsg();
+            //InitIncidentMsg();
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
@@ -164,9 +164,17 @@ namespace HHL.Common
             //InitVehiclePipeline();
             //InitPlaneWarScriptView();
             //InitActivity2048Proto();
-            InitCargoProto();
+            //InitCargoProto();
             //InitIsland();
-            InitPetProto();
+            //InitPetProto();
+            InitPacificRimProto();
+        }
+        
+        public void InitPacificRimProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityPlayerDataNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsslotMachineActivityDrawRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityDrawReply);
         }
         
         public void InitPetProto()
