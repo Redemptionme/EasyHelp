@@ -9,6 +9,7 @@ using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Activity;
 using IGG.Game.Data.Cache.Bag;
+using IGG.Game.Data.Cache.Common;
 using IGG.Game.Data.Cache.Setting;
 using IGG.Game.Data.Config;
 using IGG.Game.Helper;
@@ -25,6 +26,7 @@ using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
+using IGG.Game.Module.PacificRim.View;
 using IGG.Game.Module.Pet.View;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
@@ -109,8 +111,13 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                HHL.Common.Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
-                PanelMgr.Inst.OpenPanel<PacificRimTurntablePanel>();
+                Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
+
+                uint activityId = 190704;
+                var msg = GetMsgGS2CLSlotMachineActivityDrawReply(activityId);
+                PanelMgr.Inst.OpenPanel<PacificRimDrawRewardPanel>((uint)activityId, msg);
+                //PanelMgr.Inst.OpenPanel<PacificRimSuperDrawPanel>((uint)190704,(uint)20);
+                //PanelMgr.Inst.OpenPanel<PacificRimTurntablePanel>();
                 //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>((uint)130402);
                 //PanelMgr.Inst.OpenPanel<SkinMarchVideoPanel>(null, (uint)HHLGOTools.Self.Param1.x);
                 //gameObject.AddComponent<CityMapTool>();
@@ -136,9 +143,9 @@ namespace HHL.Common
                 var vos = new List<UseItemVo>();
                 var itemVo = new UseItemVo()
                 {
-                    ResType = BaseResType.Item, 
+                    ResType = BaseResType.Item,
                     NeedCount = 25,
-                    Id =  AppCache.Cargo.Vo.PlayerRefreshItemId,
+                    Id = AppCache.Cargo.Vo.PlayerRefreshItemId
                 };
                 vos.Add(itemVo);
                 PanelMgr.Inst.OpenPanel<BagResourcesPanel>(new object[] { vos });
@@ -195,6 +202,36 @@ namespace HHL.Common
             //     var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
             //     AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
             // }
+        }
+
+        public MsgGS2CLSlotMachineActivityDrawReply GetMsgGS2CLSlotMachineActivityDrawReply(uint activityId)
+        {
+            var msg = new MsgGS2CLSlotMachineActivityDrawReply()
+            {
+                ActivityId = activityId,
+                DrawType = 2
+            };
+            var list = SlotMachineDao.Inst.GetCfgList(activityId);
+            for (var i = 0; i < 10; i++)
+            {
+                var cfg = list[Random.Range(0, list.Count)];
+                var big = Random.Range(0, 2) == 1;
+                var info = new SlotMachineActivityRewardInfo()
+                {
+                    Id = cfg.Id,
+                    Odds = (uint)(big ? 2 : 0)
+                };
+                var vos = RewardDao.Inst.GetContentById(cfg.Reward);
+                info.Rewards.Add(new Resource()
+                {
+                    ResType = (uint)vos[0].Type,
+                    SubType = (uint)vos[0].Value,
+                    Value = vos[0].Count
+                });
+                msg.Rewards.Add(info);
+            }
+
+            return msg;
         }
 
         private void TestPlaneWarPanel()
