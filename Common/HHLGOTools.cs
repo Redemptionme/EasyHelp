@@ -113,7 +113,7 @@ namespace HHL.Common
             {
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
-                uint activityId = 190704;
+                uint activityId = 190702;
                 var msg = GetMsgGS2CLSlotMachineActivityDrawReply(activityId);
                 PanelMgr.Inst.OpenPanel<PacificRimDrawRewardPanel>((uint)activityId, msg);
                 //PanelMgr.Inst.OpenPanel<PacificRimSuperDrawPanel>((uint)190704,(uint)20);
@@ -222,12 +222,14 @@ namespace HHL.Common
                     Odds = (uint)(big ? 2 : 0)
                 };
                 var vos = RewardDao.Inst.GetContentById(cfg.Reward);
-                info.Rewards.Add(new Resource()
+                var res = new Resource()
                 {
                     ResType = (uint)vos[0].Type,
                     SubType = (uint)vos[0].Value,
                     Value = vos[0].Count
-                });
+                };
+                res.ResType = (uint)PlayerAttributeType.KPlayerAttrSlotMachineOdds;
+                info.Rewards.Add(res);
                 msg.Rewards.Add(info);
             }
 

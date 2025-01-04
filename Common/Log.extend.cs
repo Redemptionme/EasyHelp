@@ -175,6 +175,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityPlayerDataNotice);
             AddListenMsgType(MsgType.KMsgCl2GsslotMachineActivityDrawRequest);
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityDrawReply);
+            AddListenMsgType(MsgType.KMsgCl2GsslotMachineActivityFetchStageRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityFetchStageRewardReply);
         }
         
         public void InitPetProto()
