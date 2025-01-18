@@ -114,8 +114,9 @@ namespace HHL.Common
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
                 uint activityId = 190702;
-                var msg = GetMsgGS2CLSlotMachineActivityDrawReply(activityId);
-                PanelMgr.Inst.OpenPanel<PacificRimDrawRewardPanel>((uint)activityId, msg);
+                PanelMgr.Inst.OpenPanel<PacificRimSlotMachinePanel>((uint)activityId);
+                // var msg = GetMsgGS2CLSlotMachineActivityDrawReply(activityId);
+                // PanelMgr.Inst.OpenPanel<PacificRimDrawRewardPanel>((uint)activityId, msg);
                 //PanelMgr.Inst.OpenPanel<PacificRimSuperDrawPanel>((uint)190704,(uint)20);
                 //PanelMgr.Inst.OpenPanel<PacificRimTurntablePanel>();
                 //PanelMgr.Inst.OpenPanel<SlidingPuzzlePanel>((uint)130402);

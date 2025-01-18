@@ -32,7 +32,7 @@ namespace HHL.Common.Pet.Editor
                 var go = debug.gameObject;
                 foreach (var item in PetMgr.Inst.Pets)
                 {
-                    var goComp = item.Value.GetComp<PetGoComp>();
+                    var goComp = item.Value.GetComp<OwnerGoComp>();
                     if (goComp != null && goComp.Go == go)
                     {
                         m_owner = item.Value;
@@ -42,7 +42,7 @@ namespace HHL.Common.Pet.Editor
 
                 foreach (var item in PetMgr.Inst.StakeS)
                 {
-                    var goComp = item.Value.GetComp<PetGoComp>();
+                    var goComp = item.Value.GetComp<OwnerGoComp>();
                     if (goComp != null && goComp.Go == go)
                     {
                         m_owner = item.Value;
@@ -70,7 +70,7 @@ namespace HHL.Common.Pet.Editor
             AttrAnim.target = EditorGUILayout.Foldout(AttrAnim.target, "属性");
             if (EditorGUILayout.BeginFadeGroup(AttrAnim.faded))
             {
-                var attrComp = m_owner.PetAttrComp;
+                var attrComp = m_owner.OwnerAttrComp;
                 var intCount = attrComp.GetIntCount();
                 for (var i = 0; i < intCount; i++)
                 {
@@ -110,7 +110,7 @@ namespace HHL.Common.Pet.Editor
             FsmAnim.target = EditorGUILayout.Foldout(FsmAnim.target, "状态机");
             if (EditorGUILayout.BeginFadeGroup(FsmAnim.faded))
             {
-                var fsmComp = m_owner.GetComp<PetFsmComp>();
+                var fsmComp = m_owner.GetComp<OwnerFsmComp>();
                 var allStates = fsmComp.Fsm.GetAllStates();
                 for (var i = 0; i < allStates.Length; i++)
                 {

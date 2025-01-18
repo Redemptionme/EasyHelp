@@ -156,8 +156,8 @@ namespace HHL.Common.Pet.Editor
                     if (EditorGUILayout.BeginFadeGroup(StakeGroups.faded))
                     {
                         GUILayout.BeginVertical();
-                        var targetId = pet.PetAttrComp.GetIntAttr(PetAttrInt.TargetId);
-                        var posIndex = pet.PetAttrComp.GetIntAttr(PetAttrInt.TargetPosIndex);
+                        var targetId = pet.OwnerAttrComp.GetIntAttr(PetAttrInt.TargetId);
+                        var posIndex = pet.OwnerAttrComp.GetIntAttr(PetAttrInt.TargetPosIndex);
 
                         if (targetId != 0)
                         {
@@ -174,9 +174,9 @@ namespace HHL.Common.Pet.Editor
                             GUILayout.Label($"TargetPosIndex ---");
                         }
 
-                        GUILayout.Label($"TargetHitCount {pet.PetAttrComp.GetIntAttr(PetAttrInt.TargetHitCount)}");
+                        GUILayout.Label($"TargetHitCount {pet.OwnerAttrComp.GetIntAttr(PetAttrInt.TargetHitCount)}");
                         GUILayout.Label(
-                            $"TargetMaxHitCount {pet.PetAttrComp.GetIntAttr(PetAttrInt.TargetMaxHitCount)}");
+                            $"TargetMaxHitCount {pet.OwnerAttrComp.GetIntAttr(PetAttrInt.TargetMaxHitCount)}");
 
                         GUILayout.EndHorizontal();
                     }

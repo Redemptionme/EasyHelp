@@ -153,7 +153,7 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            //InitHeroEquip();
+            InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             ///InitCampIsland();
@@ -166,7 +166,7 @@ namespace HHL.Common
             //InitActivity2048Proto();
             //InitCargoProto();
             //InitIsland();
-            //InitPetProto();
+            InitPetProto();
             InitPacificRimProto();
         }
         
