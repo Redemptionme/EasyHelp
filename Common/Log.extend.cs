@@ -137,7 +137,7 @@ namespace HHL.Common
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
-            InitIncidentMsg();
+            //InitIncidentMsg();
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
@@ -153,7 +153,7 @@ namespace HHL.Common
             //InitNewPegie();
             //InitClean();
             //InitRank();
-            InitHeroEquip();
+            //InitHeroEquip();
             //InitBattleRoyale();
             //InitActivityLimitTIme();
             ///InitCampIsland();
@@ -166,8 +166,39 @@ namespace HHL.Common
             //InitActivity2048Proto();
             //InitCargoProto();
             //InitIsland();
-            InitPetProto();
-            InitPacificRimProto();
+            //InitPetProto();
+            //InitPacificRimProto();
+            
+            InitPetEquipProto();
+            InitBusTurnTable();
+        }
+
+        private void InitBusTurnTable()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClactivityStatusNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityBusinessTurntableNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityBusinessTurntableRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityBusinessTurntableReply);
+            InitTurnTable();
+        }
+
+        public void InitPetEquipProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipWearDataUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspetEquipInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetEquipWearRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipWearReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetEquipStarUpRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipStarUpReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetEquipCreateRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipCreateReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetEquipRemoveRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipRemoveReply);
+            AddListenMsgType(MsgType.KMsgCl2GspetEquipLockRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipLockReply);
+            AddListenMsgType(MsgType.KMsgGs2ClpetEquipUpdateNotice);
         }
         
         public void InitPacificRimProto()
