@@ -137,7 +137,7 @@ namespace HHL.Common
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
-            //InitIncidentMsg();
+            InitIncidentMsg();
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
@@ -169,8 +169,8 @@ namespace HHL.Common
             //InitPetProto();
             //InitPacificRimProto();
             
-            InitPetEquipProto();
-            InitBusTurnTable();
+            //InitPetEquipProto();
+            //InitBusTurnTable();
         }
 
         private void InitBusTurnTable()
