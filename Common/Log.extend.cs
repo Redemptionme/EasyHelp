@@ -129,7 +129,7 @@ namespace HHL.Common
         private void InitMsgFunction()
         {
             InitLogin();
-            InitWise();
+            //InitWise();
             //InitHonorMsg();
             //InitScout();
             //InitExploreMsg();
@@ -137,7 +137,7 @@ namespace HHL.Common
             //InitHonorMsg2();
             //InitHXFDerbyMsg();
             //InitGuildResourceMsg();
-            InitIncidentMsg();
+            //InitIncidentMsg();
             //InitRuneMsg();
             //InitCityPerson();
             //InitCharter();
@@ -171,6 +171,20 @@ namespace HHL.Common
             
             //InitPetEquipProto();
             //InitBusTurnTable();
+            InitActivityAliceProto();
+        }
+        
+        public void InitActivityAliceProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsactivitySwitchRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivitySwitchRewardReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityGetSwitchRewardRequest);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityGetSwitchRewardReply);
+            AddListenMsgType(MsgType.KMsgGs2ClplayerActivityTaskUpdateNotice);
+            
+            InitPacificRimProto();
         }
 
         private void InitBusTurnTable()

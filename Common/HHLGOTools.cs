@@ -46,7 +46,6 @@ namespace HHL.Common
     {
         public static HHLGOTools Self;
         public Vector3 Param1;
-
         public Vector3 Param2;
 
         // Start is called before the first frame update
@@ -78,9 +77,11 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
-                PanelMgr.Inst.OpenPanel<PetFencePanel>();
+                //PanelMgr.Inst.OpenPanel<PetFencePanel>();
+
                 //HHL.Common.Log.Inst.TestShowSeniorRewardPanel();
                 // AppPrefs.CargoFirstAdd.Value = false;
                 // AppPrefs.Save();
