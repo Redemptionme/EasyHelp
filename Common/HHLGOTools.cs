@@ -77,7 +77,9 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
+                PanelMgr.Inst.OpenPanel<PussSlotMachinePanel>(ActivityModule.Inst.FestivalCatSlotMachineId);
+                //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
+                
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
                 //PanelMgr.Inst.OpenPanel<PetFencePanel>();
