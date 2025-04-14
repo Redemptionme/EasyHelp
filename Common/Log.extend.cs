@@ -509,6 +509,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgLs2ClloginReply);
             AddListenMsgType(MsgType.KMsgCl2GsloginRequest);
             AddListenMsgType(MsgType.KMsgGs2ClloginReply);
+            AddListenMsgType(MsgType.KMsgGs2CldayResetNotice);
         }
 
         private void InitActivityLimitTIme()

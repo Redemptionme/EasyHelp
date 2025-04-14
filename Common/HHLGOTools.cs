@@ -77,8 +77,7 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<PussSlotMachinePanel>(ActivityModule.Inst.FestivalCatSlotMachineId);
-                //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
+                PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
                 
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
@@ -114,10 +113,12 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
+                PanelMgr.Inst.OpenPanel<PussSlotMachinePanel>(ActivityModule.Inst.FestivalCatSlotMachineId);
+                
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
-                uint activityId = 190702;
-                PanelMgr.Inst.OpenPanel<PacificRimSlotMachinePanel>((uint)activityId);
+                // uint activityId = 190702;
+                // PanelMgr.Inst.OpenPanel<PacificRimSlotMachinePanel>((uint)activityId);
                 // var msg = GetMsgGS2CLSlotMachineActivityDrawReply(activityId);
                 // PanelMgr.Inst.OpenPanel<PacificRimDrawRewardPanel>((uint)activityId, msg);
                 //PanelMgr.Inst.OpenPanel<PacificRimSuperDrawPanel>((uint)190704,(uint)20);
