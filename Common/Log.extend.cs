@@ -171,7 +171,7 @@ namespace HHL.Common
             
             //InitPetEquipProto();
             //InitBusTurnTable();
-            InitActivityAliceProto();
+            //InitActivityAliceProto();
         }
         
         public void InitActivityAliceProto()
