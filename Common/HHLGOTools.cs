@@ -46,7 +46,6 @@ namespace HHL.Common
     {
         public static HHLGOTools Self;
         public Vector3 Param1;
-
         public Vector3 Param2;
 
         // Start is called before the first frame update
@@ -78,9 +77,12 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
+                
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
-                PanelMgr.Inst.OpenPanel<PetFencePanel>();
+                //PanelMgr.Inst.OpenPanel<PetFencePanel>();
+
                 //HHL.Common.Log.Inst.TestShowSeniorRewardPanel();
                 // AppPrefs.CargoFirstAdd.Value = false;
                 // AppPrefs.Save();
@@ -111,10 +113,12 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
+                PanelMgr.Inst.OpenPanel<PussSlotMachinePanel>(ActivityModule.Inst.FestivalCatSlotMachineId);
+                
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
-                uint activityId = 190702;
-                PanelMgr.Inst.OpenPanel<PacificRimSlotMachinePanel>((uint)activityId);
+                // uint activityId = 190702;
+                // PanelMgr.Inst.OpenPanel<PacificRimSlotMachinePanel>((uint)activityId);
                 // var msg = GetMsgGS2CLSlotMachineActivityDrawReply(activityId);
                 // PanelMgr.Inst.OpenPanel<PacificRimDrawRewardPanel>((uint)activityId, msg);
                 //PanelMgr.Inst.OpenPanel<PacificRimSuperDrawPanel>((uint)190704,(uint)20);
