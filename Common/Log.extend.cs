@@ -1092,7 +1092,7 @@ namespace HHL.Common
                 return;
             }
 
-            if (m_MsgList.Count > 4)
+            if (m_MsgList.Count > 5)
             {
                 // 什么都不填等于啥都要
                 if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal && !m_MsgList.Contains(msgType))
