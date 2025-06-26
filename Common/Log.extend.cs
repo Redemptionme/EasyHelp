@@ -166,7 +166,7 @@ namespace HHL.Common
             //InitActivity2048Proto();
             //InitCargoProto();
             //InitIsland();
-            //InitPetProto();
+            InitPetProto();
             //InitPacificRimProto();
             
             //InitPetEquipProto();
@@ -246,6 +246,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpetTrainUnloadReply);
             AddListenMsgType(MsgType.KMsgCl2GspetTrainRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpetTrainRewardReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GspetHuntBatchHuntCollectRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpetHuntBatchHuntCollectReply);
         }
 
         private void InitIsland()
