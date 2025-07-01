@@ -43,6 +43,7 @@ namespace Game.HHL.Editor
         public string FuncName = "";
         public string TypeName;
         public EProtoType ProtoType;
+        public bool IsRepeated = false;
 
         public void GenProtoType()
         {

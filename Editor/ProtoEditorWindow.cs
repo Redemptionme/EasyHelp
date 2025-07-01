@@ -167,7 +167,8 @@ namespace Game.HHL.Editor
                             var st = new ProtoStruct
                             {
                                 FieldName = pos[equalIndex - 1],
-                                TypeName = TypeNameHelper.GetClientName(pos[equalIndex - 2], isRepeated)
+                                TypeName = TypeNameHelper.GetClientName(pos[equalIndex - 2], isRepeated),
+                                IsRepeated = isRepeated
                             };
 
                             info.Childs.Add(st);
@@ -246,6 +247,8 @@ namespace Game.HHL.Editor
                             sb.Append(")").AppendLine();
                             sb.Append("        ").Append("{").AppendLine();
                             sb.Append("        ").Append("    var msg = new ").Append(info.ClassName).Append("()");
+                            var bRepeated = false;
+                            var repeateSB = new StringBuilder();
                             if (info.Childs.Count == 0)
                             {
                                 sb.Append("        ").Append("{};");
@@ -256,13 +259,27 @@ namespace Game.HHL.Editor
                                 for (var i = 0; i < info.Childs.Count; i++)
                                 {
                                     var childInfo = info.Childs[i];
+                                    if (childInfo.IsRepeated)
+                                    {
+                                        bRepeated = true;
+                                        repeateSB.Append("        ").Append("    msg.").Append(childInfo.FieldName)
+                                            .Append(".AddRange(").Append(childInfo.ParamName).Append(");").AppendLine();
+                                        continue;
+                                    }
+
                                     sb.Append("        ").Append("        ").Append(childInfo.FieldName).Append(" = ")
                                         .Append(childInfo.ParamName).Append(",").AppendLine();
                                 }
 
                                 sb.Append("        ").Append("    };");
                             }
+
                             sb.AppendLine();
+                            if (bRepeated)
+                            {
+                                sb.Append(repeateSB.ToString());
+                            }
+
                             sb.Append("        ").Append("    SendMsg(msg);").AppendLine();
                             sb.Append("        ").Append("}").AppendLine();
                             break;
