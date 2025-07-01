@@ -45,6 +45,11 @@ namespace Game.HHL.Editor
         public EProtoType ProtoType;
         public bool IsRepeated = false;
 
+        public string GetEasyName()
+        {
+            return m_className.Substring(8, m_className.Length - 8);
+        }
+
         public void GenProtoType()
         {
             if (StringUtils.Contains(ClassName, EProtoType.Notice.ToString(), StringComparison.OrdinalIgnoreCase))

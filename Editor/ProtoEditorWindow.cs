@@ -11,9 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using IGG.Framework.Extend;
+using Msgtype;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,7 +22,8 @@ namespace Game.HHL.Editor
     {
         private string m_moduleName = "Test";
         private string m_authorName = "hanlinhe";
-
+        public string[] SendMsgTypeOption = new string[] { "API", "SedEvent", "SendMsg" };
+        private int m_curSendMsgType = 2;
 
         private Vector2 m_protoScrollPos;
         private string m_protoStr;
@@ -60,6 +60,7 @@ namespace Game.HHL.Editor
             //GUILayout.Label("基础设置", EditorStyles.boldLabel);
             m_moduleName = EditorGUILayout.TextField("基础名", m_moduleName);
             m_authorName = EditorGUILayout.TextField("作者名", m_authorName);
+            m_curSendMsgType = EditorGUILayout.Popup("发消息类型 ", m_curSendMsgType, SendMsgTypeOption);
 
             var bc = GUI.backgroundColor;
             GUILayout.EndHorizontal();
@@ -182,7 +183,7 @@ namespace Game.HHL.Editor
                 foreach (var info in m_infos)
                 {
                     var enumName = $"k{info.ClassName}".ToLowerInvariant();
-                    foreach (var msgtype in Enum.GetValues(typeof(Msgtype.MsgType)))
+                    foreach (var msgtype in Enum.GetValues(typeof(MsgType)))
                     {
                         if (enumName == msgtype.ToString().ToLowerInvariant())
                         {
@@ -198,15 +199,30 @@ namespace Game.HHL.Editor
                 m_outputDebugStr = sb.ToString();
 
                 sb.Clear();
+                var bEvt = false;
+                var evtSB = new StringBuilder();
                 foreach (var info in m_infos)
                 {
                     if (info.ProtoType == EProtoType.Request)
                     {
+                        if (m_curSendMsgType == 1)
+                        {
+                            bEvt = true;
+                            evtSB.Append("AddEventListener(").Append(m_moduleName).Append("Event.")
+                                .Append(info.GetEasyName()).Append(", ").Append(info.GetEasyName())
+                                .Append("EventHandler);").AppendLine();
+                        }
+
                         continue;
                     }
 
-                    sb.Append("AddMsgListener<").Append(info.ClassName).Append(">(On").Append(info.ClassName)
-                        .Append(");").AppendLine();
+                    sb.Append("AddMsgListener<").Append(info.GetEasyName()).Append(">(").Append(info.GetEasyName())
+                        .Append("Handler);").AppendLine();
+                }
+
+                if (bEvt)
+                {
+                    sb.Append(evtSB.ToString());
                 }
 
                 m_outputModuleStr1 = sb.ToString();
@@ -220,9 +236,10 @@ namespace Game.HHL.Editor
                             break;
                         case EProtoType.Notice:
                             sb.Append("        ").Append(info.Annotation).AppendLine();
-                            sb.Append("        ").Append("public void On").Append(info.ClassName).Append("(")
+                            sb.Append("        ").Append("private void ").Append(info.GetEasyName()).Append("Handler")
+                                .Append("(")
                                 .Append(info.ClassName)
-                                .Append(" obj)").AppendLine();
+                                .Append(" msg)").AppendLine();
                             sb.Append("        ").Append("{").AppendLine();
                             //sb.Append("        ").Append("    //todo hhl").AppendLine();
                             sb.Append("        ").Append("    ").Append("// AppCache.").Append(m_moduleName).Append(";")
@@ -232,69 +249,35 @@ namespace Game.HHL.Editor
                             sb.Append("        ").Append("}").AppendLine();
                             break;
                         case EProtoType.Request:
-                            sb.Append("        ").Append(info.Annotation).AppendLine();
-                            sb.Append("        ").Append("public void Send").Append(info.ClassName).Append("(");
-                            for (var i = 0; i < info.Childs.Count; i++)
+                            switch (m_curSendMsgType)
                             {
-                                var proto = info.Childs[i];
-                                sb.Append(proto.TypeName).Append(" ").Append(proto.ParamName);
-                                if (i != info.Childs.Count - 1)
-                                {
-                                    sb.Append(", ");
-                                }
+                                case 0:
+                                    OnHandleAPI(sb, info);
+                                    //OnHandleSendMsg(sb, info,false);
+                                    break;
+                                case 1:
+                                    OnHandleEvent(sb, info);
+                                    OnHandleSendMsg(sb, info,false);
+                                    break;
+                                case 2:
+                                    OnHandleSendMsg(sb, info,true);
+                                    break;
                             }
 
-                            sb.Append(")").AppendLine();
-                            sb.Append("        ").Append("{").AppendLine();
-                            sb.Append("        ").Append("    var msg = new ").Append(info.ClassName).Append("()");
-                            var bRepeated = false;
-                            var repeateSB = new StringBuilder();
-                            if (info.Childs.Count == 0)
-                            {
-                                sb.Append("        ").Append("{};");
-                            }
-                            else
-                            {
-                                sb.AppendLine().Append("        ").Append("    {").AppendLine();
-                                for (var i = 0; i < info.Childs.Count; i++)
-                                {
-                                    var childInfo = info.Childs[i];
-                                    if (childInfo.IsRepeated)
-                                    {
-                                        bRepeated = true;
-                                        repeateSB.Append("        ").Append("    msg.").Append(childInfo.FieldName)
-                                            .Append(".AddRange(").Append(childInfo.ParamName).Append(");").AppendLine();
-                                        continue;
-                                    }
-
-                                    sb.Append("        ").Append("        ").Append(childInfo.FieldName).Append(" = ")
-                                        .Append(childInfo.ParamName).Append(",").AppendLine();
-                                }
-
-                                sb.Append("        ").Append("    };");
-                            }
-
-                            sb.AppendLine();
-                            if (bRepeated)
-                            {
-                                sb.Append(repeateSB.ToString());
-                            }
-
-                            sb.Append("        ").Append("    SendMsg(msg);").AppendLine();
-                            sb.Append("        ").Append("}").AppendLine();
                             break;
                         case EProtoType.Reply:
                             sb.Append("        ").Append(info.Annotation).AppendLine();
-                            sb.Append("        ").Append("public void On").Append(info.ClassName).Append("(")
+                            sb.Append("        ").Append("private void ").Append(info.GetEasyName()).Append("Handler")
+                                .Append("(")
                                 .Append(info.ClassName)
-                                .Append(" obj)").AppendLine();
+                                .Append(" msg)").AppendLine();
                             sb.Append("        ").Append("{").AppendLine();
                             sb.Append("        ").Append("    ")
-                                .Append("if ((ErrorCode)obj.ErrorCode != ErrorCode.KEcsuccess)")
+                                .Append("if ((ErrorCode)msg.ErrorCode != ErrorCode.KEcsuccess)")
                                 .AppendLine();
                             sb.Append("        ").Append("    {").AppendLine();
                             sb.Append("        ").Append("        ")
-                                .Append("ErrorHelper.ShowError(obj, (int)obj.ErrorCode);").AppendLine();
+                                .Append("ErrorHelper.ShowError(msg, (int)msg.ErrorCode);").AppendLine();
                             sb.Append("        ").Append("        ").Append("return;").AppendLine();
                             sb.Append("        ").Append("    }").AppendLine();
                             //sb.Append("        ").Append("    // todo hhl;").AppendLine();
@@ -313,10 +296,20 @@ namespace Game.HHL.Editor
                 m_outputModuleStr2 = sb.ToString();
 
                 sb.Clear();
+                var bEvent = false;
+                var eventSB = new StringBuilder();
                 foreach (var info in m_infos)
                 {
                     if (info.ProtoType == EProtoType.Request)
                     {
+                        if (m_curSendMsgType == 1)
+                        {
+                            bEvent = true;
+                            eventSB.Append("public static string ").Append(info.FuncName).Append(" = ").Append('\"')
+                                .Append(m_moduleName)
+                                .Append("Event_").Append(info.FuncName).Append("\"").Append(";").AppendLine();
+                        }
+
                         continue;
                     }
 
@@ -325,8 +318,13 @@ namespace Game.HHL.Editor
                         .Append("Notify_").Append(info.FuncName).Append("\"").Append(";").AppendLine();
                 }
 
-                m_outputNotifyStr = sb.ToString();
+                if (bEvent)
+                {
+                    sb.Append("// Event").AppendLine();
+                    sb.Append(eventSB.ToString());
+                }
 
+                m_outputNotifyStr = sb.ToString();
                 sb.Clear();
             }
 
@@ -357,7 +355,7 @@ namespace Game.HHL.Editor
             }
 
             GUI.backgroundColor = Color.magenta;
-            if (GUILayout.Button("拷贝Notify", GUILayout.Width(200)))
+            if (GUILayout.Button("拷贝Notify和Event", GUILayout.Width(200)))
             {
                 GUIUtility.systemCopyBuffer = m_outputNotifyStr;
             }
@@ -403,6 +401,125 @@ namespace Game.HHL.Editor
             //GUILayout.EndArea();
             GUILayout.EndScrollView();
             GUIUtility.ExitGUI();
+        }
+
+        private void OnHandleAPI(StringBuilder sb, ProtoStruct info)
+        {
+            sb.Append("        ").Append(info.Annotation).Append(" 请将XXX改为自己API名字").AppendLine();
+            sb.Append("        ").Append("public void XXX").Append(info.GetEasyName()).Append("(");
+            for (var i = 0; i < info.Childs.Count; i++)
+            {
+                var proto = info.Childs[i];
+                sb.Append(proto.TypeName).Append(" ").Append(proto.ParamName);
+                if (i != info.Childs.Count - 1)
+                {
+                    sb.Append(", ");
+                }
+            }
+
+            sb.Append(")").AppendLine();
+            sb.Append("        ").Append("{").AppendLine();
+            sb.Append("        ").Append("    // 对param进行参数解析").AppendLine();
+            sb.Append("        ").Append("    var msg = new ").Append(info.ClassName).Append("()");
+            var bRepeated = false;
+            var repeateSB = new StringBuilder();
+            if (info.Childs.Count == 0)
+            {
+                sb.Append("        ").Append("{};");
+            }
+            else
+            {
+                sb.AppendLine().Append("        ").Append("    {").AppendLine();
+                for (var i = 0; i < info.Childs.Count; i++)
+                {
+                    var childInfo = info.Childs[i];
+                    if (childInfo.IsRepeated)
+                    {
+                        bRepeated = true;
+                        repeateSB.Append("        ").Append("    msg.").Append(childInfo.FieldName)
+                            .Append(".AddRange(").Append(childInfo.ParamName).Append(");").AppendLine();
+                        continue;
+                    }
+
+                    sb.Append("        ").Append("        ").Append(childInfo.FieldName).Append(" = ")
+                        .Append(childInfo.ParamName).Append(",").AppendLine();
+                }
+
+                sb.Append("        ").Append("    };");
+            }
+
+            sb.AppendLine();
+            if (bRepeated)
+            {
+                sb.Append(repeateSB.ToString());
+            }
+
+            sb.Append("        ").Append("    SendMsg(msg);").AppendLine();
+            sb.Append("        ").Append("}").AppendLine();
+        }
+
+        private void OnHandleEvent(StringBuilder sb, ProtoStruct info)
+        {
+            sb.Append("        ").Append("private void ").Append(info.GetEasyName()).Append("EventHandler(CallbackVo param)").AppendLine();
+            sb.Append("        ").Append("{").AppendLine();
+            sb.Append("        ").Append("    // 对参数param进行解析").AppendLine();
+            sb.Append("        ").Append("    Send").Append(info.ClassName).Append("();").AppendLine();
+            sb.Append("        ").Append("}").AppendLine();
+        }
+
+        private void OnHandleSendMsg(StringBuilder sb, ProtoStruct info,bool bPublic = false)
+        {
+            var funcType = bPublic ? "public" : "private";
+            sb.Append("        ").Append(info.Annotation).AppendLine();
+            sb.Append("        ").Append(funcType).Append(" void Send").Append(info.GetEasyName()).Append("(");
+            for (var i = 0; i < info.Childs.Count; i++)
+            {
+                var proto = info.Childs[i];
+                sb.Append(proto.TypeName).Append(" ").Append(proto.ParamName);
+                if (i != info.Childs.Count - 1)
+                {
+                    sb.Append(", ");
+                }
+            }
+
+            sb.Append(")").AppendLine();
+            sb.Append("        ").Append("{").AppendLine();
+            sb.Append("        ").Append("    var msg = new ").Append(info.ClassName).Append("()");
+            var bRepeated = false;
+            var repeateSB = new StringBuilder();
+            if (info.Childs.Count == 0)
+            {
+                sb.Append("        ").Append("{};");
+            }
+            else
+            {
+                sb.AppendLine().Append("        ").Append("    {").AppendLine();
+                for (var i = 0; i < info.Childs.Count; i++)
+                {
+                    var childInfo = info.Childs[i];
+                    if (childInfo.IsRepeated)
+                    {
+                        bRepeated = true;
+                        repeateSB.Append("        ").Append("    msg.").Append(childInfo.FieldName)
+                            .Append(".AddRange(").Append(childInfo.ParamName).Append(");").AppendLine();
+                        continue;
+                    }
+
+                    sb.Append("        ").Append("        ").Append(childInfo.FieldName).Append(" = ")
+                        .Append(childInfo.ParamName).Append(",").AppendLine();
+                }
+
+                sb.Append("        ").Append("    };");
+            }
+
+            sb.AppendLine();
+            if (bRepeated)
+            {
+                sb.Append(repeateSB.ToString());
+            }
+
+            sb.Append("        ").Append("    SendMsg(msg);").AppendLine();
+            sb.Append("        ").Append("}").AppendLine();
         }
     }
 }
