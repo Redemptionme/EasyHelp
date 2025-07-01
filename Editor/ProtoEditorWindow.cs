@@ -74,7 +74,7 @@ namespace Game.HHL.Editor
 
             GUILayout.BeginHorizontal();
             GUI.backgroundColor = Color.green;
-            if (GUILayout.Button("生成Proto消息代码", GUILayout.Width(200)))
+            if (GUILayout.Button("生成基础Proto消息代码", GUILayout.Width(200)))
             {
                 m_infos.Clear();
                 using (var strReader = new StringReader(m_protoStr))
@@ -216,7 +216,7 @@ namespace Game.HHL.Editor
                         continue;
                     }
 
-                    sb.Append("AddMsgListener<").Append(info.GetEasyName()).Append(">(").Append(info.GetEasyName())
+                    sb.Append("AddMsgListener<").Append(info.ClassName).Append(">(").Append(info.GetEasyName())
                         .Append("Handler);").AppendLine();
                 }
 
@@ -463,7 +463,7 @@ namespace Game.HHL.Editor
             sb.Append("        ").Append("private void ").Append(info.GetEasyName()).Append("EventHandler(CallbackVo param)").AppendLine();
             sb.Append("        ").Append("{").AppendLine();
             sb.Append("        ").Append("    // 对参数param进行解析").AppendLine();
-            sb.Append("        ").Append("    Send").Append(info.ClassName).Append("();").AppendLine();
+            sb.Append("        ").Append("    Send").Append(info.GetEasyName()).Append("();").AppendLine();
             sb.Append("        ").Append("}").AppendLine();
         }
 
