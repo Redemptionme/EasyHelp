@@ -166,8 +166,8 @@ namespace HHL.Common
             //InitActivity2048Proto();
             //InitCargoProto();
             //InitIsland();
-            InitPetProto();
-            //InitPacificRimProto();
+            //InitPetProto();
+            InitPacificRimProto();
             
             //InitPetEquipProto();
             //InitBusTurnTable();
@@ -222,6 +222,18 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityDrawReply);
             AddListenMsgType(MsgType.KMsgCl2GsslotMachineActivityFetchStageRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityFetchStageRewardReply);
+            
+            
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityBaseNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivitySelectRewardNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivitySelectRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivitySelectReply);
+            AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivityDrawRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityDrawReply);
+            AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivityStageRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardReply);
         }
         
         public void InitPetProto()
