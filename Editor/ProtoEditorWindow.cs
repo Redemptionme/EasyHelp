@@ -22,7 +22,7 @@ namespace Game.HHL.Editor
     {
         private string m_moduleName = "Test";
         private string m_authorName = "hanlinhe";
-        public string[] SendMsgTypeOption = new string[] { "API", "SedEvent", "SendMsg" };
+        public string[] SendMsgTypeOption = new string[] { "API", "SendEvent", "SendMsg" };
         private int m_curSendMsgType = 2;
 
         private Vector2 m_protoScrollPos;
