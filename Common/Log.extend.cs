@@ -142,7 +142,7 @@ namespace HHL.Common
             //InitCityPerson();
             //InitCharter();
             //InitArenaShop();
-            //InitTurnTable();
+            InitTurnTable();
             //InitWaterStatus();
             //InitPompeii();
             //InitMail();
@@ -167,23 +167,24 @@ namespace HHL.Common
             //InitCargoProto();
             //InitIsland();
             //InitPetProto();
-            InitPacificRimProto();
-            
+            //InitPacificRimProto();
+
             //InitPetEquipProto();
             //InitBusTurnTable();
             //InitActivityAliceProto();
+            InitPoolLottery();
         }
-        
+
         public void InitActivityAliceProto()
         {
             AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsactivitySwitchRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivitySwitchRewardReply);
             AddListenMsgType(MsgType.KMsgCl2GsactivityGetSwitchRewardRequest);
             AddListenMsgType(MsgType.KMsgCl2GsactivityGetSwitchRewardReply);
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityTaskUpdateNotice);
-            
+
             InitPacificRimProto();
         }
 
@@ -214,7 +215,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpetEquipLockReply);
             AddListenMsgType(MsgType.KMsgGs2ClpetEquipUpdateNotice);
         }
-        
+
         public void InitPacificRimProto()
         {
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityPlayerDataNotice);
@@ -222,8 +223,10 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityDrawReply);
             AddListenMsgType(MsgType.KMsgCl2GsslotMachineActivityFetchStageRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClslotMachineActivityFetchStageRewardReply);
-            
-            
+        }
+
+        public void InitPoolLottery()
+        {
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityNotice);
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityBaseNotice);
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivitySelectRewardNotice);
@@ -234,8 +237,11 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityDrawReply);
             AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivityStageRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardReply);
+            AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivityStageRewardsRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardsReply);
+
         }
-        
+
         public void InitPetProto()
         {
             AddListenMsgType(MsgType.KMsgGs2ClpetHuntEventsNotice);
@@ -247,8 +253,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpetHuntHuntCollectReply);
             AddListenMsgType(MsgType.KMsgCl2GspetHuntHuntInstantRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpetHuntHuntInstantReply);
-            
-            
+
+
             AddListenMsgType(MsgType.KMsgGs2ClpetTrainCellDataUpdateNotice);
             AddListenMsgType(MsgType.KMsgCl2GspetTrainInfoRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpetTrainInfoReply);
@@ -258,7 +264,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpetTrainUnloadReply);
             AddListenMsgType(MsgType.KMsgCl2GspetTrainRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpetTrainRewardReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GspetHuntBatchHuntCollectRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpetHuntBatchHuntCollectReply);
         }
@@ -366,7 +372,7 @@ namespace HHL.Common
 
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
-            
+
             // 红包
             AddListenMsgType(MsgType.KMsgGs2ClplayerHongbaoDataNotice);
             AddListenMsgType(MsgType.KMsgGs2ClplayerHongbaoUpdateNotice);
@@ -658,73 +664,75 @@ namespace HHL.Common
             //英雄
             //for(int i = 0; i < 10; i++)
             {
-                reward.Add(new Resource(){ ResType = 11,SubType = 1063,Value = 2,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 40000,Value = 41,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 15001,Value = 1068,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 20010,Value = 19,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 21010,Value = 28,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 40011,Value = 70,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 20000,Value = 102,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 14000,Value = 28,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 23010,Value = 21,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 21000,Value = 84,});
-                reward.Add(new Resource(){ ResType = 2,SubType = 14010,Value = 14,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 141,Value = 1370,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 109,Value = 1270,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 143,Value = 1020,});
-                reward.Add(new Resource(){ ResType = 14,SubType = 113,Value = 1400,});
-                reward.Add(new Resource(){ ResType = 11,SubType = 1062,Value = 21,});
-                reward.Add(new Resource(){ ResType = 11,SubType = 1064,Value = 2,});
+                reward.Add(new Resource { ResType = 11, SubType = 1063, Value = 2 });
+                reward.Add(new Resource { ResType = 2, SubType = 40000, Value = 41 });
+                reward.Add(new Resource { ResType = 2, SubType = 15001, Value = 1068 });
+                reward.Add(new Resource { ResType = 2, SubType = 20010, Value = 19 });
+                reward.Add(new Resource { ResType = 2, SubType = 21010, Value = 28 });
+                reward.Add(new Resource { ResType = 2, SubType = 40011, Value = 70 });
+                reward.Add(new Resource { ResType = 2, SubType = 20000, Value = 102 });
+                reward.Add(new Resource { ResType = 2, SubType = 14000, Value = 28 });
+                reward.Add(new Resource { ResType = 2, SubType = 23010, Value = 21 });
+                reward.Add(new Resource { ResType = 2, SubType = 21000, Value = 84 });
+                reward.Add(new Resource { ResType = 2, SubType = 14010, Value = 14 });
+                reward.Add(new Resource { ResType = 14, SubType = 141, Value = 1370 });
+                reward.Add(new Resource { ResType = 14, SubType = 109, Value = 1270 });
+                reward.Add(new Resource { ResType = 14, SubType = 143, Value = 1020 });
+                reward.Add(new Resource { ResType = 14, SubType = 113, Value = 1400 });
+                reward.Add(new Resource { ResType = 11, SubType = 1062, Value = 21 });
+                reward.Add(new Resource { ResType = 11, SubType = 1064, Value = 2 });
             }
 
             // 科技
-            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 1,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 2,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2051,Value = 3,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 2,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2052,Value = 3,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
-            reward.Add(new Resource(){ ResType = 24,SubType = 2053,Value = 4,});
+            reward.Add(new Resource { ResType = 24, SubType = 2051, Value = 1 });
+            reward.Add(new Resource { ResType = 24, SubType = 2051, Value = 2 });
+            reward.Add(new Resource { ResType = 24, SubType = 2051, Value = 3 });
+            reward.Add(new Resource { ResType = 24, SubType = 2052, Value = 2 });
+            reward.Add(new Resource { ResType = 24, SubType = 2052, Value = 3 });
+            reward.Add(new Resource { ResType = 24, SubType = 2053, Value = 4 });
+            reward.Add(new Resource { ResType = 24, SubType = 2053, Value = 4 });
 
-            reward.Add(new Resource()
+            reward.Add(new Resource
             {
                 ResType = (uint)PlayerAttributeType.KPlayerAttrItem,
                 SubType = 46604,
-                Value = 19,
+                Value = 19
             });
-            
-            reward.Add(new Resource()
+
+            reward.Add(new Resource
             {
                 ResType = (uint)PlayerAttributeType.KPlayerAttrTechnology,
                 SubType = 10001,
-                Value = 1,
+                Value = 1
             });
-            reward.Add(new Resource()
+            reward.Add(new Resource
             {
                 ResType = (uint)PlayerAttributeType.KPlayerAttrHero,
                 SubType = 1063,
-                Value = 1,
+                Value = 1
             });
-           
-            reward.Add(new Resource()
+
+            reward.Add(new Resource
             {
                 ResType = (uint)PlayerAttributeType.KPlayerAttrItem,
                 SubType = 46604,
-                Value = 15,
+                Value = 15
             });
 
             var specialRes = new SpecialRes();
             specialRes.Type = PlayerAttributeType.KPlayerAttrItem;
             specialRes.Id = 46604;
             specialRes.UIRender = OnRenderTest;
-            RewardModule.Inst.ShowSeniorRewardPanel(reward,true,85037,0,80463,SRPCloseType.ClickEmptyClose,null,null,null,null,specialRes);
+            RewardModule.Inst.ShowSeniorRewardPanel(reward, true, 85037, 0, 80463, SRPCloseType.ClickEmptyClose, null,
+                null, null, null, specialRes);
         }
 
-        private void OnRenderTest(Resource res, BaseItemReceive ui,int index)
+        private void OnRenderTest(Resource res, BaseItemReceive ui, int index)
         {
             ui.m_ctrlIconItem.selectedIndex = 3;
             Print($"Res {res}");
         }
+
         private void InitNewPegie()
         {
             AddListenMsgType(MsgType.KMsgGs2ClallHeroNotice);
@@ -871,6 +879,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableReply);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableStageRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityTurntableStageRewardReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableStageRewardOneUseRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityTurntableStageRewardOneUseReply);
         }
 
         private void InitArenaShop()
@@ -942,10 +953,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClradarCompleteReply);
             AddListenMsgType(MsgType.KMsgCl2GsradarRefreshRequest);
             AddListenMsgType(MsgType.KMsgGs2ClradarRefreshReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsradarCompleteAllRequest);
             AddListenMsgType(MsgType.KMsgGs2ClradarCompleteAllReply);
-
         }
 
         private void InitGuildResourceMsg()

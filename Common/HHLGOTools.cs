@@ -26,6 +26,7 @@ using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
+using IGG.Game.Module.Notification;
 using IGG.Game.Module.PacificRim.View;
 using IGG.Game.Module.Pet.View;
 using IGG.Game.Module.PlayerOp.OpStates;
@@ -77,7 +78,9 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
+                NotificationModule.Inst.GetAllNotifis();
+                //PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
+                //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
                 
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 

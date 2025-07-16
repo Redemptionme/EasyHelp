@@ -14,7 +14,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
 {
     public class __PANEL_NAME__ : Base__PANEL_NAME__
     {
-        private PanelRigHelper m_rigHelper;
+        private PanelRigHelper m_rigHelper = new();
         
         protected override void OnInit()
         {
@@ -26,18 +26,17 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
             return true;
         }
         
-        private void RigCfg(ParamVo param)
+        private void InitConfigs(ParamVo param)
         {
             // xxx = param.Get<uint>();
         }
           
-        private void RigEvent()
+        private void AddListeners()
         {
-            m_rigHelper = new PanelRigHelper();
-            // m_owner.AddEventListener(__MODULE_NAME__Notify.xxx, xxx);
+            // m_rigHelper
         }
 
-        private void UnRigEvent()
+        private void RemoveListeners()
         {
             m_rigHelper.Clear();
         }
@@ -45,13 +44,13 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         protected override bool OnOpen(ParamVo param)
         {
             //这里可以处理参数及注册各种事件
-            RigCfg(param);
+            InitConfigs(param);
             if (!CheckOpen())
             {
                 IGG.Framework.Logging.Logger.LogError($"{ResName} CheckOpen fail");
                 return false;
             }
-            RigEvent();
+            AddListeners();
             RefreshUI();
             return true;
         }
@@ -59,7 +58,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         protected override void OnClose()
         {
             //这里可以移除各种事件
-            UnRigEvent();
+            RemoveListeners();
         }
         
         private void RefreshUI()
