@@ -46,6 +46,7 @@ namespace HHL.Common
     public class HHLGOTools : MonoBehaviour
     {
         public static HHLGOTools Self;
+        public bool IsAllMsg = false;
         public Vector3 Param1;
         public Vector3 Param2;
 
@@ -78,8 +79,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                NotificationModule.Inst.GetAllNotifis();
-                //PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
+                //NotificationModule.Inst.GetAllNotifis();
+                PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
                 //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
                 
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
@@ -116,7 +117,7 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                PanelMgr.Inst.OpenPanel<PussSlotMachinePanel>(ActivityModule.Inst.FestivalCatSlotMachineId);
+                PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.PoolLotteryActivityId);
                 
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 

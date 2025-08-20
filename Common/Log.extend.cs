@@ -142,7 +142,6 @@ namespace HHL.Common
             //InitCityPerson();
             //InitCharter();
             //InitArenaShop();
-            InitTurnTable();
             //InitWaterStatus();
             //InitPompeii();
             //InitMail();
@@ -172,7 +171,9 @@ namespace HHL.Common
             //InitPetEquipProto();
             //InitBusTurnTable();
             //InitActivityAliceProto();
-            InitPoolLottery();
+            
+            //InitTurnTable();
+            //InitPoolLottery();
         }
 
         public void InitActivityAliceProto()
@@ -1117,7 +1118,7 @@ namespace HHL.Common
                 return;
             }
 
-            if (m_MsgList.Count > 4)
+            if (m_MsgList.Count > 4 && !HHLGOTools.Self.IsAllMsg)
             {
                 // 什么都不填等于啥都要
                 if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal && !m_MsgList.Contains(msgType))
