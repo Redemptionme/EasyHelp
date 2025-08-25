@@ -174,6 +174,29 @@ namespace HHL.Common
             
             //InitTurnTable();
             //InitPoolLottery();
+            InitTroopEquipProto();
+        }
+        public void InitTroopEquipProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipNewAddNotice);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipRemoveNotice);
+            AddListenMsgType(MsgType.KMsgGs2CltroopOrgingCareerUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipCreateRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipCreateReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipUpLvlRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipUpLvlReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipRemoveRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipRemoveReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipLockRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipLockReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipWearRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipWearReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopEquipEntryMeltingRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipEntryMeltingReply);
+            AddListenMsgType(MsgType.KMsgCl2GstroopOrgingCareerSwitchRequest);
+            AddListenMsgType(MsgType.KMsgGs2CltroopOrgingCareerSwitchReply);
         }
 
         public void InitActivityAliceProto()
