@@ -32,6 +32,7 @@ using IGG.Game.Module.Pet.View;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
 using IGG.Game.Module.Skin.View;
+using IGG.Game.Module.TroopEquip.View;
 using IGG.Game.Module.Vehicle.View;
 using IGG.Game.Module.WorldMap.Help;
 using IGG.Game.UI.Hero;
@@ -79,10 +80,11 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>();
                 //NotificationModule.Inst.GetAllNotifis();
-                PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
+                //PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
                 //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
-                
+
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
                 //PanelMgr.Inst.OpenPanel<PetFencePanel>();
