@@ -241,7 +241,6 @@ namespace Game.HHL.Editor
                                 .Append(info.ClassName)
                                 .Append(" msg)").AppendLine();
                             sb.Append("        ").Append("{").AppendLine();
-                            //sb.Append("        ").Append("    //todo hhl").AppendLine();
                             sb.Append("        ").Append("    ").Append("// AppCache.").Append(m_moduleName).Append(";")
                                 .AppendLine();
                             sb.Append("        ").Append("    ").Append("SendNotify(").Append(m_moduleName)
@@ -280,7 +279,6 @@ namespace Game.HHL.Editor
                                 .Append("ErrorHelper.ShowError(msg, (int)msg.ErrorCode);").AppendLine();
                             sb.Append("        ").Append("        ").Append("return;").AppendLine();
                             sb.Append("        ").Append("    }").AppendLine();
-                            //sb.Append("        ").Append("    // todo hhl;").AppendLine();
                             //sb.Append("        ").Append("    ").Append("AppCache.").Append(m_moduleName).Append(";").AppendLine();
                             sb.Append("        ").Append("    ").Append("SendNotify(").Append(m_moduleName)
                                 .Append("Notify.").Append(info.FuncName).Append(")").Append(";")
