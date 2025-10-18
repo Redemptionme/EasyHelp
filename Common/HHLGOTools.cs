@@ -80,7 +80,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>();
+                PanelMgr.Inst.OpenPanel<KOFTurntablePanel>((uint)191035);
+                //PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>();
                 //NotificationModule.Inst.GetAllNotifis();
                 //PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
                 //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);

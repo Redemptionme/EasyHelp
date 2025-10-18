@@ -169,13 +169,24 @@ namespace HHL.Common
             //InitPacificRimProto();
 
             //InitPetEquipProto();
-            //InitBusTurnTable();
+            InitBusTurnTable();
             //InitActivityAliceProto();
             
             //InitTurnTable();
-            //InitPoolLottery();
-            InitTroopEquipProto();
+            InitPoolLottery();
+            
+            //InitTroopEquipProto();
+            
+            InitBoxItem();
         }
+
+        private void InitBoxItem()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsitemUseRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClupdateItemNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClitemUseReply);
+        }
+
         public void InitTroopEquipProto()
         {
             AddListenMsgType(MsgType.KMsgGs2CltroopEquipTroopHisMaxPowerNotice);
