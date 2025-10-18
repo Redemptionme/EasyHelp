@@ -178,6 +178,7 @@ namespace HHL.Common
         }
         public void InitTroopEquipProto()
         {
+            AddListenMsgType(MsgType.KMsgGs2CltroopEquipTroopHisMaxPowerNotice);
             AddListenMsgType(MsgType.KMsgGs2CltroopEquipNewAddNotice);
             AddListenMsgType(MsgType.KMsgGs2CltroopEquipRemoveNotice);
             AddListenMsgType(MsgType.KMsgGs2CltroopOrgingCareerUpdateNotice);
