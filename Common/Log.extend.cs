@@ -172,8 +172,25 @@ namespace HHL.Common
             //InitPetEquipProto();
             //InitBusTurnTable();
             //InitActivityAliceProto();
+            InitPlaneWarGuildAllPanel();
         }
-        
+
+        private void InitPlaneWarGuildAllPanel()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClguildApplicationForAllianceUpdateNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClguildAllianceUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsguildApplicationForAllianceRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildApplicationForAllianceReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildAllianceProcessingResultRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildAllianceProcessingResultReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildOtherAllianceInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildOtherAllianceInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildAllianceInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildAllianceInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildAllianceCancelRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildAllianceCancelReply);
+        }
+
         public void InitActivityAliceProto()
         {
             AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
