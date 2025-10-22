@@ -26,11 +26,13 @@ using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
 using IGG.Game.Module.NewCity;
+using IGG.Game.Module.Notification;
 using IGG.Game.Module.PacificRim.View;
 using IGG.Game.Module.Pet.View;
 using IGG.Game.Module.PlayerOp.OpStates;
 using IGG.Game.Module.Reward;
 using IGG.Game.Module.Skin.View;
+using IGG.Game.Module.TroopEquip.View;
 using IGG.Game.Module.Vehicle.View;
 using IGG.Game.Module.WorldMap.Help;
 using IGG.Game.UI.Hero;
@@ -45,6 +47,7 @@ namespace HHL.Common
     public class HHLGOTools : MonoBehaviour
     {
         public static HHLGOTools Self;
+        public bool IsAllMsg = false;
         public Vector3 Param1;
         public Vector3 Param2;
 
@@ -77,8 +80,12 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
-                
+                PanelMgr.Inst.OpenPanel<KOFTurntablePanel>((uint)191035);
+                //PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>();
+                //NotificationModule.Inst.GetAllNotifis();
+                //PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
+                //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
+
                 //AppPrefs.SeasonShopIslandNeedTip.Value = true;
                 //AppPrefs.SeasonShopIslandOpenZeroTime.Value = 0; 
                 //PanelMgr.Inst.OpenPanel<PetFencePanel>();
@@ -113,7 +120,7 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                PanelMgr.Inst.OpenPanel<PussSlotMachinePanel>(ActivityModule.Inst.FestivalCatSlotMachineId);
+                PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.PoolLotteryActivityId);
                 
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
