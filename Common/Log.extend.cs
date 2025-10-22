@@ -165,19 +165,21 @@ namespace HHL.Common
             //InitActivity2048Proto();
             //InitCargoProto();
             //InitIsland();
-            //InitPetProto();
+            InitPetProto();
             //InitPacificRimProto();
 
             //InitPetEquipProto();
-            InitBusTurnTable();
+            //InitBusTurnTable();
             //InitActivityAliceProto();
             
             //InitTurnTable();
-            InitPoolLottery();
-            
+            //InitPoolLottery();
             //InitTroopEquipProto();
             
-            InitBoxItem();
+            //InitBoxItem();
+            
+            
+            
         }
 
         private void InitBoxItem()
