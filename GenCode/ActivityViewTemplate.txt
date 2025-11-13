@@ -24,8 +24,8 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         {
             m_panel = panel;
             m_activityConfig = cfg;
-            RigCfg();
-            RigEvent();
+            InitConfigs();
+            AddListeners();
             RefreshTitle();    
             RefreshUI();
         }
@@ -42,7 +42,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         
         protected override void OnClose()
         {
-            UnRigEvent();
+            RemoveListeners();
         }
         
         private void InitConfigs()
@@ -58,9 +58,8 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         }
           
         private void AddListeners()
-        {
-            m_rigHelper = new PanelRigHelper();
-            // m_owner.AddEventListener(__MODULE_NAME__Notify.xxx, xxx);
+        {             
+            // m_rigHelper
             m_btnInfo.onClick.Add(OnClickInfo);
             Timers.inst.Add(1, -1, OnTimeRefreshTime);
         }
@@ -107,7 +106,6 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private void OnClickInfo(EventContext context)
         {
             m_panel.GotoRule(m_activityConfig.Id);
-        }
-        
+        }        
     }
 }
