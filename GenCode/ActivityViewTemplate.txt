@@ -61,21 +61,21 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         {             
             // m_rigHelper
             m_btnInfo.onClick.Add(OnClickInfo);
-            Timers.inst.Add(1, -1, OnTimeRefreshTime);
+            Timers.inst.Add(1, -1, OnTimeUpdate);
         }
 
         private void RemoveListeners()
         {
             m_rigHelper.Clear();
             m_btnInfo.onClick.Remove(OnClickInfo);
-            Timers.inst.Remove(OnTimeRefreshTime);
+            Timers.inst.Remove(OnTimeUpdate);
         }
         
         private void RefreshTitle()
         {
             m_txtTitle.text = m_activityConfig.GetTitle();           
             m_txtUtc.text = TimeFormatHelper.DayAToDayB(m_activityInfo.TimeBegin, m_activityInfo.TimeEnd);
-            OnTimeRefreshTime(null);
+            OnTimeUpdate(null);
         }        
         
         private void RefreshUI()
@@ -83,7 +83,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
             // copy to module
             RegisterView<__PANEL_NAME__>(Base__PANEL_NAME__.URL);
         }
-        private void OnTimeRefreshTime(object param)
+        private void OnTimeUpdate(object param)
         {
              if(m_activityInfo == null) return;
              
@@ -91,7 +91,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
              uint second = 0;
              if (endTime < TimeHelper.ServerTime)
              {
-                 Timers.inst.Remove(OnTimeRefreshTime);                 
+                 Timers.inst.Remove(OnTimeUpdate);                 
                  m_owner.DispatchEvent(ActivityEvent.UpdateTimeEndActivity, m_activityConfig.Id, 0);
                  m_panelMgr.ClosePanel("ActivityPanel");
              }

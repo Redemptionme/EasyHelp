@@ -165,22 +165,29 @@ namespace HHL.Common
             //InitActivity2048Proto();
             //InitCargoProto();
             //InitIsland();
-            InitPetProto();
+            //InitPetProto();
             //InitPacificRimProto();
 
             //InitPetEquipProto();
             //InitBusTurnTable();
             //InitActivityAliceProto();
-            
+
             //InitTurnTable();
             //InitPoolLottery();
             //InitTroopEquipProto();
-            
+
             //InitBoxItem();
-            
-            
-            
-            InitPlaneWarGuildAllPanel();
+            //InitPlaneWarGuildAllPanel();
+
+            InitGvgProto();
+        }
+
+        private void InitGvgProto()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsactivityRankQueryRankBoardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityRankQueryRankBoardReply);
+            AddListenMsgType(MsgType.KMsgCl2GsguildActivityMemberScoreDataRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClguildActivityMemberScoreDataResponse);
         }
 
         private void InitBoxItem()
@@ -295,7 +302,6 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardReply);
             AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivityStageRewardsRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardsReply);
-
         }
 
         public void InitPetProto()
@@ -935,7 +941,7 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableReply);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableStageRewardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityTurntableStageRewardReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GsactivityTurntableStageRewardOneUseRequest);
             AddListenMsgType(MsgType.KMsgGs2ClactivityTurntableStageRewardOneUseReply);
         }

@@ -25,6 +25,8 @@ using IGG.Game.Module.Cargo.View;
 using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
+using IGG.Game.Module.IslandWar.View.Rank;
+using IGG.Game.Module.Jungle.View.Rank;
 using IGG.Game.Module.NewCity;
 using IGG.Game.Module.Notification;
 using IGG.Game.Module.PacificRim.View;
@@ -36,6 +38,7 @@ using IGG.Game.Module.TroopEquip.View;
 using IGG.Game.Module.Vehicle.View;
 using IGG.Game.Module.WorldMap.Help;
 using IGG.Game.UI.Hero;
+using IGG.Game.UI.Jungle;
 using Protomsg;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -80,8 +83,9 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                OpenGvgMainRank();
                 //PanelMgr.Inst.OpenPanel<KOFTurntablePanel>((uint)191035);
-                PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>(1);
+                //PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>(1);
                 //NotificationModule.Inst.GetAllNotifis();
                 //PanelMgr.Inst.OpenPanel<DuckLotteryPanel>(ActivityModule.Inst.PoolLotteryActivityId);
                 //PanelMgr.Inst.OpenPanel<AliceSlotMachinePanel>(ActivityModule.Inst.AliceSlotMachineId);
@@ -214,6 +218,20 @@ namespace HHL.Common
             //     var pos8 = new Vector3(dis - fLen, 0, 0) + pos1;
             //     AddCube(pos8, new Vector3(0.1f, 0.1f, 0.1f), new Vector3(0f, -45f, 0f), Color.blue, "pos8");
             // }
+        }
+
+        private void OpenGvgMainRank()
+        {
+            PanelMgr.Inst.OpenPanel(BaseJungleRankPanel.ResName, new object[]  
+            {  
+                (uint)160051,  
+                new List<JungleRankEnumType>  
+                {        JungleRankEnumType.JungleRankEnumType_PosTempleGuildRank,  
+                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildMemberRank,  
+                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildRankReward,  
+                    JungleRankEnumType.JungleRankEnumType_LootAward  
+                }  
+            });
         }
 
         public MsgGS2CLSlotMachineActivityDrawReply GetMsgGS2CLSlotMachineActivityDrawReply(uint activityId)
