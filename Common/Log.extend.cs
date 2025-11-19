@@ -188,6 +188,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClactivityRankQueryRankBoardReply);
             AddListenMsgType(MsgType.KMsgCl2GsguildActivityMemberScoreDataRequest);
             AddListenMsgType(MsgType.KMsgGs2ClguildActivityMemberScoreDataResponse);
+            AddListenMsgType(MsgType.KMsgCl2GsislandWarItemCureRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClislandWarItemCureReply);
         }
 
         private void InitBoxItem()

@@ -18,7 +18,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private ActivityPanel m_panel;
         private ActivityConfig m_activityConfig;
         private ActivityBaseInfo m_activityInfo;
-        private PanelRigHelper m_rigHelper;
+        private PanelRigHelper m_rigHelper = new();
         
         public void Init(ActivityPanel panel, ActivityConfig cfg)
         {
