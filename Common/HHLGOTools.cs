@@ -83,7 +83,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                OpenGvgMainRank();
+                PanelMgr.Inst.OpenPanel<KOFLotteryPanel>((uint)191071);
+                //OpenGvgMainRank();
                 //PanelMgr.Inst.OpenPanel<KOFTurntablePanel>((uint)191035);
                 //PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>(1);
                 //NotificationModule.Inst.GetAllNotifis();
