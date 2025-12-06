@@ -179,7 +179,43 @@ namespace HHL.Common
             //InitBoxItem();
             //InitPlaneWarGuildAllPanel();
 
-            InitGvgProto();
+            //InitGvgProto();
+
+            InitGiantWorldBoss();
+        }
+
+        public void InitTitanStrikeWorldBossProto()
+        {
+            AddListenMsgType(MsgType.KMsgS2ClworldBossInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossAttackRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossAttackReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossAchievementRewardRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossAchievementRewardReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossHistoryReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossDailyTopHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossDailyTopHistoryReply);
+            AddListenMsgType(MsgType.KMsgS2SworldBossDailyTopHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2SworldBossDailyTopHistoryResponse);
+        }
+
+        private void InitGiantWorldBoss()
+        {
+            // 参考所有要打印
+            InitTitanStrikeWorldBossProto();
+
+            AddListenMsgType(MsgType.KMsgS2ClgiantWorldBossActivityInfoNotify);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAchievementRewardRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAchievementRewardReply);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAttackRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAttackReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantHistoryReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantDailyTopHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantDailyTopHistoryReply);
+            AddListenMsgType(MsgType.KMsgS2SworldBossGiantDailyTopHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2SworldBossGiantDailyTopHistoryResponse);
         }
 
         private void InitGvgProto()
