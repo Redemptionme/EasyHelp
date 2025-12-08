@@ -25,6 +25,7 @@ using IGG.Game.Module.Cargo.View;
 using IGG.Game.Module.CityBuilding;
 using IGG.Game.Module.Common;
 using IGG.Game.Module.Common.View;
+using IGG.Game.Module.GiantBoss.View;
 using IGG.Game.Module.IslandWar.View.Rank;
 using IGG.Game.Module.Jungle.View.Rank;
 using IGG.Game.Module.NewCity;
@@ -83,7 +84,8 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<KOFLotteryPanel>((uint)191071);
+                PanelMgr.Inst.OpenPanel<GiantBossPanel>();
+                //PanelMgr.Inst.OpenPanel<KOFLotteryPanel>((uint)191071);
                 //OpenGvgMainRank();
                 //PanelMgr.Inst.OpenPanel<KOFTurntablePanel>((uint)191035);
                 //PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>(1);
