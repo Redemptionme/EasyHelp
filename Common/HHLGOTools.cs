@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Google.Protobuf.Collections;
 using HHL.Game;
 using IGG.Framework.Cache;
+using IGG.Framework.EditorTools;
 using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Activity;
@@ -128,7 +130,7 @@ namespace HHL.Common
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.PoolLotteryActivityId);
-                
+
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
                 // uint activityId = 190702;
@@ -160,7 +162,7 @@ namespace HHL.Common
             {
                 //m_panelMgr.OpenPanel("CommonNeedResPanel", new object[] { list });
                 var vos = new List<UseItemVo>();
-                var itemVo = new UseItemVo()
+                var itemVo = new UseItemVo
                 {
                     ResType = BaseResType.Item,
                     NeedCount = 25,
@@ -225,21 +227,22 @@ namespace HHL.Common
 
         private void OpenGvgMainRank()
         {
-            PanelMgr.Inst.OpenPanel(BaseJungleRankPanel.ResName, new object[]  
-            {  
-                (uint)160051,  
-                new List<JungleRankEnumType>  
-                {        JungleRankEnumType.JungleRankEnumType_PosTempleGuildRank,  
-                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildMemberRank,  
-                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildRankReward,  
-                    JungleRankEnumType.JungleRankEnumType_LootAward  
-                }  
+            PanelMgr.Inst.OpenPanel(BaseJungleRankPanel.ResName, new object[]
+            {
+                (uint)160051,
+                new List<JungleRankEnumType>
+                {
+                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildRank,
+                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildMemberRank,
+                    JungleRankEnumType.JungleRankEnumType_PosTempleGuildRankReward,
+                    JungleRankEnumType.JungleRankEnumType_LootAward
+                }
             });
         }
 
         public MsgGS2CLSlotMachineActivityDrawReply GetMsgGS2CLSlotMachineActivityDrawReply(uint activityId)
         {
-            var msg = new MsgGS2CLSlotMachineActivityDrawReply()
+            var msg = new MsgGS2CLSlotMachineActivityDrawReply
             {
                 ActivityId = activityId,
                 DrawType = 2
@@ -249,13 +252,13 @@ namespace HHL.Common
             {
                 var cfg = list[Random.Range(0, list.Count)];
                 var big = Random.Range(0, 2) == 1;
-                var info = new SlotMachineActivityRewardInfo()
+                var info = new SlotMachineActivityRewardInfo
                 {
                     Id = cfg.Id,
                     Odds = (uint)(big ? 2 : 0)
                 };
                 var vos = RewardDao.Inst.GetContentById(cfg.Reward);
-                var res = new Resource()
+                var res = new Resource
                 {
                     ResType = (uint)vos[0].Type,
                     SubType = (uint)vos[0].Value,
@@ -509,6 +512,19 @@ namespace HHL.Common
         private static void OpenNewCityTools()
         {
             EditorSceneManager.OpenScene("Assets/GameTools/NewCity/NewCity.unity");
+        }
+
+        [MenuItem("HHL/FGUI更新版本 %#_f")]
+        private static void SvnUpdate()
+        {
+            var batPath = GetProjPath() + "/SvnCommitFairyGUI.bat";
+            Process.Start(batPath);
+        }
+
+        private static string GetProjPath()
+        {
+            var projFolder = Application.dataPath;
+            return projFolder.Substring(0, projFolder.Length - 7);
         }
     }
 }
