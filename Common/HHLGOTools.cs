@@ -514,10 +514,17 @@ namespace HHL.Common
             EditorSceneManager.OpenScene("Assets/GameTools/NewCity/NewCity.unity");
         }
 
-        [MenuItem("HHL/FGUI更新版本 %#_f")]
-        private static void SvnUpdate()
+        [MenuItem("HHL/SVN_FGUI提交 %#_f")]
+        private static void SvnCommitFairyGUI()
         {
             var batPath = GetProjPath() + "/SvnCommitFairyGUI.bat";
+            Process.Start(batPath);
+        }
+        
+        [MenuItem("HHL/SVN_Game提交 %#_g")]
+        static void SvnCommitGame()
+        {
+            string batPath = GetProjPath() + "/SvnCommitGame.bat";
             Process.Start(batPath);
         }
 
