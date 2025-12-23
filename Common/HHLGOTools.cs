@@ -127,8 +127,9 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.PoolLotteryActivityId);
-
+                PanelMgr.Inst.OpenPanel<KOFLotteryLvPanel>((uint)191071);
+                // PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.DuckPoolLotteryActivityId);
+                //
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
                 // uint activityId = 190702;
