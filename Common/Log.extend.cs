@@ -204,18 +204,20 @@ namespace HHL.Common
             // 参考所有要打印
             InitTitanStrikeWorldBossProto();
 
-            // AddListenMsgType(MsgType.KMsgS2ClgiantWorldBossActivityInfoNotify);
-            // AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAchievementRewardRequest);
-            // AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAchievementRewardReply);
-            // AddListenMsgType(MsgType.KMsgS2ClworldBossGiantInfoNotice);
-            // AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAttackRequest);
-            // AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAttackReply);
-            // AddListenMsgType(MsgType.KMsgCl2SworldBossGiantHistoryRequest);
-            // AddListenMsgType(MsgType.KMsgS2ClworldBossGiantHistoryReply);
-            // AddListenMsgType(MsgType.KMsgCl2SworldBossGiantDailyTopHistoryRequest);
-            // AddListenMsgType(MsgType.KMsgS2ClworldBossGiantDailyTopHistoryReply);
-            // AddListenMsgType(MsgType.KMsgS2SworldBossGiantDailyTopHistoryRequest);
-            // AddListenMsgType(MsgType.KMsgS2SworldBossGiantDailyTopHistoryResponse);
+            AddListenMsgType(MsgType.KMsgS2ClgiantWorldBossActivityInfoNotify);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAchievementRewardRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAchievementRewardReply);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAttackRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAttackReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantHistoryReply);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantDailyTopHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantDailyTopHistoryReply);
+            AddListenMsgType(MsgType.KMsgS2SworldBossGiantDailyTopHistoryRequest);
+            AddListenMsgType(MsgType.KMsgS2SworldBossGiantDailyTopHistoryResponse);
+            AddListenMsgType(MsgType.KMsgCl2SworldBossGiantAchievementDataRequest);
+            AddListenMsgType(MsgType.KMsgS2ClworldBossGiantAchievementDataReply);
         }
 
         private void InitGvgProto()
