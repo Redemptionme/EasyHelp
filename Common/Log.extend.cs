@@ -107,9 +107,19 @@ namespace HHL.Common
             }
         }
 
-        private void InitWise()
+        public void InitWise(bool active = true)
         {
-            _typeList.Add(eLogType.ewise);
+            if (active)
+            {
+                if (!_typeList.Contains(eLogType.ewise))
+                {
+                    _typeList.Add(eLogType.ewise);
+                }
+            }
+            else
+            {
+                _typeList.Remove(eLogType.ewise);
+            }
         }
 
         private void InitEntityMsg()

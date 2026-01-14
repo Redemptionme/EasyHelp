@@ -56,6 +56,23 @@ namespace HHL.Common
         public bool IsAllMsg = false;
         public Vector3 Param1;
         public Vector3 Param2;
+        [SerializeField] private bool isWise = false;
+        private bool lastIsWise = false;
+
+        private void OnValidate()
+        {
+            if (isWise != lastIsWise)
+            {
+                OnIsWiseChanged(isWise);
+                lastIsWise = isWise;
+            }
+        }
+
+        private void OnIsWiseChanged(bool newValue)
+        {
+            Log.Inst.InitWise(newValue);
+        }
+
 
         // Start is called before the first frame update
         private void Start()
@@ -523,11 +540,11 @@ namespace HHL.Common
             var batPath = GetProjPath() + "/SvnCommitFairyGUI.bat";
             Process.Start(batPath);
         }
-        
+
         [MenuItem("HHL/SVN_Game提交 %#_g")]
-        static void SvnCommitGame()
+        private static void SvnCommitGame()
         {
-            string batPath = GetProjPath() + "/SvnCommitGame.bat";
+            var batPath = GetProjPath() + "/SvnCommitGame.bat";
             Process.Start(batPath);
         }
 
