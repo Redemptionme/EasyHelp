@@ -1,0 +1,867 @@
+﻿using System;
+using System.Collections.Generic;
+using FairyGUI;
+using IGG.Framework;
+using IGG.Framework.Cache;
+using IGG.Framework.Manager;
+using IGG.Framework.Module;
+using IGG.Game.Data.Cache;
+using IGG.Game.Data.Config;
+using IGG.Game.Module.Launch;
+using IGG.Game.Module.WorldMap;
+using IGG.Game.Module.WorldMap.Comps;
+using IGG.Game.Notifys;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using Logger = IGG.Framework.Logging.Logger;
+
+namespace IGG.Game.Managers.Audio
+{
+    public enum AudioBnkType
+    {
+        General, //通用
+        Hero, //英雄
+        Barrack, //士兵
+    }
+
+    /// <summary>
+    /// Author  xuzhihui
+    /// Date    2020.09.02
+    /// Desc    声音管理器
+    /// </summary>
+    /// 
+    public partial class AudioMgr : Singleton<AudioMgr>, IManager
+    {
+        public delegate bool CheckBgAudioConditionDelegate();
+
+        public enum AudioEndEventType
+        {
+            StopInterPhone,
+            OtherFunc,
+        }
+
+        private Dictionary<string, CheckBgAudioConditionDelegate> m_bgAudioDelDict =
+            new Dictionary<string, CheckBgAudioConditionDelegate>();
+
+
+        private string m_preBgAudioEvent;
+        private string m_curBgAudioEvent;
+        private string m_conflictBgAudioEvent;
+
+        private Dictionary<uint, AudioEndEventType> m_endEventDic = new Dictionary<uint, AudioEndEventType>();
+        private Dictionary<uint, Action> m_endActDic = new Dictionary<uint, Action>();
+
+        #region 新的音效bnk加卸载逻辑
+        private float m_unloadBnkDelays = 5f;
+        private Dictionary<uint, string> m_playIdEvents = new Dictionary<uint, string>();
+        private Dictionary<string, WwiseBankHandle> m_bnkDic = new Dictionary<string, WwiseBankHandle>();
+        private List<string> m_removeBnks = new List<string>();
+        #endregion 
+        
+        public string Name
+        {
+            get { return "Audio"; }
+        }
+
+        public bool Enabled { get; set; }
+
+
+        private bool m_curInWorldScene = false;
+
+        private bool m_playInterPhoneEvent = false;
+
+        public void Initialize()
+        {
+            InitRecordAudio();
+#if DISABLE_WISEEVENT
+#else
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+            UIConfig.playAudioCallback = OnPlayAudio;
+
+            ModuleMgr.Inst.AddNotifyListener(CommonNotify.OpenPanel, OnOpenPanel);
+            ModuleMgr.Inst.AddNotifyListener(CommonNotify.ClosePanel, OnClosePanel);
+
+            LoadBank(AudioBnkType.General);
+            SwichAudio(false);
+            SwichBgm(false);
+            PlayEvent("Init");
+#endif
+            m_preBgAudioEvent = string.Empty;
+            m_curBgAudioEvent = string.Empty;
+            m_conflictBgAudioEvent = string.Empty;
+            m_playInterPhoneEvent = false;
+            
+            Timers.inst.Add(1,-1,OnTimers);
+        }
+
+        public void Update()
+        {
+        }
+
+        public void LateUpdate()
+        {
+        }
+
+        /// <summary>
+        /// 设备清bank的时间间隔
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetUnloadBankTime(float time)
+        {
+            if (time < 0)
+            {
+                m_unloadBnkDelays = 0;
+            }
+            else
+            {
+                m_unloadBnkDelays = time;
+            }
+        }
+        
+        protected override void OnDispose()
+        {
+#if DISABLE_WISEEVENT
+#else
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+            m_preBgAudioEvent = string.Empty;
+            m_curBgAudioEvent = string.Empty;
+            m_conflictBgAudioEvent = string.Empty;
+            m_bgAudioDelDict.Clear();
+            m_endEventDic.Clear();
+            m_endActDic.Clear();
+            
+            
+            Timers.inst.Remove(OnTimers);
+            var enumator = m_bnkDic.GetEnumerator();
+            while (enumator.MoveNext())
+            {
+                AkBankManager.UnloadBank(enumator.Current.Key);
+            }
+            enumator.Dispose();
+            m_bnkDic.Clear();
+#endif
+        }
+
+        public void RegisterBgAudioConditionDel(string eventName, CheckBgAudioConditionDelegate checkDel)
+        {
+            m_bgAudioDelDict[eventName] = checkDel;
+        }
+
+        private void OnPlayAudio(string packageName, string eventName, float volume)
+        {
+            // LoadAndPlayEvent(packageName, eventName);
+            if (volume < 0.01f)
+            {
+                return;
+            }
+
+            PlayEvent(eventName);
+        }
+
+        private void OnOpenPanel(CallbackVo vo)
+        {
+            PlayEventFormat("open_{0}", vo.Param.Get<string>(0));
+        }
+
+        private void OnClosePanel(CallbackVo vo)
+        {
+            PlayEventFormat("close_{0}", vo.Param.Get<string>(0));
+        }
+
+        public void SetAkObjEnable(bool visible)
+        {
+            if (ListenerObject != null)
+            {
+                ListenerObject.SetActive(visible);
+            }
+        }
+
+        private GameObject m_listenerObj;
+
+        private GameObject ListenerObject
+        {
+            get
+            {
+                if (m_listenerObj == null)
+                {
+                    m_listenerObj = GameObject.Find("AkAudioListenerObj");
+                    if (m_listenerObj == null)
+                    {
+                        m_listenerObj = new GameObject("AkAudioListenerObj");
+                        m_listenerObj.AddComponent<AkGameObj>();
+                    }
+                    var listener = m_listenerObj.GetComponent<AkAudioListener>();
+                    if (listener == null)
+                    {
+                        m_listenerObj.AddComponent<AkAudioListener>();
+                    }
+                    var compAkListener = m_listenerObj.GetComponent<CompAkSoundListener>();
+                    if (compAkListener == null)
+                    {
+                        compAkListener = m_listenerObj.AddComponent<CompAkSoundListener>();
+                    }
+
+                    compAkListener.Init(m_curInWorldScene);
+                }
+
+                return m_listenerObj;
+            }
+        }
+
+        private AkAudioListener Listener
+        {
+            get { return ListenerObject.GetComponent<AkAudioListener>(); }
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            m_curInWorldScene = scene.name == SceneName.World;
+            m_listenerObj = null;
+            Listener.SetIsDefaultListener(true);
+
+            switch (scene.name)
+            {
+                case SceneName.Launch:
+                    SwichAudio(AppCache.Setting.GetSettingValue(SettingType.EffectAudio) == 1);
+                    SwichBgm(AppCache.Setting.GetSettingValue(SettingType.BackgroundAudio) == 1);
+                    break;
+
+                case SceneName.World:
+                    if (AppCache.Guide.IsZombieGuideFinish())
+                    {
+                        WorldFeatureMgr.Current?.PlayBGM();
+                    }
+                    else
+                    {
+                        //开场剧情动画
+                        //PlayEvent("Guide");
+                    }
+
+                    break;
+
+                default:
+                    // LoadBank(scene.name)
+                    PlayEvent(scene.name);
+                    break;
+            }
+        }
+
+        private void OnSceneUnloaded(Scene scene)
+        {
+            // UnloadBank(scene.name);
+        }
+
+        public void LoadBank(AudioBnkType abType)
+        {
+#if DISABLE_WISEEVENT
+#else
+            // switch (abType)
+            // {
+            //     case AudioBnkType.General:
+            //         LoadBank("General");
+            //         break;
+            //     case AudioBnkType.Hero:
+            //         LoadBank("Hero");
+            //         break;
+            //     case AudioBnkType.Barrack:
+            //         LoadBank("Barrack");
+            //         break;
+            // }
+#endif
+        }
+
+        public void UnloadBank(AudioBnkType abType)
+        {
+#if DISABLE_WISEEVENT
+#else
+            // switch (abType)
+            // {
+            //     case AudioBnkType.General:
+            //         UnloadBank("General");
+            //         break;
+            //     case AudioBnkType.Hero:
+            //         UnloadBank("Hero");
+            //         break;
+            //     case AudioBnkType.Barrack:
+            //         UnloadBank("Barrack");
+            //         break;
+            // }
+#endif
+        }
+
+        private void LoadBank(string name)
+        {
+#if DISABLE_WISEEVENT
+#else
+            // if (m_banks.ContainsKey(name))
+            // {
+            //     return;
+            // }
+            //
+            // AkBankManager.LoadBank(name, false, false);
+            // m_banks.Add(name, 0);
+#endif
+        }
+
+        // public bool IsBankLoaded(AudioBnkType bnkType)
+        // {
+        //     return m_banks.ContainsKey(bnkType.ToString());
+        // }
+
+        public void LoadBankAsync(string name)
+        {
+#if DISABLE_WISEEVENT
+#else
+            // if (m_banks.ContainsKey(name))
+            // {
+            //     return;
+            // }
+            //
+            // m_banks.Add(name, 0);
+            // AkBankManager.LoadBankAsync(name, (bankID, inMemoryBankPtr, loadResult, cookie) => { });
+#endif
+        }
+
+        private void UnloadBank(string name)
+        {
+#if DISABLE_WISEEVENT
+#else
+            // if (!m_banks.ContainsKey(name))
+            // {
+            //     return;
+            // }
+            //
+            // m_banks.Remove(name);
+            // AkBankManager.UnloadBank(name);
+#endif
+        }
+
+        public void UnloadAllBanks()
+        {
+#if DISABLE_WISEEVENT
+#else
+            // if (m_banks.Count == 0)
+            // {
+            //     return;
+            // }
+            //
+            // AkSoundEngine.UnregisterAllGameObj();
+            // var iter = m_banks.GetEnumerator();
+            // while (iter.MoveNext())
+            // {
+            //     AkBankManager.UnloadBank(iter.Current.Key);
+            // }
+            //
+            // iter.Dispose();
+            // m_banks.Clear();
+#endif
+        }
+
+        private void OnTimers(object param)
+        {
+            m_removeBnks.Clear();
+            var enumator = m_bnkDic.GetEnumerator();
+            while (enumator.MoveNext())
+            {
+                var handler = enumator.Current.Value;
+                if (handler.IsUsing)
+                {
+                    continue;
+                }
+
+                if (Time.realtimeSinceStartup - handler.LastSleepTime >= m_unloadBnkDelays)
+                {
+                    m_removeBnks.Add(enumator.Current.Key);
+                }
+            }
+            enumator.Dispose();
+            if (m_removeBnks.Count > 0)
+            {
+                foreach (var bnk in m_removeBnks)
+                {
+                    m_bnkDic.Remove(bnk);
+                    AkBankManager.UnloadBank(bnk);                    
+                }
+            }
+        }
+
+        private void CheckBnk(string bnkName)
+        {
+            if (string.IsNullOrEmpty(bnkName))
+            {
+                return;
+            } 
+            if (!m_bnkDic.ContainsKey(bnkName))
+            {
+                var handler = new WwiseBankHandle(bnkName);
+                m_bnkDic[bnkName] = handler;
+                AkBankManager.LoadBank(bnkName, false, false);
+            }
+        }
+
+        private void IncreaseBnk(string bnkName,uint playingId,string eventName)
+        {
+            if (m_bnkDic.TryGetValue(bnkName,out var handler))
+            {
+                handler.IncreaseRef(playingId,eventName);
+            }
+        }
+        
+        /// <summary>
+        /// 根据rtpc参数名，传递参数
+        /// </summary>
+        /// <param name="idStr"></param>
+        /// <param name="value"></param>
+        public void PostRTPCValue(string idStr, float value)
+        {
+#if DISABLE_WISEEVENT
+#else
+
+#if UNITY_STANDALONE && !UNITY_EDITOR
+            if (!AppCache.Common.AppFocus)
+            {
+                return;
+            }
+#endif            
+            
+            
+            AkUnitySoundEngine.SetRTPCValue(AkUnitySoundEngine.GetIDFromString(idStr), value);
+#endif
+        }
+
+        public uint PlayEventFormat(string format, params object[] args)
+        {
+#if DISABLE_WISEEVENT
+            return 0;
+#else
+            var eventName = SbPool.PutAndToStr(SbPool.Get().AppendFormat(format, args));
+            return PlayEvent(eventName);
+#endif
+        }
+
+        public uint PlayEvent(string eventName)
+        {
+            return PlayEvent(eventName, null);
+        }
+
+        public uint PlayEvent(string eventName, uint flags)
+        {
+            return PlayEvent(eventName, null, flags);
+        }
+
+        public uint PlayEvent(string eventName, GameObject target,uint flags = (uint)AkCallbackType.AK_EndOfEvent)
+        {
+#if DISABLE_WISEEVENT
+            return 0;
+#else
+            bool showAudioLog = FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog;
+            
+            WiseEventConfig cfg = WiseEventDao.Inst.GetCfg(eventName);
+            if (cfg == null)
+            {
+                HHL.Common.Log.Inst.Print("PlayEvent cfgName[" + eventName + "] => [WiseEventDao cfg err !!!]",HHL.Common.Log.eLogType.ewise);
+            }
+            else
+            {
+                HHL.Common.Log.Inst.Print("PlayEvent cfgName[" + eventName + "] => [" + cfg.WiseEvent+"]",HHL.Common.Log.eLogType.ewise ); 
+            }
+            
+            
+            if (cfg == null || string.IsNullOrEmpty(cfg.WiseEvent))
+            {
+                if (showAudioLog)
+                {
+                    Logger.LogError($"WiseEventConfig Null Or Empty:{eventName}");
+                }
+                return 0;
+            }
+
+            if (cfg.BgSound == 1 && CheckBgAudioConflict(cfg.OppositeName))
+            {
+                if (showAudioLog)
+                {
+                    Logger.Log($"{eventName} BgSound = 1 And Check Bg Audio Conflict:{cfg.OppositeName}");
+                }
+                return 0;
+            }
+
+            if (showAudioLog)
+            {
+                Logger.Log($"PlayAudioEvent:{eventName},EventName:{cfg.WiseEvent}");
+            }
+            return PostEvent(cfg.WiseEvent,cfg.Bnk, target,flags);
+#endif
+        }
+
+        public void PlayEvent(string eventName, GameObject target, Action playEndAct)
+        {
+#if DISABLE_WISEEVENT
+            return ;
+#else
+
+#if ENABLE_AUDIO_LOG
+            Debug.Log("-----PlayEvent:" + eventName);
+#endif
+
+            WiseEventConfig cfg = WiseEventDao.Inst.GetCfg(eventName);
+            if (cfg == null || string.IsNullOrEmpty(cfg.WiseEvent))
+            {
+                return;
+            }
+            if (StopPlayWiseByBnk(cfg.Bnk))
+            {
+                return;
+            }
+            if (cfg.BgSound == 1 && CheckBgAudioConflict(cfg.OppositeName))
+            {
+                return;
+            }
+            //2025 11 06 空bnk事件不发 wwise请求
+            if (string.IsNullOrEmpty(cfg.Bnk))
+            {
+                if (FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog)
+                {
+                    Logger.LogError($"记录无Bnk事件:EventName:{eventName}");
+                }
+                return ;
+            }
+
+            
+#if UNITY_STANDALONE && !UNITY_EDITOR
+            if (!AppCache.Common.AppFocus)
+            {
+                return;
+            }
+#endif            
+            
+            CheckBnk(cfg.Bnk);
+            
+            RecordAudio(cfg.WiseEvent,cfg.Bnk);
+            
+            uint ret = AkUnitySoundEngine.PostEvent(cfg.WiseEvent, target != null ? target : ListenerObject,
+                (uint) AkCallbackType.AK_EndOfEvent, AudioPlayEndEvent, m_akCallPackage);
+            m_endEventDic[ret] = AudioEndEventType.OtherFunc;
+            m_endActDic[ret] = playEndAct;
+            if (ret > 0)
+            {
+                IncreaseBnk(cfg.Bnk,ret, cfg.WiseEvent);
+                m_playIdEvents[ret] = cfg.Bnk;    
+            }
+#endif
+        }
+
+        private bool CheckBgAudioConflict(string newBgAudio)
+        {
+            if (string.IsNullOrEmpty(m_curBgAudioEvent))
+            {
+                m_preBgAudioEvent = string.Empty;
+                m_curBgAudioEvent = newBgAudio;
+                m_conflictBgAudioEvent = string.Empty;
+                return false;
+            }
+
+            if (m_curBgAudioEvent.Equals(newBgAudio))
+            {
+                return false;
+            }
+
+            if (m_bgAudioDelDict.TryGetValue(m_curBgAudioEvent, out var checkDel))
+            {
+                if (checkDel())
+                {
+                    m_conflictBgAudioEvent = newBgAudio;
+                    return true;
+                }
+            }
+
+            m_preBgAudioEvent = m_curBgAudioEvent;
+            m_curBgAudioEvent = newBgAudio;
+            m_conflictBgAudioEvent = string.Empty;
+            return false;
+        }
+
+        public void PlayPreConflictAudioEvent()
+        {
+            if (string.IsNullOrEmpty(m_conflictBgAudioEvent))
+            {
+                if (!string.IsNullOrEmpty(m_preBgAudioEvent))
+                {
+                    PlayEvent(m_preBgAudioEvent);
+                }
+            }
+            else
+            {
+                PlayEvent(m_conflictBgAudioEvent);
+            }
+        }
+        
+
+        private AkCallbackManager.EventCallbackPackage m_akCallPackage = new AkCallbackManager.EventCallbackPackage();
+
+        /// <summary>
+        /// 播放 英雄 语音，附带转对讲机音效
+        /// </summary>
+        /// <param name="eventName"></param>
+        /// <returns></returns>
+        public uint PlayInterPhoneEvent(string eventName, GameObject target = null)
+        {
+#if DISABLE_WISEEVENT
+            return 0;
+#else
+            WiseEventConfig cfg = WiseEventDao.Inst.GetCfg(eventName);
+            if (cfg == null || string.IsNullOrEmpty(cfg.WiseEvent))
+            {
+                return 0;
+            }
+
+            if (StopPlayWiseByBnk(cfg.Bnk))
+            {
+                return 0;
+            }
+            //2025 11 06 空bnk事件不发 wwise请求
+            if (string.IsNullOrEmpty(cfg.Bnk))
+            {
+                if (FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog)
+                {
+                    Logger.LogError($"记录无Bnk事件:EventName:{cfg.WiseEvent}");
+                }
+                return 0;
+            }
+
+#if UNITY_STANDALONE && !UNITY_EDITOR
+            if (!AppCache.Common.AppFocus)
+            {
+                return 0;
+            }
+#endif             
+            //增加对讲机事件
+            bool playPhoneEvent = false;
+            WiseEventConfig phoneEventCfg = WiseEventDao.Inst.GetCfg("interphone_open");
+            if (phoneEventCfg != null && !string.IsNullOrEmpty(phoneEventCfg.WiseEvent))
+            {
+                PostEvent(phoneEventCfg.WiseEvent, cfg.Bnk,null);
+                playPhoneEvent = true;
+            }
+
+            if (playPhoneEvent && !m_playInterPhoneEvent)
+            {
+                CheckBnk(cfg.Bnk);
+                m_playInterPhoneEvent = true;
+
+                RecordAudio(cfg.WiseEvent, cfg.Bnk);
+                    
+                uint ret = AkUnitySoundEngine.PostEvent(cfg.WiseEvent, target == null ? ListenerObject : target,
+                    (uint) AkCallbackType.AK_EndOfEvent, AudioPlayEndEvent, m_akCallPackage);
+                m_endEventDic.Add(ret, AudioEndEventType.StopInterPhone);
+
+                if (ret > 0)
+                {
+                    IncreaseBnk(cfg.Bnk,ret,cfg.WiseEvent);
+                    m_playIdEvents[ret] = cfg.Bnk;
+                }
+                
+                return ret;
+            }
+            else
+            {
+                return PostEvent(cfg.WiseEvent, cfg.Bnk,null);
+            }
+#endif
+        }
+
+        /// <summary>
+        /// 当配置中bnk为空时，release包不发事件，非release包正常发事件供调试
+        /// </summary>
+        /// <param name="bnk"></param>
+        /// <returns></returns>
+        private bool StopPlayWiseByBnk(string bnk)
+        {
+            if (string.IsNullOrEmpty(bnk))
+            {
+                return FrameworkConfig.Inst.Release == ReleaseType.Release;
+            }
+            return false;
+        }
+
+        private void AudioPlayEndEvent(object in_cookie, AkCallbackType in_type, AkCallbackInfo in_info)
+        {
+            if (in_type == AkCallbackType.AK_EndOfEvent)
+            {
+                var info = in_info as AkEventCallbackInfo;
+                if (info == null)
+                {
+                    return;
+                }
+                uint playId = info.playingID;
+                if (m_endEventDic.TryGetValue(playId, out AudioEndEventType type))
+                {
+                    if (type == AudioEndEventType.StopInterPhone)
+                    {
+                        m_playInterPhoneEvent = false;
+                        PlayEvent("interphone_close");
+                    }
+                    else if (type == AudioEndEventType.OtherFunc)
+                    {
+                        if (m_endActDic.TryGetValue(playId, out Action endAct))
+                        {
+                            endAct.Invoke();
+                            m_endActDic.Remove(playId);
+                        }
+                    }
+                    m_endEventDic.Remove(playId);
+                }
+                
+                if (m_playIdEvents.TryGetValue(playId, out var bnk))
+                { 
+                    if (m_bnkDic.TryGetValue(bnk, out var handler))
+                    {
+                        handler.DecreaseRef(playId);
+                    }
+                    else
+                    {
+                        Logger.LogWarning($"end of event,bnk:{bnk},but has no exist handler");
+                    }
+                }
+            }
+        }
+
+        public uint PostEvent(string eventName,string bnk)
+        {
+            return PostEvent(eventName, bnk, null);
+        }
+
+        public uint PostEvent(string eventName,string bnk, GameObject target,uint flags = (uint)AkCallbackType.AK_EndOfEvent)
+        {
+#if DISABLE_WISEEVENT
+            return 0;
+#else
+            if (StopPlayWiseByBnk(bnk))
+            {
+                return 0;
+            }
+
+            
+#if UNITY_STANDALONE && !UNITY_EDITOR
+            if (!AppCache.Common.AppFocus)
+            {
+                return 0;
+            }
+#endif
+            //2025 11 06 空bnk事件不发 wwise请求
+            if (string.IsNullOrEmpty(bnk))
+            {
+                if (FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog)
+                {
+                    Logger.LogError($"记录无Bnk事件:EventName:{eventName}");
+                }
+                return 0;
+            }
+            
+            CheckBnk(bnk);
+            GameObject go = target != null ? target : ListenerObject;
+            
+            RecordAudio(eventName,bnk);
+            
+            uint ret = AkUnitySoundEngine.PostEvent(eventName, go,flags, AudioPlayEndEvent,null);
+            if (ret > 0)
+            {
+                IncreaseBnk(bnk,ret,eventName);
+                m_playIdEvents[ret] = bnk;
+            }
+            
+            return ret;
+#endif
+        }
+
+        public void LoadAndPlayEvent(string bankName, string eventName)
+        {
+            LoadAndPlayEvent(bankName, eventName, null);
+        }
+
+        public void LoadAndPlayEvent(string bankName, string eventName, GameObject target)
+        {
+            LoadBank(bankName);
+            PlayEvent(eventName, target);
+        }
+
+        // 背景音乐开关
+        public void SwichBgm(bool open)
+        {
+            string pszEventName = open ? "BGM_On" : "BGM_Off";
+            PlayEvent(pszEventName);
+        }
+
+        // 音效开关
+        public void SwichAudio(bool open)
+        {
+            string pszEventName = open ? "SFX_On" : "SFX_Off";
+            PlayEvent(pszEventName);
+        }
+
+        public void StopPlayingId(uint playingId)
+        {
+#if DISABLE_WISEEVENT
+#else
+            AkUnitySoundEngine.StopPlayingID(playingId);
+#endif
+        }
+
+        /// <summary>
+        /// 开启cg，播放此事件，静全局wise音效
+        /// </summary>
+        public void StartPlayCg()
+        {
+            PlayEvent("cg_start");
+        }
+
+        /// <summary>
+        /// 结束cg，播放此事件，还原wise音效
+        /// </summary>
+        public void StopPlayCg()
+        {
+            PlayEvent("cg_end");
+        }
+    }
+
+    public class WwiseBankHandle
+    {
+        private readonly string m_bnkName;
+        public int RefCount { get; private set; }
+        public float LastSleepTime { get; private set; }
+        public bool IsUsing {get { return RefCount > 0; } }
+
+        private Dictionary<uint, string> m_infoDict = new Dictionary<uint, string>();
+        public WwiseBankHandle(string bnkName)
+        {
+            m_bnkName = bnkName;
+            RefCount = 0;
+        }
+
+        public void IncreaseRef(uint id,string eventName)
+        {
+            m_infoDict[id] = eventName;
+            RefCount++;
+        }
+
+        public void DecreaseRef(uint id)
+        {
+            if (m_infoDict.ContainsKey(id))
+            {
+                m_infoDict.Remove(id);
+            }
+             
+            RefCount--;
+            if (RefCount == 0)
+            {
+                LastSleepTime = Time.realtimeSinceStartup;
+            }
+            else if (RefCount < 0)
+            {
+                Logger.LogWarning($"{m_bnkName} RefCount < 0");
+            }
+        }
+        
+    }
+}

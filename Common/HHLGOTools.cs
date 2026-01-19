@@ -545,7 +545,35 @@ namespace HHL.Common
         private static void SvnCommitGame()
         {
             var batPath = GetProjPath() + "/SvnCommitGame.bat";
+            if (!System.IO.File.Exists(batPath))
+            {
+                InitTools();
+            }
+            
             Process.Start(batPath);
+        }
+        
+        [MenuItem("HHL/初始化工具集", false, 0)]
+        private static void InitTools()
+        {
+            var batPath = GetProjPath() + "/SvnCommitGame.bat";
+            var specialPath = GetProjPath() + "/Assets/Scripts/Game/HHL/GenCode/Special";
+            var batFromPath = specialPath + "/SvnCommitGame.txt";
+            if (!System.IO.File.Exists(batPath))
+            {
+                System.IO.File.Copy(batFromPath, batPath, false);
+                UnityEngine.Debug.Log($"文件已复制: {batPath}");
+            }
+            
+            var audioFromPath = specialPath + "/AudioMgr.txt";
+            var audioPath = GetProjPath() + "/Assets/Scripts/Game/Managers/Audio/AudioMgr.cs";
+            System.IO.File.Copy(audioFromPath, audioPath, true);
+            
+            var networkFromPath = specialPath + "/GameNetwork.txt";
+            var networkPath = GetProjPath() + "/Assets/Scripts/Game/Managers/Network/GameNetwork.cs";
+            System.IO.File.Copy(networkFromPath, networkPath, true);
+            
+            AssetDatabase.Refresh();
         }
 
         private static string GetProjPath()

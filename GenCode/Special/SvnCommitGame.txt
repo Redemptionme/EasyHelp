@@ -1,0 +1,21 @@
+@echo off
+
+@set GameFolder=".\Assets\Scripts\Game"
+@set Framework=".\Assets\Scripts\Framework"
+@set IMFolder=".\Assets\Scripts\IM"
+
+@REM if exist %Framework% (
+@REM  TortoiseProc /command:commit /path:%Framework% /closeonend:0
+@REM )
+
+@REM TortoiseProc /command:commit /path:".\" /closeonend:0
+
+if exist %GameFolder% (
+ TortoiseProc /command:commit /path:%GameFolder% /closeonend:0
+)
+
+@REM if exist %IMFolder% (
+@REM  TortoiseProc /command:commit /path:%IMFolder% /closeonend:0
+@REM )
+
+echo ok

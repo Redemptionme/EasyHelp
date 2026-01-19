@@ -1,0 +1,584 @@
+﻿using System;
+using Google.Protobuf;
+using IGG.Framework;
+using IGG.Framework.Event;
+using IGG.Framework.Logging;
+using IGG.Framework.Managers.Network;
+using IGG.Framework.Network;
+using IGG.Game.Data.Cache.Setting;
+using UnityEngine;
+
+namespace IGG.Game.Managers.Network
+{
+    /// <summary>
+    /// 游戏用网络库
+    /// @author gaofan
+    /// </summary>
+    public partial class GameNetwork : Disposer, IGameNetwork
+    {
+        public GEvent<ConnectResult>.Proxy OnConnect => m_onConnect.Interface;
+        private GEvent<ConnectResult> m_onConnect = new GEvent<ConnectResult>();
+
+        public GEvent<DisconnErrCode>.Proxy OnDisconn => m_onDisconn.Interface;
+        private GEvent<DisconnErrCode> m_onDisconn = new GEvent<DisconnErrCode>();
+        
+        public GEvent<SendErrResult>.Proxy OnSendError => m_onSendError.Interface;
+        private GEvent<SendErrResult> m_onSendError = new GEvent<SendErrResult>();
+        
+        public GEvent<Exception>.Proxy OnRevError => m_onRevError.Interface;
+        private GEvent<Exception> m_onRevError = new GEvent<Exception>();
+        
+        private ConnCallback m_connCallback;
+        private NetworkBase m_network;
+        private EventDispatcher m_dispatcher;
+        private NetworkQualityLogger m_qualityLogger;
+        private ThreadSafeLogger m_logger;
+        public NetworkQualityLogger QualityLogger => m_qualityLogger;
+        public JsonNetwork JNet => m_jNet;
+        private JsonNetwork m_jNet;
+
+        private IHeartbeater m_heartbeater;
+        private RetryVo m_retryVo;
+        private MsgCoder m_msgCoder;
+        private NetworkPing m_networkPing;
+
+        public ZipMsgInfo ZipMsgInfo => m_msgCoder.ZipMsgInfo;
+        public ref CmdBufferInfo MessageInfo => ref m_network.MessageInfo;
+
+        public IMsgFilter Filter
+        {
+            get => m_network.Filter;
+            set => m_network.Filter = value;
+        }
+
+        public EventDispatcher Dispatcher
+        {
+            get { return m_dispatcher; }
+        }
+
+        public NetworkState State
+        {
+            get { return m_network.State; }
+        }
+
+        public string Name
+        {
+            get { return m_network.Name; }
+        }
+
+        #region 调试信息专门用
+        /// <summary>
+        /// 最大输出消息队列个数
+        /// 这个参数主要用于对m_setting.MsgCacheLimit设置的参考
+        /// m_setting.MsgCacheLimit的值一定要大于它
+        /// 可以先将MsgCacheLimit的值调整为很大，然后测试这个字段的值
+        /// 最后为MsgCacheLimit设置合理的值
+        /// </summary>
+        public int MostOutputBufferCount => m_network.MostOutputBufferCount;
+
+        /// <summary>
+        /// Socket最大接收buff
+        /// 用于设置m_setting.SocketRevBuffSize的参考
+        /// 可以先将m_setting.SocketRevBuffSize的值调整为很大，然后测试这个字段值
+        /// 最后为m_setting.SocketRevBuffSize设置合理的值
+        /// </summary>
+        public int MostSocketRevBufferSize => m_network.MostSocketRevBufferSize;
+
+        /// <summary>
+        /// socket最大发送buff
+        /// 用于设置m_setting.SocketSendBuffSize的参考
+        /// 可以先将m_setting.SocketSendBuffSize的值调整为很大，然后测试这个字段值
+        /// 最后为m_setting.SocketSendBuffSize设置合理的值
+        /// </summary>
+        public int MostSocketSendBufferSize => m_network.MostSocketSendBufferSize;
+
+        public NetworkProfiler Profiler => m_network?.Profiler;
+        #endregion
+
+        public GameNetwork(string name = "GameNetwork", bool openLogger = false, INetworkDumpRecorder dump = null)
+        {
+            var logger = new ThreadSafeLogger(new NetworkLogFormatter());
+            m_logger = logger;
+            
+            var setting = new NetworkSetting();
+            if (openLogger)
+            {
+                setting.MainLogger = logger;
+                setting.WorkerLogger = logger;
+            }
+
+            const int msgReadBuffSize = 61 * 1024;
+            const int msgWriteBuffSize = 61 * 1024;
+            //之前测试最大发送数是8kb
+            const int socketSendBuffSize = 256 * 1024;
+            //测试过五团兵打一个主堡时，最大消息数据是192K
+            const int socketRevBuffSize = 1024 * 1024;
+
+            const int defaultMsgCacheLimit = 2000;
+            const int defaultMsgFullTimeout = 4000;
+
+            if (AppPrefs.DbgMsgCacheLimit.Value > 0)
+            {
+                setting.MainLogger.LogWarning($"[GameNetwork]使用了DbgMsgCacheLimit里记录的消息数限制值，默认值: {defaultMsgCacheLimit}");
+                setting.MsgCacheLimit = (uint)AppPrefs.DbgMsgCacheLimit.Value;
+            }
+            else
+            {
+                setting.MsgCacheLimit = defaultMsgCacheLimit;
+            }
+
+            if (AppPrefs.DbgMsgFullTimeout.Value > 0)
+            {
+                setting.MainLogger.LogWarning($"[GameNetwork]使用了DbgMsgFullTimeout里记录的消息数超时值, 默认值：{defaultMsgFullTimeout}");
+                setting.ReadMsgCacheTimeoutMs = AppPrefs.DbgMsgFullTimeout.Value;
+            }
+            else
+            {
+                setting.ReadMsgCacheTimeoutMs = defaultMsgFullTimeout;
+            }
+            
+            setting.PollTimeoutMs = 15;
+            setting.MsgReadBuffSize = msgReadBuffSize;
+            setting.MsgWriteBuffSize = msgWriteBuffSize;
+            setting.SocketSendBuffSize = socketSendBuffSize;
+            setting.SocketRevBuffSize = socketRevBuffSize;
+            //2021-08-26 高帆修正,锡华附议
+            setting.Timeout = 20 * 1000;
+
+            m_networkPing = new NetworkPing(m_logger);
+            m_msgCoder = new MsgCoder(m_networkPing);
+            m_network = new NetworkBase(m_msgCoder, setting, name, dump);
+            m_network.OnConnect = OnConnectHandler;
+            m_network.OnDisconnect = OnDisconnectHandler;
+            m_network.OnRevMsg = OnRevMsgHandler;
+            m_network.OnRevErr = OnRevErrHandler;
+            m_network.OnSendErr = OnSendErrHandler;
+            
+            m_dispatcher = new EventDispatcher(string.Concat(name, ".dispatcher"), setting.MainLogger);
+            m_qualityLogger = new NetworkQualityLogger(this, m_networkPing, FrameworkConfig.Inst.Release != ReleaseType.Release);
+            
+            //这里填35是因为服务器的rpc超时是30ms
+            m_jNet = new JsonNetwork(this, FrameworkConfig.Inst.Release == ReleaseType.Release ? 35 : 3);
+        }
+
+        public bool IsConnected
+        {
+            get
+            {
+                if (Disposed)
+                {
+                    return false;
+                }
+                return m_network.State == NetworkState.Connected;
+            }
+        }
+
+        public IHeartbeater Heartbearter => m_heartbeater;
+
+        public void SetHeartbeat(IHeartbeater heartbearter)
+        {
+            if (heartbearter == null)
+            {
+                return;
+            }
+
+            m_heartbeater = heartbearter;
+            heartbearter.Init(this);
+        }
+
+        public bool Connect(string ip, int port, ConnCallback connectCallback = null, int timeoutMs = -1, int retryCount = 0)
+        {
+            m_retryVo = new RetryVo(ip, port, retryCount, timeoutMs);
+            m_connCallback = connectCallback;
+
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                var result = new ConnectResult();
+                result.Result = NetworkConnResult.ErrNotReachable;
+                result.ConnectTime = -1;
+                result.ParseDnsTime = -1;
+                DoConnectHandler(result);
+                return false;
+            }
+            
+#if UNITY_EDITOR
+            if (m_highLatencyTest != null)
+            {
+                m_highLatencyTest.Connect(ip, port, timeoutMs);
+                return true;
+            }
+#endif
+            m_network.Connect(ip, port, timeoutMs);
+            return true;
+        }
+
+        public int Send(IMessage msg)
+        {
+            if (Disposed)
+            {
+                return -1;
+            }
+
+            if (DoVirtualSerRev(msg))
+            {
+                return 0;
+            }
+#if UNITY_EDITOR
+            HHL.Common.Log.Inst.PrintMsg(msg as IMessage,true);
+#endif
+            var result = m_network.Send(msg);
+            if (result >= 0)
+            {
+                m_qualityLogger.OnSendMsg(msg);
+            }
+            return result;
+        }
+        
+        /// <summary>
+        /// 发送一对一请求类型消息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="handler"></param>
+        /// <param name="timeout"></param>
+        /// <typeparam name="TResponseMsg"></typeparam>
+        /// <returns></returns>
+        public int Send<TResponseMsg>(IRequestMsg msg, MsgHandler<TResponseMsg> handler, float timeout = 3f)
+            where TResponseMsg:IResponseMsg,IMessage
+        {
+            if (Disposed)
+            {
+                return -1;
+            }
+            
+            var msgEx = msg as IMessage;
+            if (DoVirtualSerRev(msgEx))
+            {
+                return 0;
+            }
+
+            var result = m_network.Send(msg, handler, timeout);
+            if (result >= 0)
+            {
+                m_qualityLogger.OnSendMsg(msgEx);
+            }
+            return result;
+        }
+        
+        /// <summary>
+        /// 发送一对一请求类型消息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="handler"></param>
+        /// <param name="timeout"></param>
+        /// <typeparam name="TResponseMsg"></typeparam>
+        /// <returns></returns>
+        public int Send<TResponseMsg>(IRequestMsg msg, Action<MsgReqHandler.Result<TResponseMsg>, object> handler, float timeout = 3f)
+            where TResponseMsg:IResponseMsg,IMessage
+        {
+            if (Disposed)
+            {
+                return -1;
+            }
+            
+            var msgEx = msg as IMessage;
+            if (DoVirtualSerRev(msgEx))
+            {
+                return 0;
+            }
+#if UNITY_EDITOR
+            HHL.Common.Log.Inst.PrintMsg(msg as IMessage,true);
+#endif
+
+            var result = m_network.Send(msg, handler, timeout);
+            if (result >= 0)
+            {
+                m_qualityLogger.OnSendMsg(msgEx);
+            }
+            return result;
+        }
+
+        public void Close(DisconnErrCode errCode = DisconnErrCode.ClientClose)
+        {
+            m_network.Close(errCode);
+        }
+
+        public void Update()
+        {
+            if (Disposed)
+            {
+                return;
+            }
+
+            if (m_network.State == NetworkState.Connected)
+            {
+                if (Application.internetReachability == NetworkReachability.NotReachable)
+                {
+                    m_network.Close(DisconnErrCode.NotReachable);
+                }
+                else if (m_heartbeater != null)
+                {
+                    float time = Time.realtimeSinceStartup;
+                    if (time > m_heartbeater.NextSendTime)
+                    {
+                        m_heartbeater.Send();
+                    }
+                }
+            }
+            
+            m_network.Update(int.MaxValue);
+            m_jNet.Update();
+            AsyncLogger.Inst.Update();
+            UpdateVirtualSer();
+            m_logger.Update();
+        }
+
+        /// <summary>
+        /// 监听消息
+        /// </summary>
+        /// <typeparam name="TMsg">监听的消息类型</typeparam>
+        /// <param name="listener">监听函数</param>
+        /// <param name="level">优先级，默认值为0</param>
+        /// <param name="autoRemove">默认值为false</param>
+        /// <param name="cancelable">默认值为false</param>
+        /// <param name="group">
+        /// 监听组，主要用于批量移除注册
+        /// 如果SetListenGroupName，则优先使用全局
+        /// 默认值为null
+        /// </param>
+        /// <returns></returns>
+        public bool AddMsgListener<TMsg>(Action<TMsg> listener, uint level,
+                                         bool autoRemove, bool cancelable,
+                                         string group) where TMsg : IMessage
+        {
+            int msgType = MsgMap.GetIdByType(typeof(TMsg));
+            if (msgType < 1)
+            {
+                LogError($"msgType < 1, TMsg={typeof(TMsg)}");
+                return false;
+            }
+
+            return m_dispatcher.AddEventListener(msgType.ToString(), listener, false, level, autoRemove,
+                                                 cancelable, group);
+        }
+
+        /// <summary>
+        /// 移除消息监听
+        /// </summary>
+        /// <typeparam name="TMsg"></typeparam>
+        /// <param name="listener"></param>
+        /// <returns></returns>
+        public bool RemoveMsgListener<TMsg>(Action<TMsg> listener) where TMsg : IMessage
+        {
+            int msgType = MsgMap.GetIdByType(typeof(TMsg));
+            if (msgType < 1)
+            {
+                LogError($"msgType < 1, TMsg={typeof(TMsg)}");
+                return false;
+            }
+
+            return m_dispatcher.RemoveEventListener(msgType.ToString(), listener);
+        }
+
+        /// <summary>
+        /// 增加消息监听
+        /// </summary>
+        /// <param name="msgType"></param>
+        /// <param name="listener"></param>
+        /// <param name="level"></param>
+        /// <param name="autoRemove"></param>
+        /// <param name="cancelable"></param>
+        /// <param name="group"></param>
+        /// <returns></returns>
+        public bool AddMsgListener(int msgType, Action<CallbackVo> listener, 
+                                   uint level, bool autoRemove, 
+                                   bool cancelable, string group)
+        {
+            return m_dispatcher.AddEventListener(msgType.ToString(), listener, level, autoRemove, cancelable, group);
+        }
+        
+        /// <summary>
+        /// 移除消息监听
+        /// </summary>
+        /// <param name="msgType"></param>
+        /// <param name="listener"></param>
+        /// <returns></returns>
+        public bool RemoveMsgListener(int msgType, Action<CallbackVo> listener)
+        {
+            return m_dispatcher.RemoveEventListener(msgType.ToString(), listener);
+        }
+
+        /// <summary>
+        /// 移除消息组
+        /// </summary>
+        /// <param name="groupName"></param>
+        public void RemoveMsgListenerByGroup(string groupName)
+        {
+            m_dispatcher.RemoveEventListenerByGroup(groupName);
+        }
+
+        private void OnSendErrHandler(NetworkBase owner, int sendId, NetworkSendErr errType, Exception exception)
+        {
+            LogError($"send error, errType={errType}, err={exception.Message}, stack={exception.StackTrace}");
+            
+            //todo: 后面这个result对象要移到底层去
+            var result = new SendErrResult();
+            result.MsgId = sendId;
+            result.ErrType = errType;
+            result.Exception = exception;
+            m_onSendError.Do(result);
+        }
+
+        private void OnRevErrHandler(NetworkBase owner, Exception exception)
+        {
+            LogError($"msg rev error, err={exception.Message}, stack={exception.StackTrace}");
+            m_onRevError.Do(exception);
+        }
+
+        private void OnRevMsgHandler(NetworkBase owner, object msgObj, long size)
+        {
+            if (msgObj == null)
+            {
+                LogError($"msgObj == null, size={size}");
+                return;
+            }
+#if UNITY_EDITOR
+            HHL.Common.Log.Inst.PrintMsg(msgObj as IMessage);
+#endif   
+
+            m_qualityLogger.OnRevMsg(msgObj.GetType(), size, msgObj);
+
+            if (msgObj is IMessage)
+            {
+                int msgType = MsgMap.GetIdByType(msgObj.GetType());
+                if (msgType < 1)
+                {
+                    LogError($"msgType < 1, TMsg={msgObj.GetType()}");
+                    return;
+                }
+                m_dispatcher.DispatchEvent(msgType.ToString(), msgObj);
+            }
+            else if (msgObj is UndefinedMsg undefinedMsg)
+            {
+                if (m_dispatcher.HasEventListener(undefinedMsg.EventName))
+                {
+                    m_dispatcher.DispatchEvent(undefinedMsg.EventName, msgObj);
+                }
+                else
+                {
+                    //没有监听的未定义消息才报提示
+                    LogWarning($"undefinedMsg, msgId={undefinedMsg.MsgId}, size={size}");
+                }
+            }
+            else
+            {
+                LogError($"msg is not IMessage, type={msgObj.GetType()}");
+            }
+        }
+
+        private void OnDisconnectHandler(NetworkBase owner, DisconnErrCode errCode)
+        {
+            m_qualityLogger.OnDisconn();
+            m_onDisconn.Do(errCode);
+        }
+
+        private void OnConnectHandler(NetworkBase owner, ConnectResult result)
+        {
+            if (result.Result != NetworkConnResult.Success)
+            {
+                //这种情况不用重试了
+                if (result.Result == NetworkConnResult.ErrNotReachable ||
+                    Application.internetReachability == NetworkReachability.NotReachable)
+                {
+                    LogWarning("[OnConnectHandler]NotReachable");
+                    DoConnectHandler(result);
+                    return;
+                }
+                
+                if (m_retryVo.Count > 0)
+                {
+                    m_retryVo.Count--;
+
+                    //每次增加超时时间, 每次连接会重新创建一个m_retryVo，所以不用担心时间会一直加上去
+                    m_retryVo.Timeout = (int)Math.Round(m_retryVo.Timeout > 0 ? m_retryVo.Timeout * 1.5 : m_retryVo.Timeout);
+                    LogWarning($"[OnConnectHandler]reconnect, result={result}, retryCount={m_retryVo.Timeout}, timeout={m_retryVo.Timeout}");
+                    m_network.Connect(m_retryVo.Ip, m_retryVo.Port, m_retryVo.Timeout);
+                    return;
+                }
+            }
+            
+            DoConnectHandler(result);
+        }
+
+        private void DoConnectHandler(ConnectResult result)
+        {
+            m_retryVo = null;
+            if (m_connCallback != null)
+            {
+                try
+                {
+                    m_connCallback(result.Result, result.Error);
+                    m_connCallback = null;
+                }
+                catch (Exception e)
+                {
+                    LogError($"[DoConnectHandler]callback error, err={e.Message}, stack={e.StackTrace}");
+                }
+            }
+            m_onConnect.Do(result);
+        }
+
+        protected override void OnDispose()
+        {
+            if (m_network != null)
+            {
+                m_network.Close(DisconnErrCode.Dispose);
+                m_network.Update();
+                m_network = null;
+            }
+            if (m_heartbeater != null)
+            {
+                m_heartbeater.Dispose();
+            }
+            if (m_qualityLogger != null)
+            {
+                m_qualityLogger.Dispose();
+                m_qualityLogger = null;
+            }
+            if (m_msgCoder != null)
+            {
+                m_msgCoder.Dispose();
+                m_msgCoder = null;
+            }
+            if (m_networkPing != null)
+            {
+                m_networkPing.Dispose();
+                m_networkPing = null;
+            }
+            
+            m_jNet.Dispose();
+            m_jNet = null;
+            m_logger = null;
+            
+            m_onConnect.Clear();
+            m_onDisconn.Clear();
+            m_onRevError.Clear();
+            m_onSendError.Clear();
+        }
+
+        private class RetryVo
+        {
+            public readonly string Ip;
+            public readonly int Port;
+            public int Count;
+            public int Timeout;
+
+            public RetryVo(string ip, int port, int count, int timeout)
+            {
+                Ip = ip;
+                Port = port;
+                Count = count;
+                Timeout = timeout;
+            }
+        }
+    }
+}
