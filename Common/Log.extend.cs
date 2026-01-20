@@ -198,7 +198,9 @@ namespace HHL.Common
 
         private void InitKsJigsaw()
         {
-            
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalKsJigsawNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsJigsawRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsJigsawReply);
         }
 
         private void InitJigsaw()
