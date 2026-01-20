@@ -50,7 +50,7 @@ using Random = UnityEngine.Random;
 
 namespace HHL.Common
 {
-    public class HHLGOTools : MonoBehaviour
+    public partial class HHLGOTools : MonoBehaviour
     {
         public static HHLGOTools Self;
         public bool IsAllMsg = false;
@@ -103,7 +103,7 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                PanelMgr.Inst.OpenPanel<GiantBossPanel>();
+                OnClick(KeyCode.F3);
                 //PanelMgr.Inst.OpenPanel<KOFLotteryPanel>((uint)191071);
                 //OpenGvgMainRank();
                 //PanelMgr.Inst.OpenPanel<KOFTurntablePanel>((uint)191035);
@@ -146,10 +146,10 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                PanelMgr.Inst.OpenPanel<KOFLotteryLvPanel>((uint)191071);
+                //PanelMgr.Inst.OpenPanel<KOFLotteryLvPanel>((uint)191071);
                 // PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.DuckPoolLotteryActivityId);
                 //
-                PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.DuckPoolLotteryActivityId);
+                //PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.DuckPoolLotteryActivityId);
 
                 Log.Inst.Print($"当前时间戳 {TimeHelper.ServerTime}");
 
@@ -549,10 +549,10 @@ namespace HHL.Common
             {
                 InitTools();
             }
-            
+
             Process.Start(batPath);
         }
-        
+
         [MenuItem("HHL/初始化工具集", false, 0)]
         private static void InitTools()
         {
@@ -564,15 +564,15 @@ namespace HHL.Common
                 System.IO.File.Copy(batFromPath, batPath, false);
                 UnityEngine.Debug.Log($"文件已复制: {batPath}");
             }
-            
+
             var audioFromPath = specialPath + "/AudioMgr.txt";
             var audioPath = GetProjPath() + "/Assets/Scripts/Game/Managers/Audio/AudioMgr.cs";
             System.IO.File.Copy(audioFromPath, audioPath, true);
-            
+
             var networkFromPath = specialPath + "/GameNetwork.txt";
             var networkPath = GetProjPath() + "/Assets/Scripts/Game/Managers/Network/GameNetwork.cs";
             System.IO.File.Copy(networkFromPath, networkPath, true);
-            
+
             AssetDatabase.Refresh();
         }
 

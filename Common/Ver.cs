@@ -1,0 +1,17 @@
+#region FileInfo
+// <summary>
+// Author  hanhinhe
+// Date    2026.01.20
+// Desc
+// </summary>
+#endregion
+
+namespace HHL.Common
+{
+    public enum Ver
+    {
+        V1_53,
+        V1_54,
+        V1_55,
+    }
+}
