@@ -191,8 +191,23 @@ namespace HHL.Common
 
             //InitGvgProto();
 
-            InitGiantWorldBoss();
+            //InitGiantWorldBoss();
+            InitVersion();
         }
+
+
+        private void InitKsJigsaw()
+        {
+            
+        }
+
+        private void InitJigsaw()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityJigsawNotice);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityJigsawRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityJigsawReply);
+        }
+
 
         public void InitTitanStrikeWorldBossProto()
         {
@@ -855,6 +870,7 @@ namespace HHL.Common
         }
 
         // 客户端独立存储这块，大小不超过8字节都支持
+
         private void InitExSave()
         {
             AddListenMsgType(MsgType.KMsgGs2ClplayerBaseNotice);
