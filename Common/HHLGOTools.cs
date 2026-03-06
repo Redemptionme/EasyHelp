@@ -146,6 +146,7 @@ namespace HHL.Common
 
             if (Input.GetKeyDown(KeyCode.F4))
             {
+                OnClick(KeyCode.F4);
                 //PanelMgr.Inst.OpenPanel<KOFLotteryLvPanel>((uint)191071);
                 // PanelMgr.Inst.OpenPanel<DuckLotteryTaskPanel>(ActivityModule.Inst.DuckPoolLotteryActivityId);
                 //
