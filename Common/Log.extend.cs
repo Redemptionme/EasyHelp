@@ -200,7 +200,10 @@ namespace HHL.Common
         {
             AddListenMsgType(MsgType.KMsgGs2ClpersonalKsJigsawNotice);
             AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsJigsawRequest);
-            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsJigsawReply);
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityKsJigsawReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsCollectDropRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityKsCollectDropReply);
         }
 
         private void InitJigsaw()
