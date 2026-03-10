@@ -16,6 +16,7 @@ using IGG.Game.Data.Cache.Activity;
 using IGG.Game.Game.HHL.Attr;
 using IGG.Game.Module.Activity.View;
 using IGG.Game.Module.GiantBoss.View;
+using IGG.Game.Module.TroopEquip.View;
 using UnityEngine;
 
 namespace HHL.Common
@@ -37,17 +38,26 @@ namespace HHL.Common
             method?.Invoke(this, null);
         }
 
+        [HHLKeyFunVerAttr(Ver.V1_55, KeyCode.F4)]
+        private void OnF4Click_55()
+        {
+            PanelMgr.Inst.OpenPanel<TroopsEquipBagPanel>();
+        }
+        
+        
+        [HHLKeyFunVerAttr(Ver.V1_55, KeyCode.F3)]
+        private void OnF3Click_55()
+        {
+            PanelMgr.Inst.OpenPanel<ActivityPanel>((uint)ActivityCache.PersonalActivityAdd + 70, true);
+        }
+        
 
         [HHLKeyFunVerAttr(Ver.V1_53, KeyCode.F3)]
-        private void OnF3Click1_53()
+        private void OnF3Click_53()
         {
             PanelMgr.Inst.OpenPanel<GiantBossPanel>();
         }
 
-        [HHLKeyFunVerAttr(Ver.V1_55, KeyCode.F3)]
-        private void OnF3Click1_55()
-        {
-            PanelMgr.Inst.OpenPanel<ActivityPanel>((uint)ActivityCache.PersonalActivityAdd + 70, true);
-        }
+    
     }
 }
