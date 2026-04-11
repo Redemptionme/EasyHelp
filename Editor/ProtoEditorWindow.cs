@@ -149,7 +149,7 @@ namespace Game.HHL.Editor
                         else
                         {
                             var pos = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                            var equalIndex = 0;
+                            var equalIndex = -1;
                             var isRepeated = false;
                             for (var i = 0; i < pos.Length; i++)
                             {
@@ -163,6 +163,11 @@ namespace Game.HHL.Editor
                                     equalIndex = i;
                                     break;
                                 }
+                            }
+
+                            if (equalIndex < 2)
+                            {
+                                continue;
                             }
 
                             var st = new ProtoStruct

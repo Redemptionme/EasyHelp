@@ -19,6 +19,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private ActivityConfig m_activityConfig;
         private ActivityBaseInfo m_activityInfo;
         private PanelRigHelper m_rigHelper = new();
+        __DIRTY_FIELD__
         
         public void Init(ActivityPanel panel, ActivityConfig cfg)
         {
@@ -62,6 +63,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
             // m_rigHelper
             m_btnInfo.onClick.Add(OnClickInfo);
             Timers.inst.Add(1, -1, OnTimeUpdate);
+            __DIRTY_FUN_ADD_LISTENERS__
         }
 
         private void RemoveListeners()
@@ -80,6 +82,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         
         private void RefreshUI()
         {
+            __DIRTY_FUN_REFRESH_UI__
             // copy to module
             RegisterView<__PANEL_NAME__>(Base__PANEL_NAME__.URL);
         }
@@ -106,6 +109,9 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private void OnClickInfo(EventContext context)
         {
             m_panel.GotoRule(m_activityConfig.Id);
-        }        
+        } 
+        __DIRTY_FUN_UPDATE__
+                
+        __DIRTY_FUN_SYN_MSG__       
     }
 }

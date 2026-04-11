@@ -26,6 +26,7 @@ namespace Game.HHL.Editor
         private int m_curPanelIndex = 0;
         private string m_panelName = "TestPanel";
         private string m_authorName = "hanlinhe";
+        private bool m_needPanelDirty;
         private static bool m_bMute;
 
         [MenuItem("HHL/音量开关")]
@@ -113,7 +114,8 @@ namespace Game.HHL.Editor
             m_authorName = EditorGUILayout.TextField("作者名", m_authorName);
 
             m_curPanelIndex = EditorGUILayout.Popup("界面类型", m_curPanelIndex, panelOptions);
-
+            // 显示带标签的 toggle，避免无标签时被挤出或不易察觉
+            m_needPanelDirty = EditorGUILayout.Toggle("标脏处理", m_needPanelDirty);
             if (GUILayout.Button("生成代码"))
             {
                 var moduleDir = basePath + "//" + m_moduleName;
@@ -161,6 +163,21 @@ namespace Game.HHL.Editor
             sb.Replace("__MODULE_NAME__", m_moduleName);
             sb.Replace("__PANEL_NAME__", panelName);
 
+            sb.Replace("__DIRTY_FIELD__", m_needPanelDirty ? "private DirtyFlag m_dirtyFlag = new();" : "");
+            sb.Replace("__DIRTY_FUN_INIT__",
+                m_needPanelDirty ? "m_dirtyFlag.MarkDirty((int)CommonPanelDirty.All);" : "RefreshUI();");
+            sb.Replace("__DIRTY_FUN_UPDATE__",
+                m_needPanelDirty
+                    ? "protected override void OnUpdate()\n        {\n            base.OnUpdate();\n\n            if (m_dirtyFlag.IsFlagDirty((int)CommonPanelDirty.UI))\n            {\n                m_dirtyFlag.ClearDirty((int)CommonPanelDirty.UI);\n                RefreshUI();\n            }\n        }"
+                    : "");
+            sb.Replace("__DIRTY_FUN_ADD_LISTENERS__",
+                m_needPanelDirty ? "m_dirtyFlag.MarkDirty((int)CommonPanelDirty.All);" : "");
+            sb.Replace("__DIRTY_FUN_REFRESH_UI__", m_needPanelDirty ? "SyncMsg();" : "");
+            sb.Replace("__DIRTY_FUN_SYN_MSG__",
+                m_needPanelDirty
+                    ? "private void SyncMsg()\n        {\n            if (!m_dirtyFlag.IsFlagDirty((int)CommonPanelDirty.Msg))\n            {\n                return;\n            }\n\n            m_dirtyFlag.ClearDirty((int)CommonPanelDirty.Msg);\n            \n        }"
+                    : "");
+
             EditorHelper.WriteFile(outputFileName, sb.ToString());
         }
 
@@ -180,6 +197,20 @@ namespace Game.HHL.Editor
             sb.Replace("__DATA_TABLE_CREATE_TIME__", DateTime.UtcNow.ToLocalTime().ToString("yyyy.MM.dd"));
             sb.Replace("__MODULE_NAME__", m_moduleName);
             sb.Replace("__PANEL_NAME__", panelName);
+            sb.Replace("__DIRTY_FIELD__", m_needPanelDirty ? "private DirtyFlag m_dirtyFlag = new();" : "");
+            sb.Replace("__DIRTY_FUN_INIT__",
+                m_needPanelDirty ? "m_dirtyFlag.MarkDirty((int)CommonPanelDirty.All);" : "RefreshUI();");
+            sb.Replace("__DIRTY_FUN_UPDATE__",
+                m_needPanelDirty
+                    ? "protected override void OnUpdate()\n        {\n            base.OnUpdate();\n\n            if (m_dirtyFlag.IsFlagDirty((int)CommonPanelDirty.UI))\n            {\n                m_dirtyFlag.ClearDirty((int)CommonPanelDirty.UI);\n                RefreshUI();\n            }\n        }"
+                    : "");
+            sb.Replace("__DIRTY_FUN_ADD_LISTENERS__",
+                m_needPanelDirty ? "m_dirtyFlag.MarkDirty((int)CommonPanelDirty.All);" : "");
+            sb.Replace("__DIRTY_FUN_REFRESH_UI__", m_needPanelDirty ? "SyncMsg();" : "");
+            sb.Replace("__DIRTY_FUN_SYN_MSG__",
+                m_needPanelDirty
+                    ? "private void SyncMsg()\n        {\n            if (!m_dirtyFlag.IsFlagDirty((int)CommonPanelDirty.Msg))\n            {\n                return;\n            }\n\n            m_dirtyFlag.ClearDirty((int)CommonPanelDirty.Msg);\n            \n        }"
+                    : "");
 
             EditorHelper.WriteFile(outputFileName, sb.ToString());
         }

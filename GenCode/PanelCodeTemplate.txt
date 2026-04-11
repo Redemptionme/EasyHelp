@@ -15,6 +15,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
     public class __PANEL_NAME__ : Base__PANEL_NAME__
     {
         private PanelRigHelper m_rigHelper = new();
+        __DIRTY_FIELD__
         
         protected override void OnInit()
         {
@@ -34,6 +35,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private void AddListeners()
         {
             // m_rigHelper
+            __DIRTY_FUN_ADD_LISTENERS__
         }
 
         private void RemoveListeners()
@@ -50,8 +52,8 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
                 IGG.Framework.Logging.Logger.LogError($"{ResName} CheckOpen fail");
                 return false;
             }
-            AddListeners();
-            RefreshUI();
+            AddListeners();            
+            __DIRTY_FUN_INIT__
             return true;
         }
         
@@ -63,8 +65,13 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         
         private void RefreshUI()
         {
+            __DIRTY_FUN_REFRESH_UI__            
             // copy to module
             BindPanel<__PANEL_NAME__>();
         }
+        
+        __DIRTY_FUN_UPDATE__
+        
+        __DIRTY_FUN_SYN_MSG__
     }
 }

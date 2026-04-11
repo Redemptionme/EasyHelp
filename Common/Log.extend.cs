@@ -195,13 +195,35 @@ namespace HHL.Common
             InitVersion();
         }
 
+        public void InitSheepProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClplayerAllActivityNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateInfoRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateInfoReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateStartLevelRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateStartLevelReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateRestartRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateRestartReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateClickTileRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateClickTileReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateItemRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateItemReply);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateCaptureRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateCaptureReply);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateLevelStateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateProgressRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateProgressNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsactivityEliminateClaimProgressRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityEliminateClaimProgressRewardReply);
+        }
+
 
         private void InitKsJigsaw()
         {
             AddListenMsgType(MsgType.KMsgGs2ClpersonalKsJigsawNotice);
             AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsJigsawRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityKsJigsawReply);
-            
+
             AddListenMsgType(MsgType.KMsgCl2GspersonalActivityKsCollectDropRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityKsCollectDropReply);
         }
@@ -755,6 +777,21 @@ namespace HHL.Common
 
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipSpecialRevertSearchRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipSpecialRevertSearchReply);
+
+            InitHeroEquipSynthesis();
+            InitHeroEquipInherit();
+        }
+
+        private void InitHeroEquipInherit()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipSwitchEntryRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipSwitchEntryReply);
+        }
+
+        public void InitHeroEquipSynthesis()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipSecondSynthesisRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipSecondSynthesisReply);
         }
 
         private void InitRank()
