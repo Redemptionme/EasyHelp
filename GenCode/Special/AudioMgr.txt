@@ -81,7 +81,7 @@ namespace IGG.Game.Managers.Audio
 
             ModuleMgr.Inst.AddNotifyListener(CommonNotify.OpenPanel, OnOpenPanel);
             ModuleMgr.Inst.AddNotifyListener(CommonNotify.ClosePanel, OnClosePanel);
-
+            InitAudioLanguage();
             LoadBank(AudioBnkType.General);
             SwichAudio(false);
             SwichBgm(false);
@@ -95,6 +95,33 @@ namespace IGG.Game.Managers.Audio
             Timers.inst.Add(1,-1,OnTimers);
         }
 
+        /// <summary>
+        /// #87355 【音效】支持根据当前选择的语言播放相应配音 客户端开发
+        /// </summary>
+        private void InitAudioLanguage()
+        {
+            uint languageId = AppCache.Setting.LanguageId;
+            string language = "English(US)";
+            switch (languageId)
+            {
+                case 2:
+                case 3:
+                    language = "Chinese(CN)";
+                    break;
+                case 8:
+                    language = "Russian(RU)";
+                    break;
+                case 9:
+                    language = "Korean(KR)";
+                    break;
+                case 10:
+                    language = "Japanese(JP)";
+                    break;
+            }
+            var result = AkUnitySoundEngine.SetCurrentLanguage(language);
+            Logger.Log($"set audio lan : {language},result : {result}");
+        }
+        
         public void Update()
         {
         }
@@ -504,6 +531,7 @@ namespace IGG.Game.Managers.Audio
 #if ENABLE_AUDIO_LOG
             Debug.Log("-----PlayEvent:" + eventName);
 #endif
+            bool showAudioLog = FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog;
 
             WiseEventConfig cfg = WiseEventDao.Inst.GetCfg(eventName);
             if (cfg == null || string.IsNullOrEmpty(cfg.WiseEvent))
@@ -548,6 +576,11 @@ namespace IGG.Game.Managers.Audio
             {
                 IncreaseBnk(cfg.Bnk,ret, cfg.WiseEvent);
                 m_playIdEvents[ret] = cfg.Bnk;    
+            }
+            
+            if (showAudioLog)
+            {
+                Logger.Log($"PlayAudioEvent:{eventName},EventName:{cfg.WiseEvent}");
             }
 #endif
         }
