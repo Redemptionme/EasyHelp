@@ -16,6 +16,7 @@ using IGG.Game.Module.Reward;
 using IGG.Game.Module.Rune.Comp;
 using IGG.Game.UI.Main;
 using Protomsg;
+using UnityEngine;
 
 namespace HHL.Common
 {
@@ -1298,11 +1299,11 @@ namespace HHL.Common
 
             if (bSend)
             {
-                Print("Send " + (int)msgType + " ==>" + msgType + " " + msg, eLogType.eRootNetwork);
+                Print("Send " + (int)msgType + " ==>" + msgType + " " + JsonUtility.ToJson(msg), eLogType.eRootNetwork);
             }
             else
             {
-                Print("Recv " + (int)msgType + " ==>" + msgType + " " + msg, eLogType.eRootNetwork);
+                Print("Recv " + (int)msgType + " ==>" + msgType + " " + JsonUtility.ToJson(msg), eLogType.eRootNetwork);
             }
         }
 
