@@ -193,6 +193,11 @@ namespace HHL.Common
                 PanelMgr.Inst.OpenPanel<BagResourcesPanel>(new object[] { vos });
             }
 
+            if (Input.GetKeyDown(KeyCode.F7))
+            {
+                OnClick(KeyCode.F7);
+            }
+
 
             // if (Input.GetKeyDown(KeyCode.F8))
             // {
