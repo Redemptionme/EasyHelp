@@ -28,6 +28,15 @@ namespace HHL.Common
 {
     public partial class HHLGOTools
     {
+        // 断点调试用：按基础名分组存储 GameObject 列表，既能看数量又能展开查具体对象
+        private System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<GameObject>>
+            m_goGroupDict = new();
+
+        // 断点调试用：按 Component 类型名分组，对应 Memory Profiler 的 Managed Objects
+        private System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<Component>>
+            m_compGroupDict = new();
+
+
         private void OnClick(KeyCode keyCode)
         {
             var method = GetType()
@@ -46,10 +55,118 @@ namespace HHL.Common
         [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F7)]
         private void OnF7Click_56()
         {
-            //HeroModule.Inst.OpenHeroEquipDevelopPanel();
-            //PanelMgr.Inst.OpenPanel<HeroEquipDevelopPanel>(ActivityModule.Inst.SheepActId);
+            PrintAllGameObject();
         }
-        
+
+        private void PrintAllGameObject()
+        {
+            // ── 1. 内存概览 ──────────────────────────────────────────────
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            long gcUsed    = GC.GetTotalMemory(false);
+            long monoUsed  = UnityEngine.Profiling.Profiler.GetMonoUsedSizeLong();
+            long monoHeap  = UnityEngine.Profiling.Profiler.GetMonoHeapSizeLong();
+            long totalAlloc= UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
+
+            Log.Inst.Print("");
+            Log.Inst.Print("===========Memory Overview=");
+            Log.Inst.Print($"  GC Total Memory : {gcUsed    / 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  Mono Used       : {monoUsed  / 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  Mono Heap       : {monoHeap  / 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  Total Allocated : {totalAlloc/ 1024f / 1024f:F2} MB");
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Log.Inst.Print(IGG.Framework.Resource.ResourceRef.DumpAliveKeys());
+            // ResourceMgr pool 大小（pool 里的 GO 虽 SetActive=false 但仍占 Native 内存）
+            Log.Inst.Print(IGG.Framework.Resource.ResourceMgr.Inst.DumpPoolStats());
+#endif
+
+            // ── 2. GameObject 分组（断点调试用） ─────────────────────────
+            var all = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];
+            m_goGroupDict.Clear();
+
+            // 按 Component 类型统计的字典（断点调试用）
+            m_compGroupDict.Clear();
+            var compDict = m_compGroupDict;
+
+            foreach (var item in all)
+            {
+                if (!item.scene.isLoaded) continue;
+
+                // 去掉末尾 "(数字)" 实例编号，统计基础名
+                var name = item.name;
+                var p = name.LastIndexOf(" (", StringComparison.Ordinal);
+                if (p >= 0 && name.EndsWith(")"))
+                    name = name.Substring(0, p);
+
+                if (!m_goGroupDict.TryGetValue(name, out var goList))
+                {
+                    goList = new System.Collections.Generic.List<GameObject>();
+                    m_goGroupDict[name] = goList;
+                }
+                goList.Add(item);
+
+                // 收集每个 GO 上的所有 Component
+                var comps = item.GetComponents<Component>();
+                foreach (var comp in comps)
+                {
+                    if (comp == null) continue; // missing script guard
+                    var typeName = comp.GetType().FullName;
+                    if (!compDict.TryGetValue(typeName, out var compList))
+                    {
+                        compList = new System.Collections.Generic.List<Component>();
+                        compDict[typeName] = compList;
+                    }
+                    compList.Add(comp);
+                }
+            }
+
+            // ── 3. 输出 GameObject 统计（按数量降序） ───────────────────
+            var sortedGO =
+                new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string,
+                    System.Collections.Generic.List<GameObject>>>(m_goGroupDict);
+            sortedGO.Sort((a, b) => b.Value.Count.CompareTo(a.Value.Count));
+
+            Log.Inst.Print($"===========GameObject= total:{all.Length} types:{sortedGO.Count}");
+            foreach (var kv in sortedGO)
+                Log.Inst.Print($"{kv.Value.Count,5}  {kv.Key}");
+
+            // ── 4. 输出 Component 类型统计（按数量降序，最能对应 Managed Objects） ──
+            var sortedComp =
+                new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string,
+                    System.Collections.Generic.List<Component>>>(compDict);
+            sortedComp.Sort((a, b) => b.Value.Count.CompareTo(a.Value.Count));
+
+            Log.Inst.Print($"===========Component Types= types:{sortedComp.Count}");
+            foreach (var kv in sortedComp)
+                Log.Inst.Print($"{kv.Value.Count,5}  {kv.Key}");
+
+            // ── 5. 详细路径（需要时取消注释）────────────────────────────
+            // Log.Inst.Print($"===========detail=");
+            // foreach (var kv in sortedGO)
+            //     foreach (var go in kv.Value)
+            //         Log.Inst.Print($"  [{kv.Key}]  {GetGameObjectPath(go)}");
+
+            Log.Inst.Print($"===========End=");
+            Log.Inst.Print("");
+            // 断点调试：
+            //   m_goGroupDict["xxx"]  → 查看具体 GameObject
+            //   compDict["IGG.Framework.Resource.ResourceRefProxy"] → 查看具体组件实例及其 GO 路径
+        }
+
+        private static string GetGameObjectPath(GameObject go)
+        {
+            var sb = new System.Text.StringBuilder(go.name);
+            var t = go.transform.parent;
+            while (t != null)
+            {
+                sb.Insert(0, t.name + "/");
+                t = t.parent;
+            }
+
+            return sb.ToString();
+        }
+
         [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F4)]
         private void OnF4Click_56()
         {
