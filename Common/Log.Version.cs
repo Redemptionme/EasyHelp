@@ -16,7 +16,7 @@ namespace HHL.Common
 {
     public partial class Log
     {
-        private Ver m_version = Ver.V1_57;
+        private Ver m_version = Ver.V1_58;
 
         public Ver Version => m_version;
 
@@ -28,7 +28,13 @@ namespace HHL.Common
 
             method?.Invoke(this, null);
         }
-        
+
+        [HHLFunVerAttr(Ver.V1_58)]
+        private void Init1Dot58()
+        {
+            InitTroopEquipProto();
+        }
+
         [HHLFunVerAttr(Ver.V1_57)]
         private void Init1Dot57()
         {

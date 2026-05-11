@@ -57,8 +57,8 @@ namespace HHL.Common
         private void OnF3Click_57()
         {
             PanelMgr.Inst.OpenPanel<RegressTurntablePanel>((uint)AppCache.Activity.RegressLabaId);
-
         }
+
         [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F7)]
         private void OnF7Click_56()
         {
@@ -71,17 +71,17 @@ namespace HHL.Common
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-            long gcUsed    = GC.GetTotalMemory(false);
-            long monoUsed  = UnityEngine.Profiling.Profiler.GetMonoUsedSizeLong();
-            long monoHeap  = UnityEngine.Profiling.Profiler.GetMonoHeapSizeLong();
-            long totalAlloc= UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
+            var gcUsed = GC.GetTotalMemory(false);
+            var monoUsed = UnityEngine.Profiling.Profiler.GetMonoUsedSizeLong();
+            var monoHeap = UnityEngine.Profiling.Profiler.GetMonoHeapSizeLong();
+            var totalAlloc = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
 
             Log.Inst.Print("");
             Log.Inst.Print("===========Memory Overview=");
-            Log.Inst.Print($"  GC Total Memory : {gcUsed    / 1024f / 1024f:F2} MB");
-            Log.Inst.Print($"  Mono Used       : {monoUsed  / 1024f / 1024f:F2} MB");
-            Log.Inst.Print($"  Mono Heap       : {monoHeap  / 1024f / 1024f:F2} MB");
-            Log.Inst.Print($"  Total Allocated : {totalAlloc/ 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  GC Total Memory : {gcUsed / 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  Mono Used       : {monoUsed / 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  Mono Heap       : {monoHeap / 1024f / 1024f:F2} MB");
+            Log.Inst.Print($"  Total Allocated : {totalAlloc / 1024f / 1024f:F2} MB");
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             //Log.Inst.Print(IGG.Framework.Resource.ResourceRef.DumpAliveKeys());
             // ResourceMgr pool 大小（pool 里的 GO 虽 SetActive=false 但仍占 Native 内存）
@@ -98,32 +98,43 @@ namespace HHL.Common
 
             foreach (var item in all)
             {
-                if (!item.scene.isLoaded) continue;
+                if (!item.scene.isLoaded)
+                {
+                    continue;
+                }
 
                 // 去掉末尾 "(数字)" 实例编号，统计基础名
                 var name = item.name;
                 var p = name.LastIndexOf(" (", StringComparison.Ordinal);
                 if (p >= 0 && name.EndsWith(")"))
+                {
                     name = name.Substring(0, p);
+                }
 
                 if (!m_goGroupDict.TryGetValue(name, out var goList))
                 {
                     goList = new System.Collections.Generic.List<GameObject>();
                     m_goGroupDict[name] = goList;
                 }
+
                 goList.Add(item);
 
                 // 收集每个 GO 上的所有 Component
                 var comps = item.GetComponents<Component>();
                 foreach (var comp in comps)
                 {
-                    if (comp == null) continue; // missing script guard
+                    if (comp == null)
+                    {
+                        continue; // missing script guard
+                    }
+
                     var typeName = comp.GetType().FullName;
                     if (!compDict.TryGetValue(typeName, out var compList))
                     {
                         compList = new System.Collections.Generic.List<Component>();
                         compDict[typeName] = compList;
                     }
+
                     compList.Add(comp);
                 }
             }
@@ -136,7 +147,9 @@ namespace HHL.Common
 
             Log.Inst.Print($"===========GameObject= total:{all.Length} types:{sortedGO.Count}");
             foreach (var kv in sortedGO)
+            {
                 Log.Inst.Print($"{kv.Value.Count,5}  {kv.Key}");
+            }
 
             // ── 4. 输出 Component 类型统计（按数量降序，最能对应 Managed Objects） ──
             var sortedComp =
@@ -146,7 +159,9 @@ namespace HHL.Common
 
             Log.Inst.Print($"===========Component Types= types:{sortedComp.Count}");
             foreach (var kv in sortedComp)
+            {
                 Log.Inst.Print($"{kv.Value.Count,5}  {kv.Key}");
+            }
 
             // ── 5. 详细路径（需要时取消注释）────────────────────────────
             // Log.Inst.Print($"===========detail=");
@@ -172,6 +187,12 @@ namespace HHL.Common
             }
 
             return sb.ToString();
+        }
+
+        [HHLKeyFunVerAttr(Ver.V1_58, KeyCode.F3)]
+        private void OnF4Click_57()
+        {
+            PanelMgr.Inst.OpenPanel<TroopsEquipBagPanel>();
         }
 
         [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F4)]
