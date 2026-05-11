@@ -16,7 +16,7 @@ namespace HHL.Common
 {
     public partial class Log
     {
-        private Ver m_version = Ver.V1_58;
+        private Ver m_version = Ver.V1_57;
 
         public Ver Version => m_version;
 
@@ -41,6 +41,7 @@ namespace HHL.Common
             InitNewFixTurntable();
             InitAchievementProto();
             InitBattleRoyale();
+            InitPacificRimProto();
         }
 
         [HHLFunVerAttr(Ver.V1_56)]

@@ -22,6 +22,7 @@ using IGG.Game.Module.Hero;
 using IGG.Game.Module.Hero.View;
 using IGG.Game.Module.Hero.View.HeroEquip;
 using IGG.Game.Module.Kof.View;
+using IGG.Game.Module.Return.View;
 using IGG.Game.Module.TroopEquip.View;
 using UnityEngine;
 
@@ -51,18 +52,6 @@ namespace HHL.Common
                 });
 
             method?.Invoke(this, null);
-        }
-
-        [HHLKeyFunVerAttr(Ver.V1_57, KeyCode.F3)]
-        private void OnF3Click_57()
-        {
-            PanelMgr.Inst.OpenPanel<RegressTurntablePanel>((uint)AppCache.Activity.RegressLabaId);
-        }
-
-        [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F7)]
-        private void OnF7Click_56()
-        {
-            PrintAllGameObject();
         }
 
         private void PrintAllGameObject()
@@ -190,9 +179,27 @@ namespace HHL.Common
         }
 
         [HHLKeyFunVerAttr(Ver.V1_58, KeyCode.F3)]
-        private void OnF4Click_57()
+        private void OnF4Click_58()
         {
             PanelMgr.Inst.OpenPanel<TroopsEquipBagPanel>();
+        }
+
+        [HHLKeyFunVerAttr(Ver.V1_57, KeyCode.F4)]
+        private void OnF4Click_57()
+        {
+            PanelMgr.Inst.OpenPanel<ReturnSlotMachinePanel>(ActivityModule.Inst.ReturnSlotMachineId);
+        }
+
+        [HHLKeyFunVerAttr(Ver.V1_57, KeyCode.F3)]
+        private void OnF3Click_57()
+        {
+            PanelMgr.Inst.OpenPanel<RegressTurntablePanel>((uint)AppCache.Activity.RegressLabaId);
+        }
+
+        [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F7)]
+        private void OnF7Click_56()
+        {
+            PrintAllGameObject();
         }
 
         [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F4)]
