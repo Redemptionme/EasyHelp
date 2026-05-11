@@ -12,6 +12,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using IGG.Framework.Panel;
+using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Activity;
 using IGG.Game.Game.HHL.Attr;
 using IGG.Game.Module.Activity;
@@ -52,6 +53,12 @@ namespace HHL.Common
             method?.Invoke(this, null);
         }
 
+        [HHLKeyFunVerAttr(Ver.V1_57, KeyCode.F3)]
+        private void OnF3Click_57()
+        {
+            PanelMgr.Inst.OpenPanel<RegressTurntablePanel>((uint)AppCache.Activity.RegressLabaId);
+
+        }
         [HHLKeyFunVerAttr(Ver.V1_56, KeyCode.F7)]
         private void OnF7Click_56()
         {
@@ -76,9 +83,9 @@ namespace HHL.Common
             Log.Inst.Print($"  Mono Heap       : {monoHeap  / 1024f / 1024f:F2} MB");
             Log.Inst.Print($"  Total Allocated : {totalAlloc/ 1024f / 1024f:F2} MB");
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Log.Inst.Print(IGG.Framework.Resource.ResourceRef.DumpAliveKeys());
+            //Log.Inst.Print(IGG.Framework.Resource.ResourceRef.DumpAliveKeys());
             // ResourceMgr pool 大小（pool 里的 GO 虽 SetActive=false 但仍占 Native 内存）
-            Log.Inst.Print(IGG.Framework.Resource.ResourceMgr.Inst.DumpPoolStats());
+            //Log.Inst.Print(IGG.Framework.Resource.ResourceMgr.Inst.DumpPoolStats());
 #endif
 
             // ── 2. GameObject 分组（断点调试用） ─────────────────────────

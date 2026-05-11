@@ -14,5 +14,6 @@ namespace HHL.Common
         V1_54,
         V1_55,
         V1_56,
+        V1_57,
     }
 }

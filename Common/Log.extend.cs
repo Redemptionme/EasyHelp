@@ -721,6 +721,9 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClplayerActivityNotice);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardRequest);
             AddListenMsgType(MsgType.KMsgCl2GsactivityTaskAwardReply);
+            // 一键领取
+            AddListenMsgType(MsgType.KMsgCl2GsactivityAllTaskRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityAllTaskRewardReply);
 
             // 主活动
             AddListenMsgType(MsgType.KMsgGs2CleatChickenPairingSucceedNotice); // 匹配成功通知 (匹配成功, 登录)
@@ -746,6 +749,36 @@ namespace HHL.Common
             // 排行版
             AddListenMsgType(MsgType.KMsgCl2GsrankQueryRankBoardRequest);
             AddListenMsgType(MsgType.KMsgGs2ClrankQueryRankBoardReply);
+        }
+        
+        public void InitAchievementProto()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClallchievementInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClachievementBaseInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClachievementRewardInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClachievementInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClachievementFlagInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsachievementConfirmRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClachievementConfirmReply);
+            AddListenMsgType(MsgType.KMsgCl2GsachievementLevelRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClachievementLevelRewardReply);
+            AddListenMsgType(MsgType.KMsgCl2GsaddAchievementFlagRequest);
+            AddListenMsgType(MsgType.KMsgGs2CladdAchievementFlagReply);
+            AddListenMsgType(MsgType.KMsgCl2GsdelAchievementFlagRequest);
+            AddListenMsgType(MsgType.KMsgGs2CldelAchievementFlagReply);
+        }
+
+        private void InitNewFixTurntable()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityTurntableCycleRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityTurntableCycleReply);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityTurntableRequest);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityTurntableReply);
+            AddListenMsgType(MsgType.KMsgCl2GspersonalActivityTurntableStageRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityTurntableStageRewardReply);
+            AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityTurntableNotice);
+            
+            AddListenMsgType(MsgType.KMsgGs2ClplayerPersonalAllBaseStatusNotice);
         }
 
         private void InitHeroEquip()
@@ -1299,11 +1332,11 @@ namespace HHL.Common
 
             if (bSend)
             {
-                Print("Send " + (int)msgType + " ==>" + msgType + " " + JsonUtility.ToJson(msg), eLogType.eRootNetwork);
+                Print("Send " + (int)msgType + " ==>" + msgType + " " + JsonFormatter.ToDiagnosticString(msg), eLogType.eRootNetwork);
             }
             else
             {
-                Print("Recv " + (int)msgType + " ==>" + msgType + " " + JsonUtility.ToJson(msg), eLogType.eRootNetwork);
+                Print("Recv " + (int)msgType + " ==>" + msgType + " " + JsonFormatter.ToDiagnosticString(msg), eLogType.eRootNetwork);
             }
         }
 
