@@ -779,6 +779,8 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpersonalActivityTurntableNotice);
             
             AddListenMsgType(MsgType.KMsgGs2ClplayerPersonalAllBaseStatusNotice);
+
+            InitMagicLampNotice();
         }
 
         private void InitHeroEquip()
