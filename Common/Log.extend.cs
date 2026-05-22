@@ -814,6 +814,12 @@ namespace HHL.Common
 
             InitHeroEquipSynthesis();
             InitHeroEquipInherit();
+            InitHeroEquipSuit();
+        }
+
+        private void InitHeroEquipSuit()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipWearCellUpdateNotice);
         }
 
         private void InitHeroEquipInherit()

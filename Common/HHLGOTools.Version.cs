@@ -181,7 +181,7 @@ namespace HHL.Common
         [HHLKeyFunVerAttr(Ver.V1_58, KeyCode.F3)]
         private void OnF4Click_58()
         {
-            PanelMgr.Inst.OpenPanel<TroopsEquipBagPanel>();
+            PanelMgr.Inst.OpenPanel<TroopsEquipMainPanel>();
         }
 
         [HHLKeyFunVerAttr(Ver.V1_57, KeyCode.F4)]

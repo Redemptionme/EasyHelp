@@ -16,7 +16,7 @@ namespace HHL.Common
 {
     public partial class Log
     {
-        private Ver m_version = Ver.V1_57;
+        private Ver m_version = Ver.V1_58;
 
         public Ver Version => m_version;
 
@@ -32,7 +32,7 @@ namespace HHL.Common
         [HHLFunVerAttr(Ver.V1_58)]
         private void Init1Dot58()
         {
-            InitTroopEquipProto();
+            InitHeroEquip();
         }
 
         [HHLFunVerAttr(Ver.V1_57)]
