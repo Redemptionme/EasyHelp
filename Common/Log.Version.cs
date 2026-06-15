@@ -32,7 +32,8 @@ namespace HHL.Common
         [HHLFunVerAttr(Ver.V1_58)]
         private void Init1Dot58()
         {
-            InitHeroEquip();
+            //InitHeroEquip();
+            InitPoolLottery();
         }
 
         [HHLFunVerAttr(Ver.V1_57)]

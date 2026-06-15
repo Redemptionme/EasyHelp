@@ -395,6 +395,12 @@ namespace HHL.Common
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardReply);
             AddListenMsgType(MsgType.KMsgCl2GspoolLotteryActivityStageRewardsRequest);
             AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityStageRewardsReply);
+            
+            
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityDrawDataNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClpoolLotteryActivityGainBigRewardNotice);
+
+
         }
 
         public void InitPetProto()
