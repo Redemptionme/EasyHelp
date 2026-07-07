@@ -24,6 +24,7 @@ using IGG.Game.Module.Hero.View.HeroEquip;
 using IGG.Game.Module.Kof.View;
 using IGG.Game.Module.Return.View;
 using IGG.Game.Module.TroopEquip.View;
+using Protomsg;
 using UnityEngine;
 
 namespace HHL.Common
@@ -183,14 +184,37 @@ namespace HHL.Common
         {
             PanelMgr.Inst.OpenPanel<FairyTailLotteryPanel>(ActivityModule.Inst.FairyTailLotteryActivityId);
         }
+
         [HHLKeyFunVerAttr(Ver.V1_58, KeyCode.F4)]
         private void OnF4Click_58()
         {
-            PanelMgr.Inst.OpenPanel<FairyTailLotteryPanel>(ActivityModule.Inst.KofPoolLotteryActivityId);
+            var msg = new MsgGS2CLPoolLotteryActivityStageRewardReply
+            {
+                ActivityId = 191208,
+                Stage = 460,
+                Rewards =
+                {
+                    new Resource
+                    {
+                        ResType = 2,
+                        SubType = 72431,
+                        Value = 1
+                    }
+                },
+                ReturnRewards =
+                {
+                    new Resource
+                    {
+                        ResType = 2,
+                        SubType = 48566,
+                        Value = 450000
+                    }
+                }
+            };
+
+            PanelMgr.Inst.OpenPanel<FairyTailRewardPanel>(FairyTailRewardPanel.PanelType.StageReward, msg);
         }
 
-        
-        
 
         [HHLKeyFunVerAttr(Ver.V1_57, KeyCode.F4)]
         private void OnF4Click_57()
