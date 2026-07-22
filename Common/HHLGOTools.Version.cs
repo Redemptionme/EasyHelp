@@ -179,6 +179,17 @@ namespace HHL.Common
             return sb.ToString();
         }
 
+        [HHLKeyFunVerAttr(Ver.V1_60, KeyCode.F3)]
+        private void OnF3Click_60()
+        {
+            //PanelMgr.Inst.OpenPanel<PinBallPanel>();
+        }
+
+        [HHLKeyFunVerAttr(Ver.V1_59, KeyCode.F3)]
+        private void OnF3Click_59()
+        {
+        }
+
         [HHLKeyFunVerAttr(Ver.V1_58, KeyCode.F3)]
         private void OnF3Click_58()
         {

@@ -20,5 +20,8 @@ namespace HHL.Common
         V1_60,
         V1_61,
         V1_62,
+        V1_63,
+        V1_64,
+        V1_65,
     }
 }

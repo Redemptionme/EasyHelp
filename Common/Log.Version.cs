@@ -16,7 +16,7 @@ namespace HHL.Common
 {
     public partial class Log
     {
-        private Ver m_version = Ver.V1_58;
+        private Ver m_version = Ver.V1_60;
 
         public Ver Version => m_version;
 
@@ -27,6 +27,17 @@ namespace HHL.Common
                 .FirstOrDefault(m => m.GetCustomAttribute<HHLFunVerAttr>()?.Version == m_version);
 
             method?.Invoke(this, null);
+        }
+
+        [HHLFunVerAttr(Ver.V1_60)]
+        private void Init1Dot60()
+        {
+            InitHeroEquip();
+        }
+
+        [HHLFunVerAttr(Ver.V1_59)]
+        private void Init1Dot59()
+        {
         }
 
         [HHLFunVerAttr(Ver.V1_58)]

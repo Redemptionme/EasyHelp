@@ -828,6 +828,8 @@ namespace HHL.Common
         private void InitHeroEquipSuit()
         {
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipWearCellUpdateNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipBreakthroughRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipBreakthroughReply);
         }
 
         private void InitHeroEquipInherit()
