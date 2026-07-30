@@ -182,7 +182,14 @@ namespace HHL.Common
         [HHLKeyFunVerAttr(Ver.V1_60, KeyCode.F3)]
         private void OnF3Click_60()
         {
-            //PanelMgr.Inst.OpenPanel<PinBallPanel>();
+            HeroModule.Inst.OpenHeroEquipPanel(1032);
+            HeroModule.Inst.OpenHeroEquipDevelopPanel(1002, HeroEquipDevelopPanelType.Upgrade);   
+        }
+        
+        [HHLKeyFunVerAttr(Ver.V1_60, KeyCode.F4)]
+        private void OnF4Click_60()
+        {
+            //PanelMgr.Inst.OpenPanel<PinBallPanel>();    
         }
 
         [HHLKeyFunVerAttr(Ver.V1_59, KeyCode.F3)]

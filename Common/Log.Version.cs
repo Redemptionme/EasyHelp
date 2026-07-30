@@ -33,6 +33,7 @@ namespace HHL.Common
         private void Init1Dot60()
         {
             InitHeroEquip();
+            InitPinBall();
         }
 
         [HHLFunVerAttr(Ver.V1_59)]

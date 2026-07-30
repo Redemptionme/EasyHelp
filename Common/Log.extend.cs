@@ -1460,5 +1460,19 @@ namespace HHL.Common
 
             return SbPool.PutAndToStr(sb);
         }
+
+        private void InitPinBall()
+        {
+            AddListenMsgType(MsgType.KMsgGs2ClmarbleActivityInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClsmarbleActivityBaseInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClsmarbleActivityStageInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClsmarbleActivityLoopBaseInfoNotice);
+            AddListenMsgType(MsgType.KMsgGs2ClsmarbleActivityLoopRewardInfoNotice);
+            AddListenMsgType(MsgType.KMsgCl2GsmarbleActivityDrawRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClmarbleActivityDrawReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsactivityFetchStageRewardRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClactivityFetchStageRewardReply);
+        }
     }
 }
