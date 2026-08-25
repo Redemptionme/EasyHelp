@@ -14,6 +14,7 @@ using System.Reflection;
 using IGG.Framework.Panel;
 using IGG.Game.Data.Cache;
 using IGG.Game.Data.Cache.Activity;
+using IGG.Game.Data.Cache.Hero;
 using IGG.Game.Game.HHL.Attr;
 using IGG.Game.Module.Activity;
 using IGG.Game.Module.Activity.View;
@@ -182,14 +183,28 @@ namespace HHL.Common
         [HHLKeyFunVerAttr(Ver.V1_60, KeyCode.F3)]
         private void OnF3Click_60()
         {
-            HeroModule.Inst.OpenHeroEquipPanel(1032);
-            HeroModule.Inst.OpenHeroEquipDevelopPanel(1002, HeroEquipDevelopPanelType.Upgrade);   
+            var equipVos = AppCache.Hero.GetAllEquips();
+            HeroEquipVo vo = null;
+            foreach (var kv in equipVos)
+            {
+                if (kv.Value.GetHeroId() != 0)
+                {
+                    vo = kv.Value;
+                    break;
+                }
+            }
+
+            if (vo != null)
+            {
+                HeroModule.Inst.OpenHeroEquipPanel(vo.GetHeroId(),0);
+                HeroModule.Inst.OpenHeroEquipDevelopPanel(vo.SerialId, HeroEquipDevelopPanelType.Upgrade);
+            }
         }
-        
+
         [HHLKeyFunVerAttr(Ver.V1_60, KeyCode.F4)]
         private void OnF4Click_60()
         {
-            //PanelMgr.Inst.OpenPanel<PinBallPanel>();    
+            PanelMgr.Inst.OpenPanel<PacificRimPinballLotteryPanel>((uint)191282);    
         }
 
         [HHLKeyFunVerAttr(Ver.V1_59, KeyCode.F3)]

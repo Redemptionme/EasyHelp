@@ -1463,6 +1463,8 @@ namespace HHL.Common
 
         private void InitPinBall()
         {
+            //AddListenMsgType(MsgType.KMsgGs2ClallActivityNotice);
+            
             AddListenMsgType(MsgType.KMsgGs2ClmarbleActivityInfoNotice);
             AddListenMsgType(MsgType.KMsgGs2ClsmarbleActivityBaseInfoNotice);
             AddListenMsgType(MsgType.KMsgGs2ClsmarbleActivityStageInfoNotice);
