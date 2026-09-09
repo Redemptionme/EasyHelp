@@ -822,14 +822,17 @@ namespace HHL.Common
 
             InitHeroEquipSynthesis();
             InitHeroEquipInherit();
-            InitHeroEquipSuit();
+            InitHeroEquipBreak();
         }
 
-        private void InitHeroEquipSuit()
+        private void InitHeroEquipBreak()
         {
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipWearCellUpdateNotice);
             AddListenMsgType(MsgType.KMsgCl2GsheroEquipBreakthroughRequest);
             AddListenMsgType(MsgType.KMsgGs2ClheroEquipBreakthroughReply);
+            
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipBreakthroughRevertRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipBreakthroughRevertReply);
         }
 
         private void InitHeroEquipInherit()
