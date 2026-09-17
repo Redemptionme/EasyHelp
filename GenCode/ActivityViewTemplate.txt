@@ -60,8 +60,7 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
           
         private void AddListeners()
         {             
-            // m_rigHelper
-            m_btnInfo.onClick.Add(OnClickInfo);
+            m_rigHelper.AddClick(m_btnInfo, OnClickInfo);
             Timers.inst.Add(1, -1, OnTimeUpdate);
             __DIRTY_FUN_ADD_LISTENERS__
         }
@@ -69,7 +68,6 @@ namespace IGG.Game.Module.__MODULE_NAME__.View
         private void RemoveListeners()
         {
             m_rigHelper.Clear();
-            m_btnInfo.onClick.Remove(OnClickInfo);
             Timers.inst.Remove(OnTimeUpdate);
         }
         
