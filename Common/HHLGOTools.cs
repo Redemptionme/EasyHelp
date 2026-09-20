@@ -572,35 +572,8 @@ namespace HHL.Common
                 UnityEngine.Debug.Log($"文件已复制: {batPath}");
             }
 
-            //var audioFromPath = specialPath + "/AudioMgr.txt";
-            var audioPath = GetProjPath() + "/Assets/Scripts/Game/Managers/Audio/AudioMgr.cs";
-            var audioText = File.ReadAllText(audioPath);
-            audioText = audioText.Replace("\r\n", "\n");
-            audioText = audioText.Replace(
-                "bool showAudioLog = FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog;\n            \n            WiseEventConfig cfg = WiseEventDao.Inst.GetCfg(eventName);",
-                "bool showAudioLog = FrameworkConfig.Inst.Release != ReleaseType.Release && FrameworkConfig.Inst.EnableAudioLog;\n            \n            WiseEventConfig cfg = WiseEventDao.Inst.GetCfg(eventName);\n            if (cfg == null)\n            {\n                HHL.Common.Log.Inst.Print(\"PlayEvent cfgName[\" + eventName + \"] => [WiseEventDao cfg err !!!]\",HHL.Common.Log.eLogType.ewise);\n            }\n            else\n            {\n                HHL.Common.Log.Inst.Print(\"PlayEvent cfgName[\" + eventName + \"] => [\" + cfg.WiseEvent+\"]\",HHL.Common.Log.eLogType.ewise ); \n            }\n            \n            ");
-            audioText = audioText.Replace("\n", "\r\n");
-            File.WriteAllText(audioPath, audioText);
-
-            //var networkFromPath = specialPath + "/GameNetwork.txt";
-            var networkPath = GetProjPath() + "/Assets/Scripts/Game/Managers/Network/GameNetwork.cs";
-            var networkText = File.ReadAllText(networkPath);
-            networkText = networkText.Replace("\r\n", "\n");
-            networkText = networkText.Replace(
-                "if (DoVirtualSerRev(msg))\n            {\n                return 0;\n            }",
-                "if (DoVirtualSerRev(msg))\n            {\n                return 0;\n            }\n#if UNITY_EDITOR\n            HHL.Common.Log.Inst.PrintMsg(msg as IMessage,true);\n#endif");
-
-            networkText = networkText.Replace(
-                "if (DoVirtualSerRev(msgEx))\n            {\n                return 0;\n            }",
-                "if (DoVirtualSerRev(msgEx))\n            {\n                return 0;\n            }\n#if UNITY_EDITOR\n            HHL.Common.Log.Inst.PrintMsg(msg as IMessage,true);\n#endif");
-
-            networkText = networkText.Replace(
-                "private void OnRevMsgHandler(NetworkBase owner, object msgObj, long size)\n        {\n            if (msgObj == null)\n            {\n                LogError($\"msgObj == null, size={size}\");\n                return;\n            }",
-                "private void OnRevMsgHandler(NetworkBase owner, object msgObj, long size)\n        {\n            if (msgObj == null)\n            {\n                LogError($\"msgObj == null, size={size}\");\n                return;\n            }\n#if UNITY_EDITOR\n            HHL.Common.Log.Inst.PrintMsg(msgObj as IMessage);\n#endif  ");
-
-
-            networkText = networkText.Replace("\n", "\r\n");
-            File.WriteAllText(networkPath, networkText);
+            // 说明：网络日志已改为 HHLNetworkDumpRecorder（HHL/Common/HHLNetworkDumpRecorder.cs），
+            // 通过 NetworkMgr.DumpRecorder 装配，不再需要字符串替换注入 GameNetwork。
             AssetDatabase.Refresh();
         }
 

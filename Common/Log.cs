@@ -59,6 +59,14 @@ namespace HHL.Common
         }
             
         
+        /// <summary>
+        /// 该日志类型是否已开启（调用方应先判断再拼字符串，避免无谓开销）
+        /// </summary>
+        public bool IsOpen(eLogType eType)
+        {
+            return _typeList.Contains(eType);
+        }
+
         public void Print(object message, eLogType eType = eLogType.eLog, bool bAppend = true)
         {
             InitGoTools();
