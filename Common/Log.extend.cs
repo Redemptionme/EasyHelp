@@ -1340,7 +1340,10 @@ namespace HHL.Common
                 return;
             }
 
-            if (m_MsgList.Count > 4 && !HHLGOTools.Self.IsAllMsg)
+            // Self 由 HHLGOTools.Awake 赋值，理论上此时一定就绪；
+            // 但仍要兜住 null（对象被销毁 / 尚未创建），避免异常抛进网络主循环被 MgrCenter 刷屏。
+            var isAllMsg = HHLGOTools.Self != null && HHLGOTools.Self.IsAllMsg;
+            if (m_MsgList.Count > 4 && !isAllMsg)
             {
                 // 什么都不填等于啥都要
                 if ((m_logFuncType & LogFuncType.Normal) == LogFuncType.Normal && !m_MsgList.Contains(msgType))

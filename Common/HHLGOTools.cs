@@ -75,8 +75,11 @@ namespace HHL.Common
         }
 
 
-        // Start is called before the first frame update
-        private void Start()
+        // 注意：Self 必须在 Awake 里赋值。
+        // Log.Inst 是懒加载的，首次使用时会 new GameObject + AddComponent，
+        // AddComponent 会同步调用 Awake，但 Start 要到下一帧才执行；
+        // 期间（同一帧内）PrintMsg 若读 Self 就是 null，会在网络 Update 里抛 NRE。
+        private void Awake()
         {
             Self = this;
             DontDestroyOnLoad(this);
