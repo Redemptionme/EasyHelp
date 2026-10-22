@@ -16,7 +16,7 @@ namespace HHL.Common
 {
     public partial class Log
     {
-        private Ver m_version = Ver.V1_61;
+        private Ver m_version = Ver.V1_62;
 
         public Ver Version => m_version;
 

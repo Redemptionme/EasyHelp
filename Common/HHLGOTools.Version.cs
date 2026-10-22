@@ -180,6 +180,13 @@ namespace HHL.Common
             return sb.ToString();
         }
 
+        [HHLKeyFunVerAttr(Ver.V1_62, KeyCode.F3)]
+        private void OnF3Click_62()
+        {
+            
+        }
+        
+
         [HHLKeyFunVerAttr(Ver.V1_60, KeyCode.F3)]
         private void OnF3Click_60()
         {
