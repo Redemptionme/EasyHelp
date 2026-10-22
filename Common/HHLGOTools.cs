@@ -576,7 +576,7 @@ namespace HHL.Common
             }
 
             // 说明：网络日志已改为 HHLNetworkDumpRecorder（HHL/Common/HHLNetworkDumpRecorder.cs），
-            // 通过 NetworkMgr.DumpRecorder 装配，不再需要字符串替换注入 GameNetwork。
+            // 通过 NetworkMgr.StatsMgr（INetworkStats）注册，不再需要字符串替换注入 GameNetwork。
             AssetDatabase.Refresh();
         }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using Google.Protobuf;
+using IGG.Framework;
 using IGG.Framework.Network;
 using IGG.Game.Managers.Network;
 
@@ -9,34 +9,28 @@ namespace HHL.Common
 {
     /// <summary>
     /// 自定义网络 dump 监听（HHL 侧代码）。
-    /// 通过 NetworkMgr.DumpRecorder 装配，把收发报文交给 HHL 日志（eLogType.eRootNetwork），
-    /// 从而无需改动 GameNetwork。打印统一在主线程 OnRevDump 里做（消息线程只缓存）。
+    /// 通过 NetworkMgr.StatsMgr（INetworkStats）注册到网络统计框架，
+    /// 把收发报文交给 HHL 日志（eLogType.eRootNetwork），
+    /// 从而无需改动 GameNetwork。打印统一在主线程 Update 里做（消息线程只缓存）。
     /// </summary>
-    public class HHLNetworkDumpRecorder : INetworkDumpRecorder
+    public class HHLNetworkDumpRecorder : INetworkStats, IUpdater
     {
-        // 被装饰的内置 recorder（可能为 null），所有回调都会转发给它，保证旧有行为不受影响
-        private readonly INetworkDumpRecorder m_inner;
-
         private readonly object m_lock = new object();
         private readonly Queue<KeyValuePair<IMessage, bool>> m_queue = new Queue<KeyValuePair<IMessage, bool>>();
 
-        public HHLNetworkDumpRecorder(INetworkDumpRecorder inner)
-        {
-            m_inner = inner;
-        }
-
         /// <summary>
-        /// 包住当前的 DumpRecorder（可能是内置的，也可能为 null）。
-        /// 必须在网络创建（new GameNetwork）之前调用；重复调用安全。
+        /// 注册到 NetworkMgr.StatsMgr，重复调用安全。
+        /// StatsMgr 在 GameLaunch.Awake 中创建，之后任何时刻调用都可以。
         /// </summary>
         public static void Install()
         {
-            if (NetworkMgr.DumpRecorder is HHLNetworkDumpRecorder)
+            var statsMgr = NetworkMgr.StatsMgr;
+            if (statsMgr == null || statsMgr.HasStats(typeof(HHLNetworkDumpRecorder)))
             {
                 return;
             }
 
-            NetworkMgr.DumpRecorder = new HHLNetworkDumpRecorder(NetworkMgr.DumpRecorder);
+            statsMgr.AddStats(new HHLNetworkDumpRecorder());
         }
 
         /// <summary>
@@ -51,43 +45,36 @@ namespace HHL.Common
         }
 #endif
 
-        // —— 消息线程：只缓存 + 转发，不调用 Unity / HHL Log ——
+        // —— 消息线程：只缓存，不调用 Unity / HHL Log ——
 
-        public void OnRecvAfter(byte[] msgBytes, object msg, out object msgCopy, out int msgId)
+        public void OnConnectBefore(string ip)
         {
-            if (m_inner != null)
-            {
-                m_inner.OnRecvAfter(msgBytes, msg, out msgCopy, out msgId);
-            }
-            else
-            {
-                msgCopy = null;
-                msgId = -1;
-            }
-
-            Capture(msg, false, ref msgCopy, ref msgId);
         }
 
-        public void OnSendAfter(byte[] msgBytes, object msg, out object msgCopy, out int msgId)
+        public void OnConnectAfter(string ip, ConnectResult result)
         {
-            if (m_inner != null)
-            {
-                m_inner.OnSendAfter(msgBytes, msg, out msgCopy, out msgId);
-            }
-            else
-            {
-                msgCopy = null;
-                msgId = -1;
-            }
-
-            Capture(msg, true, ref msgCopy, ref msgId);
         }
 
-        private void Capture(object msg, bool bSend, ref object msgCopy, ref int msgId)
+        public void OnClose(string ip, Exception e = null)
         {
-            msgCopy = msg == null ? "null" : msg.ToString();
-            msgId = -1;
+        }
 
+        public void OnReceiveBytesAfter(ReadOnlySpan<byte> bytes)
+        {
+        }
+
+        public void OnReceiveMsgAfter(ReadOnlySpan<byte> msgBytes, object msg, int msgId, bool isZip)
+        {
+            Capture(msg, false);
+        }
+
+        public void OnSendAfter(ReadOnlySpan<byte> msgBytes, object msg, int msgId, int sendSize)
+        {
+            Capture(msg, true);
+        }
+
+        private void Capture(object msg, bool bSend)
+        {
             if (msg is IMessage imsg)
             {
                 lock (m_lock)
@@ -97,27 +84,10 @@ namespace HHL.Common
             }
         }
 
-        public void OnConnectBefore(string ip)
-        {
-            m_inner?.OnConnectBefore(ip);
-        }
-
-        public void OnConnectAfter(string ip, ConnectResult result)
-        {
-            m_inner?.OnConnectAfter(ip, result);
-        }
-
-        public void OnClose(IPEndPoint address, Exception e = null)
-        {
-            m_inner?.OnClose(address, e);
-        }
-
         // —— 主线程：复用 PrintMsg 的过滤与格式，打印到 HHL.log ——
 
-        public void OnRevDump(MessageDump[] dumps)
+        public void Update()
         {
-            m_inner?.OnRevDump(dumps);
-
             KeyValuePair<IMessage, bool>[] items;
             lock (m_lock)
             {
