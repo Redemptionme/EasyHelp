@@ -63,7 +63,8 @@ namespace HHL.Common
         {
         }
 
-        public void OnReceiveMsgAfter(ReadOnlySpan<byte> msgBytes, object msg, int msgId, bool isZip)
+        public void OnReceiveMsgAfter(ReadOnlySpan<byte> msgBytes, object msg, int msgId, ECompressPkgType compressPkgType,
+                                      int originalSize, int innerIndex)
         {
             Capture(msg, false);
         }
