@@ -22,6 +22,7 @@ using IGG.Game.Module.GiantBoss.View;
 using IGG.Game.Module.Hero;
 using IGG.Game.Module.Hero.View;
 using IGG.Game.Module.Hero.View.HeroEquip;
+using IGG.Game.Module.IPActivity.Dune;
 using IGG.Game.Module.Kof.View;
 using IGG.Game.Module.Return.View;
 using IGG.Game.Module.TroopEquip.View;
@@ -178,6 +179,12 @@ namespace HHL.Common
             }
 
             return sb.ToString();
+        }
+
+        [HHLKeyFunVerAttr(Ver.V1_64, KeyCode.F3)]
+        private void OnF3Click_64()
+        {
+            PanelMgr.Inst.OpenPanel<DunesSlotMachinePanel>((uint)191421);
         }
 
         [HHLKeyFunVerAttr(Ver.V1_62, KeyCode.F3)]
