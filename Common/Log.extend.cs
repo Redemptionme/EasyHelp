@@ -823,7 +823,14 @@ namespace HHL.Common
             InitHeroEquipSynthesis();
             InitHeroEquipInherit();
             InitHeroEquipBreak();
+            InitHeroReforgeProto();
             InitHeroEquipSkin();
+        }
+        
+        public void InitHeroReforgeProto()
+        {
+            AddListenMsgType(MsgType.KMsgCl2GsheroEquipReforgeRequest);
+            AddListenMsgType(MsgType.KMsgGs2ClheroEquipReforgeReply);
         }
 
         private void InitHeroEquipSkin()

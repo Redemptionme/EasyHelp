@@ -29,6 +29,12 @@ namespace HHL.Common
             method?.Invoke(this, null);
         }
 
+        [HHLFunVerAttr(Ver.V1_63)]
+        private void Init1Dot63()
+        {
+            InitHeroEquip();
+        }
+
         [HHLFunVerAttr(Ver.V1_64)]
         private void Init1Dot64()
         {
